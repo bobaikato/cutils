@@ -3,7 +3,7 @@
 A package of utilities classes intended to enhance and simplify Java development.
 
 ### Where can I get the latest release? 
-You can download source and 
+You can download source binary 
 ```
 wget --content-disposition https://packagecloud.io/Honerfor/common-util/packages/java/org.h1r4/org-hr4-common-util-1.0-SNAPSHOT.jar/artifacts/org-hr4-common-util-1.0-20190810.211653-1.jar/download
 ```
