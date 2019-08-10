@@ -1,0 +1,174 @@
+/*
+ * Copyright (C) 2018 — 2019 Honerfor, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.h1r4.common.util.security;
+
+import org.apache.commons.lang3.Validate;
+import org.h1r4.common.util.Que;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Base64.getDecoder;
+import static java.util.Base64.getEncoder;
+import static java.util.Objects.isNull;
+import static javax.crypto.Cipher.DECRYPT_MODE;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static org.h1r4.common.util.Serialization.deserialize;
+import static org.h1r4.common.util.Serialization.serialize;
+
+/**
+ * <p>
+ * This is an implementation of AAdvanced Encryption Standard.
+ * This implementation can encrypt and decrypt Objects of any type.
+ * </p>
+ *
+ * @param <T>
+ * @author B0BAI
+ * @since 1.0
+ */
+public class AES<T> {
+
+    /**
+     * <p>This is the default Encryption key which will be used if {@link AES#encryptionKey} isn't set </p>
+     *
+     * @since 1.0
+     */
+    private static String DEFAULT_ENCRYPTION_KEY = "{bMJR_QG$qvY?R*wGT2Sn9RU=GvKx_yu7Uyz^E*!*SjgaEh4K34JK8yTLB44!Z77R6z^DijHEi5GaaYA6apf3!}" +
+            "This is clearly a default Key. If you are doing something serious, please consider" +
+            "using the `AES.setKey(<Your_Key_here>)` method to set a unique Key. Got it?";
+
+    /**
+     * <p>
+     * variable to hold {@link AES} instance. will be used to enforce singleton.
+     * </p>
+     *
+     * @since 1.0
+     */
+    private static AES instance;
+
+    /**
+     * <p>Instance of {@link Cipher}</p>
+     *
+     * @since 1.0
+     */
+    private static Cipher cipher;
+
+    /**
+     * <p>Instance of {@link SecretKeySpec}</p>
+     *
+     * @since 1.0
+     */
+    private static SecretKeySpec secretKey;
+
+    /**
+     * <p>Encryption Key, set by user.</p>
+     *
+     * @implSpec If this is null, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used.
+     * @since 1.0
+     */
+    private static String encryptionKey;
+
+    /**
+     * <p>Constructor</p>
+     *
+     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @since 1.0
+     */
+    private AES() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        var key = encryptionKey.getBytes(UTF_8);
+        final var messageDigest = MessageDigest.getInstance("SHA-1");
+        key = messageDigest.digest(key);
+        key = Arrays.copyOf(key, 16);
+        secretKey = new SecretKeySpec(key, "AES");
+        cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+    }
+
+    /**
+     * <p>This initiates encryption variables</p>
+     *
+     * @return Instance of {@link AES}
+     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @since 1.0
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> AES<T> init() throws Exception {
+        return Que.<AES<T>>run(() -> encryptionKey = DEFAULT_ENCRYPTION_KEY).andCall(() -> isNull(instance) ? new AES<T>() : (AES<T>) instance).get();
+    }
+
+    /**
+     * <p>
+     * Use this method to set costume encryptionKey
+     * </p>
+     *
+     * @param key supplied encryption key.
+     * @return Instance of {@link AES}
+     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @implSpec If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
+     * @since 1.0
+     */
+    public static <T> AES<T> setKey(String key) throws Exception {
+        return Que.<AES<T>>run(() -> encryptionKey = isNull(key) ? DEFAULT_ENCRYPTION_KEY : key).andCall(AES::new).get();
+    }
+
+    /**
+     * <p>This encrypt item of T type</p>
+     *
+     * @param itemToEncrypt item to encrypt.
+     * @return encrypted string of {@code itemToEncrypt} of T type. Not {@literal null}
+     * @throws Exception instance of any exception thrown
+     * @since 1.0
+     */
+    public String encrypt(@Valid T itemToEncrypt) throws Exception {
+        return Que.<String>run(() -> {
+            Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
+        }).andCall(() -> (String) Que.execute(() -> {
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        }).andCall(() -> {
+            final var serializeData = serialize(itemToEncrypt);
+            return getEncoder().encodeToString(cipher.doFinal(serializeData));
+        }).get()).get();
+    }
+
+    /**
+     * <p>This method will decrypt the {@code itemToDecrypt}</p>
+     *
+     * @param itemToDecrypt encrypted string to be decrypted. not {@literal null}
+     * @return decrypted Object.
+     * @throws Exception instance of {@link InvalidKeyException}, {@link BadPaddingException} or any other exception thrown.
+     * @since 1.0
+     */
+
+    public T decrypt(@NotNull String itemToDecrypt) throws Exception {
+        return Que.<T>run(() -> {
+            Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
+        }).andCall(() -> Que.<T>execute(() -> {
+            cipher.init(DECRYPT_MODE, secretKey);
+        }).andCall(() -> {
+            @SuppressWarnings("unchecked") final T deserializeObject = (T) deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
+            return deserializeObject;
+        }).get()).get();
+    }
+}
