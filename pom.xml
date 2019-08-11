@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.h1r4</groupId>
-    <artifactId>org-hr4-common-util</artifactId>
+    <artifactId>org-hr4-common-utilities</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -105,11 +105,11 @@
     <distributionManagement>
         <repository>
             <id>packagecloud-Honerfor</id>
-            <url>packagecloud+https://packagecloud.io/Honerfor/common-util</url>
+            <url>packagecloud+https://packagecloud.io/Honerfor/common-utilities</url>
         </repository>
         <snapshotRepository>
             <id>packagecloud-Honerfor</id>
-            <url>packagecloud+https://packagecloud.io/Honerfor/common-util</url>
+            <url>packagecloud+https://packagecloud.io/Honerfor/common-utilities</url>
         </snapshotRepository>
     </distributionManagement>
 
