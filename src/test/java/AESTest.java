@@ -32,21 +32,21 @@ class AESTest {
 
     @DisplayName("Should successfully Encrypt Custom Object with default Encryption Key")
     @ParameterizedTest(name = "{index} => objectToBeEncrypted={0}, encryptedString={1}")
-    @MethodSource("customObjectEncryptionResource")
+    @MethodSource("customObjectResource")
     void encryptCustomObjectWithDefaultKey(PersonExample objectToBeEncrypted, String encryptedString) throws Exception {
         assertEquals(AES.<PersonExample>init().encrypt(objectToBeEncrypted), encryptedString);
     }
 
     @DisplayName("Should successfully Decrypt Custom Object with default Encryption Key")
     @ParameterizedTest(name = "{index} => output={0}, objectToBeDecrypted={1}")
-    @MethodSource("customObjectDecryptionResource")
+    @MethodSource("customObjectResource")
     void decryptCustomObjectWithDefaultKey(PersonExample output, String objectToBeDecrypted) throws Exception {
         final var decryptedObject = AES.<PersonExample>init().decrypt(objectToBeDecrypted);
         Que.run(() -> assertEquals(decryptedObject.age, output.age))
                 .andRun(() -> assertEquals(decryptedObject.name, output.name));
     }
 
-    private static Stream<Arguments> customObjectDecryptionResource() {
+    private static Stream<Arguments> customObjectResource() {
         final var personExampleI = new PersonExample() {{
             setAge(10);
             setName("B0B");
@@ -115,21 +115,21 @@ class AESTest {
 
     @DisplayName("Should successfully Decrypt Objects with Custom Encryption Key")
     @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("customKeyDecryptionResource")
+    @MethodSource("customKeyOperationResource")
     void decryptObjectWithCustomKey(Object output, String itemToBeDecrypted) throws Exception {
         assertEquals(AES.setKey("My-Custom-Key").decrypt(itemToBeDecrypted), output);
     }
 
     @DisplayName("Should Throw BadPaddingException when using a different key to decrypt.")
     @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("decryptionResource")
+    @MethodSource("customKeyOperationResource")
     void throwBadPaddingExceptionOnDecryption(Object output, String itemToBeDecrypted) throws Exception {
         assertThrows(BadPaddingException.class, () -> {
             assertEquals(AES.setKey("The-Wrong-Custom-Encryption-Key").decrypt(itemToBeDecrypted), output);
         });
     }
 
-    private static Stream<Arguments> decryptionResource() {
+    private static Stream<Arguments> customKeyOperationResource() {
         return Stream.of(
                 Arguments.of("Testing Decryption", "s68hIJWxSG09ZQjbGF/6oQ4c2a8wHXnHPbR92wV2PQk="),
                 Arguments.of(88.02, "4OkXLhHBDmq54mtV2fp+kTj4xtONwwKNUx6rjppRT0b/E/WueHmSEwGiAYXRPRwQCEEWOcTcW+p1BRNnraepj9+0m+rBHV6y9rYG23WjWvj8aFusIpAE7+Ei61R1qdjD"),
@@ -137,6 +137,7 @@ class AESTest {
                 Arguments.of(100, "QDj1XtBhN4ejgbKLvqoEFB6wtvEvCfL5TzD69/Kw/NJXubz9WruX2JV8Kmr+QyqPfQ6AoqIq915Do0P3TehkvWBXYSVT2xfFT+wCAUcKlNJPHzF9LHPhWeLllqVEm959")
         );
     }
+
     @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
