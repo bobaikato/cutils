@@ -5,7 +5,7 @@ A package of utilities classes intended to enhance and simplify Java development
 ### Where can I get the latest release? 
 You can download source binary 
 ```
-wget --content-disposition https://packagecloud.io/Honerfor/common-util/packages/java/org.h1r4/org-hr4-common-util-1.0-SNAPSHOT.jar/artifacts/org-hr4-common-util-1.0-20190810.211653-1.jar/download
+wget --content-disposition https://packagecloud.io/Honerfor/common-utilities/packages/java/org.h1r4/org-hr4-common-utilities-1.0-SNAPSHOT.jar/artifacts/org-hr4-common-utilities-1.0-20190811.123243-1.jar/download
 ```
 Or, you can pull it from the central repositories:
  - #### Maven
@@ -14,8 +14,8 @@ Firstly, add this to the top level of your pom.xml
 ```xml
 <repositories>
   <repository>
-    <id>Honerfor-common-util</id>
-    <url>https://packagecloud.io/Honerfor/common-util/maven2</url>
+    <id>Honerfor-common-utilities</id>
+    <url>https://packagecloud.io/Honerfor/common-utilities/maven2</url>
     <releases>
       <enabled>true</enabled>
     </releases>
@@ -29,7 +29,7 @@ Firstly, add this to the top level of your pom.xml
 ```xml
 <dependency>
   <groupId>org.h1r4</groupId>
-  <artifactId>org-hr4-common-util</artifactId>
+  <artifactId>org-hr4-common-utilities</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -39,12 +39,12 @@ Firstly, add this entry anywhere in your `build.gradle` file
 ```
 repositories {
     maven {
-        url "https://packagecloud.io/Honerfor/common-util/maven2"
+        url "https://packagecloud.io/Honerfor/common-utilities/maven2"
     }
 }
 ```
 ```
-compile 'org.h1r4:org-hr4-common-util:1.0-SNAPSHOT'
+compile 'org.h1r4:org-hr4-common-utilities:1.0-SNAPSHOT'
 ```
 
 - #### Grape
@@ -60,7 +60,7 @@ Firstly, create a `~/.groovy/grapeConfig.xml` file and add the code below.
       </filesystem>
       <ibiblio name="localm2" root="file:${user.home}/.m2/repository/" checkmodified="true" changingPattern=".*" changingMatcher="regexp" m2compatible="true"/>
       <!-- todo add 'endorsed groovy extensions' resolver here -->
-      <ibiblio name="Honerfor-common-util" root="https://packagecloud.io/Honerfor/common-util/maven2" m2compatible="true"/>
+      <ibiblio name="Honerfor-common-utilities" root="https://packagecloud.io/Honerfor/common-utilities/maven2" m2compatible="true"/>
       <ibiblio name="ibiblio" m2compatible="true"/>
     </chain>
   </resolvers>
@@ -68,7 +68,7 @@ Firstly, create a `~/.groovy/grapeConfig.xml` file and add the code below.
 ```
 ```
 @Grapes(
-@Grab(group='org.h1r4', module='org-hr4-common-util', version='1.0-SNAPSHOT')
+@Grab(group='org.h1r4', module='org-hr4-common-utilities', version='1.0-SNAPSHOT')
 )
 ```
 
@@ -80,13 +80,13 @@ Firstly, Create an `ivysettings.xml` file and added the code below
     <resolvers>
         <chain name="chain">
             <ibiblio name="central" m2compatible="true"/>
-            <ibiblio name="Honerfor-common-util" m2compatible="true" root="https://packagecloud.io/Honerfor/common-util/maven2"/>
+            <ibiblio name="Honerfor-common-utilities" m2compatible="true" root="https://packagecloud.io/Honerfor/common-utilities/maven2"/>
         </chain>
     </resolvers>
 </ivysettings>
 ```
 ```xml
-<dependency org="org.h1r4" name="org-hr4-common-util" rev="1.0-SNAPSHOT" />
+<dependency org="org.h1r4" name="org-hr4-common-utilities" rev="1.0-SNAPSHOT" />
 ```
 
 ### Contributing
