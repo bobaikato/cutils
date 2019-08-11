@@ -94,7 +94,8 @@ public class AES<T> {
     /**
      * <p>Constructor</p>
      *
-     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @throws NoSuchPaddingException   when a bad/Wrong encryption key is supplied.
+     * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not available in the environment.
      * @since 1.0
      */
     private AES() throws NoSuchPaddingException, NoSuchAlgorithmException {
