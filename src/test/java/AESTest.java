@@ -164,4 +164,25 @@ class AESTest {
                 Arguments.of(100, "QDj1XtBhN4ejgbKLvqoEFB6wtvEvCfL5TzD69/Kw/NJXubz9WruX2JV8Kmr+QyqPfQ6AoqIq915Do0P3TehkvWBXYSVT2xfFT+wCAUcKlNJPHzF9LHPhWeLllqVEm959")
         );
     }
+    @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("illegalValuesResource")
+    void throwIllegalArgumentExceptionOnEncryption(Object value) throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
+    }
+
+
+    @DisplayName("Should Throw IllegalArgumentException when trying to decrypt Null values.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("illegalValuesResource")
+    void throwIllegalArgumentExceptionOnDecryption(String value) throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
+    }
+
+    private static Stream<Arguments> illegalValuesResource() {
+        return Stream.of(
+                Arguments.of(""),
+                Arguments.of((Object) null)
+        );
+    }
 }
