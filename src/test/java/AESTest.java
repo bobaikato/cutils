@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Test AES Encryption and Decryption operation.")
-class AESTest {
+final class AESTest {
 
     private static class PersonExample implements Serializable {
         private static final long serialVersionUID = -4359123926347587815L;
