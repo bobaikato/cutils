@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -18,7 +19,9 @@ final class PartitionTest {
     void partitionListInSubListI(int partitionSize, List<?> list) {
         final var partitionedList = Partition.of(list).into(partitionSize);
         Que.run(() -> assertEquals(partitionedList.size(), 3)).andRun(() -> {
-            partitionedList.parallelStream().forEach(item -> assertEquals(item.size(), partitionSize));
+            partitionedList.parallelStream().forEach(item -> {
+                assertEquals(item.size(), partitionSize);
+            });
         });
     }
 
@@ -26,7 +29,15 @@ final class PartitionTest {
         return Stream.of(
                 Arguments.of(3, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)),
                 Arguments.of(2, List.of("A", "B", "C", "D", "E", "F")),
-                Arguments.of(4, List.of('a', 'b', 'c', '4', '5', '6', '7', '8', '9', 'd', 'e', 'f'))
+                Arguments.of(4, List.of('a', 'b', 'c', '4', '5', '6', '7', '8', '9', 'd', 'e', 'f')),
+                Arguments.of(2, new ArrayList<List<Integer>>() {{
+                    add(List.of(1, 2));
+                    add(List.of(3, 4));
+                    add(List.of(5, 6));
+                    add(List.of(7, 8));
+                    add(List.of(9, 10));
+                    add(List.of(11, 12));
+                }})
         );
     }
 
