@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.h1r4.common.function;
+package org.h1r4.commons.util.function;
 
 import java.util.function.Function;
 
@@ -40,6 +40,7 @@ public interface ThrowingFunction<T, R> {
      *
      * @param t the function argument if Type T
      * @return the function result
+     * @throws Exception any excetion thrown when applying function
      */
     R apply(T t) throws Exception;
 
