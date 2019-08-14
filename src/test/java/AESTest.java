@@ -1,5 +1,5 @@
-import org.h1r4.common.util.Que;
-import org.h1r4.common.util.security.AES;
+import org.h1r4.commons.util.Que;
+import org.h1r4.commons.util.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Test AES Encryption and Decryption operation.")
-class AESTest {
+final class AESTest {
 
     private static class PersonExample implements Serializable {
         private static final long serialVersionUID = -4359123926347587815L;
@@ -32,38 +32,21 @@ class AESTest {
 
     @DisplayName("Should successfully Encrypt Custom Object with default Encryption Key")
     @ParameterizedTest(name = "{index} => objectToBeEncrypted={0}, encryptedString={1}")
-    @MethodSource("customObjectEncryptionResource")
+    @MethodSource("customObjectResource")
     void encryptCustomObjectWithDefaultKey(PersonExample objectToBeEncrypted, String encryptedString) throws Exception {
         assertEquals(AES.<PersonExample>init().encrypt(objectToBeEncrypted), encryptedString);
     }
 
-    private static Stream<Arguments> customObjectEncryptionResource() {
-        final var personExampleI = new PersonExample() {{
-            setAge(10);
-            setName("B0B");
-        }};
-
-        final var personExampleII = new PersonExample() {{
-            setAge(11);
-            setName("PETER");
-        }};
-
-        return Stream.of(
-                Arguments.of(personExampleI, "k/h51sKoS2yWgcKvNhliYzA6kk8zDzYpyo85kc9pIGPubzz9sh1vu1SsYgb6Q8RZmeXrtK57KSUDM4k7IGTDx3PyZ4bO9aI6O3MvXNTdFJRYckqsFTrd44/SITmttWuQQTCURIIDi+9M6hmOlzDlOw=="),
-                Arguments.of(personExampleII, "k/h51sKoS2yWgcKvNhliY3WL2bHdh+kr98PishwlCxDubzz9sh1vu1SsYgb6Q8RZmeXrtK57KSUDM4k7IGTDx3PyZ4bO9aI6O3MvXNTdFJRYckqsFTrd44/SITmttWuQ7GZFcqV1QoCyO1ZXkaVY1q/ufFS7PBuKBEutuQn8fQM=")
-        );
-    }
-
     @DisplayName("Should successfully Decrypt Custom Object with default Encryption Key")
     @ParameterizedTest(name = "{index} => output={0}, objectToBeDecrypted={1}")
-    @MethodSource("customObjectDecryptionResource")
+    @MethodSource("customObjectResource")
     void decryptCustomObjectWithDefaultKey(PersonExample output, String objectToBeDecrypted) throws Exception {
         final var decryptedObject = AES.<PersonExample>init().decrypt(objectToBeDecrypted);
         Que.run(() -> assertEquals(decryptedObject.age, output.age))
                 .andRun(() -> assertEquals(decryptedObject.name, output.name));
     }
 
-    private static Stream<Arguments> customObjectDecryptionResource() {
+    private static Stream<Arguments> customObjectResource() {
         final var personExampleI = new PersonExample() {{
             setAge(10);
             setName("B0B");
@@ -132,12 +115,21 @@ class AESTest {
 
     @DisplayName("Should successfully Decrypt Objects with Custom Encryption Key")
     @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("customKeyDecryptionResource")
+    @MethodSource("customKeyOperationResource")
     void decryptObjectWithCustomKey(Object output, String itemToBeDecrypted) throws Exception {
         assertEquals(AES.setKey("My-Custom-Key").decrypt(itemToBeDecrypted), output);
     }
 
-    private static Stream<Arguments> customKeyDecryptionResource() {
+    @DisplayName("Should Throw BadPaddingException when using a different key to decrypt.")
+    @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
+    @MethodSource("customKeyOperationResource")
+    void throwBadPaddingExceptionOnDecryption(Object output, String itemToBeDecrypted) throws Exception {
+        assertThrows(BadPaddingException.class, () -> {
+            assertEquals(AES.setKey("The-Wrong-Custom-Encryption-Key").decrypt(itemToBeDecrypted), output);
+        });
+    }
+
+    private static Stream<Arguments> customKeyOperationResource() {
         return Stream.of(
                 Arguments.of("Testing Decryption", "s68hIJWxSG09ZQjbGF/6oQ4c2a8wHXnHPbR92wV2PQk="),
                 Arguments.of(88.02, "4OkXLhHBDmq54mtV2fp+kTj4xtONwwKNUx6rjppRT0b/E/WueHmSEwGiAYXRPRwQCEEWOcTcW+p1BRNnraepj9+0m+rBHV6y9rYG23WjWvj8aFusIpAE7+Ei61R1qdjD"),
@@ -146,22 +138,25 @@ class AESTest {
         );
     }
 
-
-    @DisplayName("Should Throw BadPaddingException when using a different key to decrypt.")
-    @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("decryptionResource")
-    void throwBadPaddingExceptionOnDecryption(Object output, String itemToBeDecrypted) throws Exception {
-        assertThrows(BadPaddingException.class, () -> {
-            assertEquals(AES.setKey("The-Wrong-Custom-Encryption-Key").decrypt(itemToBeDecrypted), output);
-        });
+    @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("illegalValuesResource")
+    void throwIllegalArgumentExceptionOnEncryption(Object value) throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
     }
 
-    private static Stream<Arguments> decryptionResource() {
+
+    @DisplayName("Should Throw IllegalArgumentException when trying to decrypt Null values.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("illegalValuesResource")
+    void throwIllegalArgumentExceptionOnDecryption(String value) throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
+    }
+
+    private static Stream<Arguments> illegalValuesResource() {
         return Stream.of(
-                Arguments.of("Testing Decryption", "s68hIJWxSG09ZQjbGF/6oQ4c2a8wHXnHPbR92wV2PQk="),
-                Arguments.of(88.02, "4OkXLhHBDmq54mtV2fp+kTj4xtONwwKNUx6rjppRT0b/E/WueHmSEwGiAYXRPRwQCEEWOcTcW+p1BRNnraepj9+0m+rBHV6y9rYG23WjWvj8aFusIpAE7+Ei61R1qdjD"),
-                Arguments.of(12L, "sFaXqId3I2kIVEgrLjdRw7pVdlfITHrLJIq3LkkLCTFUR64LJymRedu7Ez+ULbjvq9xZw2Fhei0SXu4O6WCF800jKhHkXp26VPLZOpPwEKxcoqbv9ZjMry86fV58n9xB"),
-                Arguments.of(100, "QDj1XtBhN4ejgbKLvqoEFB6wtvEvCfL5TzD69/Kw/NJXubz9WruX2JV8Kmr+QyqPfQ6AoqIq915Do0P3TehkvWBXYSVT2xfFT+wCAUcKlNJPHzF9LHPhWeLllqVEm959")
+                Arguments.of(""),
+                Arguments.of((Object) null)
         );
     }
 }

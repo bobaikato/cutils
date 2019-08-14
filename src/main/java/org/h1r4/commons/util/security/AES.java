@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.h1r4.common.util.security;
+package org.h1r4.commons.util.security;
 
 import org.apache.commons.lang3.Validate;
-import org.h1r4.common.util.Que;
+import org.h1r4.commons.util.Que;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -36,8 +36,8 @@ import static java.util.Base64.getEncoder;
 import static java.util.Objects.isNull;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.h1r4.common.util.Serialization.deserialize;
-import static org.h1r4.common.util.Serialization.serialize;
+import static org.h1r4.commons.util.Serialization.deserialize;
+import static org.h1r4.commons.util.Serialization.serialize;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ import static org.h1r4.common.util.Serialization.serialize;
  * This implementation can encrypt and decrypt Objects of any type.
  * </p>
  *
- * @param <T>
+ * @param <T> Type of value
  * @author B0BAI
  * @since 1.0
  */
@@ -94,7 +94,8 @@ public class AES<T> {
     /**
      * <p>Constructor</p>
      *
-     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @throws NoSuchPaddingException   when a bad/Wrong encryption key is supplied.
+     * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not available in the environment.
      * @since 1.0
      */
     private AES() throws NoSuchPaddingException, NoSuchAlgorithmException {
@@ -109,6 +110,7 @@ public class AES<T> {
     /**
      * <p>This initiates encryption variables</p>
      *
+     * @param <T> Type of value
      * @return Instance of {@link AES}
      * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
      * @since 1.0
@@ -121,14 +123,16 @@ public class AES<T> {
     /**
      * <p>
      * Use this method to set costume encryptionKey
+     * If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
      * </p>
      *
      * @param key supplied encryption key.
+     * @param <T> Type of value
      * @return Instance of {@link AES}
      * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
-     * @implSpec If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
      * @since 1.0
      */
+
     public static <T> AES<T> setKey(String key) throws Exception {
         return Que.<AES<T>>run(() -> encryptionKey = isNull(key) ? DEFAULT_ENCRYPTION_KEY : key).andCall(AES::new).get();
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.h1r4.common.function;
+package org.h1r4.commons.util.function;
 
 import java.util.function.Function;
 
@@ -38,8 +38,9 @@ public interface ThrowingFunction<T, R> {
     /**
      * <p>Applies this function to the given argument.</p>
      *
-     * @param t the function argument
+     * @param t the function argument if Type T
      * @return the function result
+     * @throws Exception any excetion thrown when applying function
      */
     R apply(T t) throws Exception;
 
@@ -55,11 +56,11 @@ public interface ThrowingFunction<T, R> {
      * @return A {@link Function}
      */
     static <T, R> Function<T, R> unchecked(ThrowingFunction<T, R> function) {
-        return t -> {
+        return argument -> {
             try {
-                return function.apply(t);
+                return function.apply(argument);
             } catch (Exception ex) {
-                return ThrowingFunction.sneakyThrow(ex);
+                return sneakyThrow(ex);
             }
         };
     }
