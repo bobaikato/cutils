@@ -22,7 +22,7 @@
 
     <groupId>org.h1r4.common</groupId>
     <artifactId>utilities</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <build>
         <plugins>
             <plugin>
