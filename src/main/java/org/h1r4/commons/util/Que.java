@@ -91,7 +91,7 @@ public class Que<T> {
      * This method will run a {@link Runnable} instance.
      *
      * @param runnable {@link Runnable} type variable
-     * @param <T>      @ <T> value Type
+     * @param <T>      Type of value
      * @return returns new instance of {@link Que}
      * @since 1.0
      */
@@ -105,8 +105,9 @@ public class Que<T> {
      * Use when Operation will throw an exception
      *
      * @param executable {@link Runnable} type variable
-     * @param <T>        value Type
+     * @param <T>        Type of value
      * @return returns new instance of {@link Que}
+     * @throws Exception this can be any exception throw when executing
      * @since 1.0
      */
     public static <T> Que<T> execute(Executable executable) throws Exception {
@@ -141,7 +142,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will accept a {@link Consumer} type variable of type
+     * This method will accept a {@link Consumer} type variable
      *
      * @param consumer {@link Consumer} type variable
      * @return existing instance of {@link Que}
@@ -165,7 +166,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will execute {@link Callable} type variable of type.
+     * This method will execute {@link Callable} type variable
      *
      * @param callable {@link Callable} type variable.
      * @return the result type of method {@code call}

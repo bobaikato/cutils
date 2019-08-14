@@ -45,7 +45,7 @@ import static org.h1r4.commons.util.Serialization.serialize;
  * This implementation can encrypt and decrypt Objects of any type.
  * </p>
  *
- * @param <T>
+ * @param <T> Type of value
  * @author B0BAI
  * @since 1.0
  */
@@ -110,6 +110,7 @@ public class AES<T> {
     /**
      * <p>This initiates encryption variables</p>
      *
+     * @param <T> Type of value
      * @return Instance of {@link AES}
      * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
      * @since 1.0
@@ -122,14 +123,16 @@ public class AES<T> {
     /**
      * <p>
      * Use this method to set costume encryptionKey
+     * If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
      * </p>
      *
      * @param key supplied encryption key.
+     * @param <T> Type of value
      * @return Instance of {@link AES}
      * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
-     * @implSpec If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
      * @since 1.0
      */
+
     public static <T> AES<T> setKey(String key) throws Exception {
         return Que.<AES<T>>run(() -> encryptionKey = isNull(key) ? DEFAULT_ENCRYPTION_KEY : key).andCall(AES::new).get();
     }

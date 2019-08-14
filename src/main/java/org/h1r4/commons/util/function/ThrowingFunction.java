@@ -40,6 +40,7 @@ public interface ThrowingFunction<T, R> {
      *
      * @param t the function argument if Type T
      * @return the function result
+     * @throws Exception any excetion thrown when applying function
      */
     R apply(T t) throws Exception;
 
