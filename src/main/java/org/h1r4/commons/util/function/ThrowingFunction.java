@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.h1r4.common.function;
+package org.h1r4.commons.util.function;
 
 import java.util.function.Function;
 

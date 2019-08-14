@@ -1,4 +1,4 @@
-package org.h1r4.common.util;
+package org.h1r4.commons.util;
 
 import org.apache.commons.lang3.Validate;
 

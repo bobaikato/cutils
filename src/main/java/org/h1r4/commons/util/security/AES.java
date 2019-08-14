@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.h1r4.common.util.security;
+package org.h1r4.commons.util.security;
 
 import org.apache.commons.lang3.Validate;
-import org.h1r4.common.util.Que;
+import org.h1r4.commons.util.Que;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -36,8 +36,8 @@ import static java.util.Base64.getEncoder;
 import static java.util.Objects.isNull;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.h1r4.common.util.Serialization.deserialize;
-import static org.h1r4.common.util.Serialization.serialize;
+import static org.h1r4.commons.util.Serialization.deserialize;
+import static org.h1r4.commons.util.Serialization.serialize;
 
 /**
  * <p>

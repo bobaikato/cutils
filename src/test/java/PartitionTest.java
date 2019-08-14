@@ -1,5 +1,5 @@
-import org.h1r4.common.util.Partition;
-import org.h1r4.common.util.Que;
+import org.h1r4.commons.util.Partition;
+import org.h1r4.commons.util.Que;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.h1r4.common.util;
+package org.h1r4.commons.util;
 
-import org.h1r4.common.function.Executable;
+import org.h1r4.commons.util.function.Executable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
