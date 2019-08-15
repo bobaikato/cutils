@@ -1,5 +1,5 @@
 ### Honerfor Common Utilities (Cutils)
-[![License](https://img.shields.io/github/license/honerfor/cutils?style=for-the-badge)](#License)
+[![License](https://img.shields.io/github/license/honerfor/cutils?style=for-the-badge)](https://github.com/Honerfor/cutils/blob/master/LICENSE)
 
 A package of utilities classes intended to enhance and simplify Java development.
 
@@ -99,8 +99,3 @@ But, in the mean time, there are some guidelines which will make applying PRs ea
 3. Create minimal diffs.
 4. If it will help, disable on save actions like reformat source code or organize imports. **If you feel the source code should be reformatted create a separate PR for this change**.
 5. Please, provide **JUnit tests** for your changes and make sure your changes don't break any existing tests by running `mvn clean test`.
-
-### License
-
-This code is under the [Apache Licence v2](https://github.com/Honerfor/Common/blob/master/LICENSE).
-
