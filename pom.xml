@@ -107,6 +107,7 @@
     <name>Honerfor Common Utilities</name>
     <description>This is a package of utilities classes intended to enhance and simplify Java development</description>
     <url>https://github.com/Honerfor/cutils</url>
+    <inceptionYear>2019</inceptionYear>
 
     <licenses>
         <license>
@@ -132,12 +133,20 @@
         <url>http://github.com/Honerfor/cutils/tree/master</url>
     </scm>
 
+    <issueManagement>
+        <system>hackerone</system>
+        <url>https://hackerone.com/central-security-project/reports/new</url>
+    </issueManagement>
+
     <developers>
         <developer>
             <name>B0BAI</name>
             <email>bobaikato@gmail.com</email>
             <organization>Honerfor</organization>
             <organizationUrl>http://www.honerfor.com</organizationUrl>
+            <roles>
+                <role>Engineer</role>
+            </roles>
         </developer>
     </developers>
 
