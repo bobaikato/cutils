@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc.
+ * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.h1r4.commons.util.security;
+package com.honerfor.cutils.security;
 
+import com.honerfor.cutils.Que;
 import org.apache.commons.lang3.Validate;
-import org.h1r4.commons.util.Que;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -29,15 +29,16 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 
+import static com.honerfor.cutils.Serialization.deserialize;
+import static com.honerfor.cutils.Serialization.serialize;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Base64.getDecoder;
 import static java.util.Base64.getEncoder;
 import static java.util.Objects.isNull;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.h1r4.commons.util.Serialization.deserialize;
-import static org.h1r4.commons.util.Serialization.serialize;
 
 /**
  * <p>
@@ -146,14 +147,15 @@ public class AES<T> {
      * @since 1.0
      */
     public String encrypt(@Valid T itemToEncrypt) throws Exception {
-        return Que.<String>run(() -> {
-            Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
-        }).andCall(() -> (String) Que.execute(() -> {
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        }).andCall(() -> {
-            final var serializeData = serialize(itemToEncrypt);
-            return getEncoder().encodeToString(cipher.doFinal(serializeData));
-        }).get()).get();
+        final Callable<String> encrypt = () -> Que.<String>execute(() -> cipher.init(Cipher.ENCRYPT_MODE, secretKey))
+                .andCall(() -> {
+                    final var serializeData = serialize(itemToEncrypt);
+                    return getEncoder().encodeToString(cipher.doFinal(serializeData));
+                }).get();
+
+        return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt))
+                .andCall(encrypt)
+                .get();
     }
 
     /**

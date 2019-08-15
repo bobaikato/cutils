@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2018 — 2019 Honerfor, Inc.
+  ~ Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.h1r4.common</groupId>
-    <artifactId>utilities</artifactId>
+    <groupId>com.honerfor</groupId>
+    <artifactId>cutils</artifactId>
     <version>1.0.0</version>
     <build>
         <plugins>
@@ -104,9 +104,9 @@
         </profile>
     </profiles>
 
-    <name>Common Utilities For Development</name>
-    <description>This A package of utilities classes intended to enhance and simplify Java development</description>
-    <url>https://github.com/Honerfor/Common-Utilities</url>
+    <name>Honerfor Common Utilities</name>
+    <description>This is a package of utilities classes intended to enhance and simplify Java development</description>
+    <url>https://github.com/Honerfor/cutils</url>
 
     <licenses>
         <license>
@@ -127,9 +127,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/Honerfor/Common-Utilities.git</connection>
-        <developerConnection>scm:git:ssh://github.com:Honerfor/Common-Utilities.git</developerConnection>
-        <url>http://github.com/Honerfor/Common-Utilities/tree/master</url>
+        <connection>scm:git:git://github.com/Honerfor/cutils.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Honerfor/cutils.git</developerConnection>
+        <url>http://github.com/Honerfor/cutils/tree/master</url>
     </scm>
 
     <developers>
