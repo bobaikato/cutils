@@ -1,4 +1,4 @@
-### H1R4 Common
+### Honerfor Common Utilities (Cutils)
 
 A package of utilities classes intended to enhance and simplify Java development.
 
