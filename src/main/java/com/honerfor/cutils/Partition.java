@@ -74,9 +74,9 @@ public class Partition<T> extends AbstractList<List<T>> {
      * @return current instance of {@link Partition}
      */
     public Partition<T> into(int sublistSize) {
-        return Que.<Partition<T>>run(() -> {
-            Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.");
-        }).andRun(() -> this.sublistSize = sublistSize).andSupply(() -> this).get();
+        return Que.<Partition<T>>run(() -> Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.")).andRun(() -> this.sublistSize = sublistSize)
+                .andSupply(() -> this)
+                .get();
     }
 
     @Override
