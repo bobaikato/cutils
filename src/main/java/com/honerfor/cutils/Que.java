@@ -16,8 +16,8 @@
 
 package com.honerfor.cutils;
 
+import com.honerfor.cutils.function.Executable;
 import lombok.Setter;
-import org.h1r4.commons.util.function.Executable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
