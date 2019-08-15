@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc.
+ * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.h1r4.commons.util.security;
+package com.honerfor.cutils.security;
 
 import org.apache.commons.lang3.Validate;
-import org.h1r4.commons.util.Que;
+import com.honerfor.cutils.Que;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -36,8 +36,8 @@ import static java.util.Base64.getEncoder;
 import static java.util.Objects.isNull;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.h1r4.commons.util.Serialization.deserialize;
-import static org.h1r4.commons.util.Serialization.serialize;
+import static com.honerfor.cutils.Serialization.deserialize;
+import static com.honerfor.cutils.Serialization.serialize;
 
 /**
  * <p>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc.
+ * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package org.h1r4.commons.util.function;
+package com.honerfor.cutils.function;
 
 /**
  * <p>
- * Represents an operation that returns a condition/boolean.
- * whose functional method is {@link #isMet()}.
+ * Represent operations that need the {@link Runnable}
+ * like behavior with the throw exception option.
  * </p>
  *
  * @author B0BAI
  * @since 1.0
  */
 @FunctionalInterface
-public interface Condition {
+public interface Executable {
 
     /**
-     * <p>Check the condition</p>
+     * <p>Execute the operation that may likely throw and Exception.</p>
      *
-     * @return the final condition of boolean
+     * @throws Exception that is thrown when operation executes.
      */
-    boolean isMet();
+    void execute() throws Exception;
 }
