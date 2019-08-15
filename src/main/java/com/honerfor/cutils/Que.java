@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc.
+ * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.h1r4.commons.util;
+package com.honerfor.cutils;
 
-import org.h1r4.commons.util.function.Executable;
+import com.honerfor.cutils.function.Executable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
