@@ -16,13 +16,15 @@
 
 package com.honerfor.cutils;
 
-import com.honerfor.cutils.function.Executable;
+import lombok.Setter;
+import org.h1r4.commons.util.function.Executable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
@@ -36,6 +38,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * @author B0BAI
  * @since 1.0
  */
+@Setter
 public class Que<T> {
 
     /**
@@ -46,22 +49,24 @@ public class Que<T> {
     private T value;
 
     /**
-     * Constructor
+     * <p>This will hold instance of {@link Que} which will be used to enforce singleton.</p>
      *
-     * @param value value of T type.
      * @since 1.0
      */
-    private Que(T value) {
-        this.value = requireNonNull(value);
-    }
+    private static Que instance;
 
     /**
-     * Default private constructor.
-     *
-     * @since 1.0
+     * @param <T> Type of value
+     * @return existing or newly created instance of {@link Que}
      */
-    private Que() {
-
+    @SuppressWarnings("unchecked")
+    private static <T> Que<T> getInstance() {
+        if (isNull(instance)) {
+            synchronized (Que.class) {
+                if (isNull(instance)) instance = new Que<T>();
+            }
+        }
+        return instance;
     }
 
     /**
@@ -72,7 +77,9 @@ public class Que<T> {
      * @return Returns instance of {@link Que}
      */
     public static <T> Que<T> of(T value) {
-        return new Que<>(value);
+        final Que<T> instance = getInstance();
+        instance.setValue(value);
+        return instance;
     }
 
     /**
@@ -97,7 +104,7 @@ public class Que<T> {
      */
     public static <T> Que<T> run(Runnable runnable) {
         runnable.run();
-        return new Que<>();
+        return getInstance();
     }
 
     /**
@@ -112,7 +119,7 @@ public class Que<T> {
      */
     public static <T> Que<T> execute(Executable executable) throws Exception {
         executable.execute();
-        return new Que<>();
+        return getInstance();
     }
 
     /**
