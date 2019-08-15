@@ -1,10 +1,10 @@
-### Honerfor Common Utilities (Cutils)
-[![License](https://img.shields.io/github/license/honerfor/cutils)](https://github.com/Honerfor/cutils/blob/master/LICENSE)
+## Honerfor Common Utilities (Cutils)
+[![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 ![GitHub release](https://img.shields.io/github/release/honerfor/cutils)
 
 A package of utilities classes intended to enhance and simplify Java development.
 
-### Where can I get the latest release? 
+## Where can I get the latest release? 
 You can download source binary 
 ```
 wget --content-disposition https://packagecloud.io/Honerfor/common-utilities/packages/java/org.h1r4/org-hr4-common-utilities-1.0-SNAPSHOT.jar/artifacts/org-hr4-common-utilities-1.0-20190811.123243-1.jar/download
@@ -91,7 +91,7 @@ Firstly, Create an `ivysettings.xml` file and added the code below
 <dependency org="org.h1r4" name="org-hr4-common-utilities" rev="1.0-SNAPSHOT" />
 ```
 
-### Contributing
+## Contributing
 We accept Pull Requests via GitHub. A public Slack Channel will soon be made available for communications.
 But, in the mean time, there are some guidelines which will make applying PRs easier for us:
 
@@ -100,3 +100,9 @@ But, in the mean time, there are some guidelines which will make applying PRs ea
 3. Create minimal diffs.
 4. If it will help, disable on save actions like reformat source code or organize imports. **If you feel the source code should be reformatted create a separate PR for this change**.
 5. Please, provide **JUnit tests** for your changes and make sure your changes don't break any existing tests by running `mvn clean test`.
+
+## License
+
+
+This code is under the [Apache Licence v2](https://github.com/Honerfor/Common/blob/master/LICENSE).
+This code is under the [Apache Licence v2](https://github.com/Honerfor/Common/blob/master/LICENSE).
