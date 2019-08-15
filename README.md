@@ -1,6 +1,8 @@
 ## Honerfor Common Utilities (Cutils)
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 ![GitHub release](https://img.shields.io/github/release/honerfor/cutils)
+![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.honerfor/cutils/badge.svg)
+[![Javadocs](https://javadoc.io/badge/com.honerfor/cutils.svg)](https://javadoc.io/doc/com.honerfor/cutils)
 
 A package of utilities classes intended to enhance and simplify Java development.
 
