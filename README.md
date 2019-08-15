@@ -1,4 +1,5 @@
 ### Honerfor Common Utilities (Cutils)
+[![License](https://img.shields.io/github/license/honerfor/cutils?style=for-the-badge)](#License)
 
 A package of utilities classes intended to enhance and simplify Java development.
 
@@ -102,3 +103,4 @@ But, in the mean time, there are some guidelines which will make applying PRs ea
 ### License
 
 This code is under the [Apache Licence v2](https://github.com/Honerfor/Common/blob/master/LICENSE).
+
