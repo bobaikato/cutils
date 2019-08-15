@@ -22,7 +22,7 @@
 
     <groupId>com.honerfor</groupId>
     <artifactId>cutils</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <build>
         <plugins>
             <plugin>
@@ -134,7 +134,7 @@
     </scm>
 
     <issueManagement>
-        <system>hackerone</system>
+        <system>Hackerone</system>
         <url>https://hackerone.com/central-security-project/reports/new</url>
     </issueManagement>
 
