@@ -17,7 +17,6 @@
 package com.honerfor.cutils;
 
 import com.honerfor.cutils.function.Executable;
-import lombok.Setter;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +24,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
@@ -38,7 +36,6 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * @author B0BAI
  * @since 1.0
  */
-@Setter
 public class Que<T> {
 
     /**
@@ -56,6 +53,8 @@ public class Que<T> {
     private static Que instance;
 
     /**
+     * <p>The method is used too get {@link Que} instance</p>
+     *
      * @param <T> Type of value
      * @return existing or newly created instance of {@link Que}
      */
@@ -67,6 +66,16 @@ public class Que<T> {
             }
         }
         return instance;
+    }
+
+    /**
+     * <p>This method is used to set {@link Que#get()} value.</p>
+     *
+     * @param value value to be set.z
+     * @since v1.0
+     */
+    private void setValue(T value) {
+        this.value = value;
     }
 
     /**
@@ -143,9 +152,8 @@ public class Que<T> {
      * @return existing instance of {@link Que}
      * @since 1.0
      **/
-    public Que<T> andSupply(Supplier<T> supplier) {
-        this.value = requireNonNull(supplier.get());
-        return this;
+    public T andSupply(Supplier<T> supplier) {
+        return supplier.get();
     }
 
     /**
@@ -180,9 +188,8 @@ public class Que<T> {
      * @throws Exception instance of any exception thrown.
      * @since 1.0
      */
-    public Que<T> andCall(Callable<T> callable) throws Exception {
-        this.value = requireNonNull(callable.call());
-        return this;
+    public T andCall(Callable<T> callable) throws Exception {
+        return callable.call();
     }
 
     /**

@@ -60,11 +60,8 @@ public class Serialization extends SerializationUtils {
             return Que.<byte[]>execute(() -> os.writeObject(object))
                     .andExecute(os::flush)
                     .andExecute(os::close)
-                    .andSupply(outputStream::toByteArray)
-                    .get();
+                    .andSupply(outputStream::toByteArray);
         };
-        return Que.<byte[]>run(() -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null."))
-                .andCall(serialize)
-                .get();
+        return Que.<byte[]>run(() -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null.")).andCall(serialize);
     }
 }
