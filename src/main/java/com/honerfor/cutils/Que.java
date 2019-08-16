@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
@@ -54,6 +53,8 @@ public class Que<T> {
     private static Que instance;
 
     /**
+     * <p>The method is used too get {@link Que} instance</p>
+     *
      * @param <T> Type of value
      * @return existing or newly created instance of {@link Que}
      */
