@@ -143,9 +143,8 @@ public class Que<T> {
      * @return existing instance of {@link Que}
      * @since 1.0
      **/
-    public Que<T> andSupply(Supplier<T> supplier) {
-        this.value = requireNonNull(supplier.get());
-        return this;
+    public T andSupply(Supplier<T> supplier) {
+        return supplier.get();
     }
 
     /**
@@ -180,9 +179,8 @@ public class Que<T> {
      * @throws Exception instance of any exception thrown.
      * @since 1.0
      */
-    public Que<T> andCall(Callable<T> callable) throws Exception {
-        this.value = requireNonNull(callable.call());
-        return this;
+    public T andCall(Callable<T> callable) throws Exception {
+        return callable.call();
     }
 
     /**
