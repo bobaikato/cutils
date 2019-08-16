@@ -57,7 +57,7 @@ public class AES<T> {
      *
      * @since 1.0
      */
-    private static String DEFAULT_ENCRYPTION_KEY = "{bMJR_QG$qvY?R*wGT2Sn9RU=GvKx_yu7Uyz^E*!*SjgaEh4K34JK8yTLB44!Z77R6z^DijHEi5GaaYA6apf3!}" +
+    private static String ENCRYPTION_KEY = "{bMJR_QG$qvY?R*wGT2Sn9RU=GvKx_yu7Uyz^E*!*SjgaEh4K34JK8yTLB44!Z77R6z^DijHEi5GaaYA6apf3!}" +
             "This is clearly a default Key. If you are doing something serious, please consider" +
             "using the `AES.setKey(<Your_Key_here>)` method to set a unique Key. Got it?";
 
@@ -87,7 +87,7 @@ public class AES<T> {
     /**
      * <p>Encryption Key, set by user.</p>
      *
-     * @implSpec If this is null, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used.
+     * @implSpec If this is null, {@link AES#ENCRYPTION_KEY} will be used.
      * @since 1.0
      */
     private static String encryptionKey;
@@ -116,15 +116,14 @@ public class AES<T> {
      * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
      * @since 1.0
      */
-    @SuppressWarnings("unchecked")
     public static <T> AES<T> init() throws Exception {
-        return Que.<AES<T>>run(() -> encryptionKey = DEFAULT_ENCRYPTION_KEY).andCall(() -> isNull(instance) ? new AES<T>() : (AES<T>) instance).get();
+        return Que.<AES<T>>run(() -> encryptionKey = ENCRYPTION_KEY).andCall(AES::new);
     }
 
     /**
      * <p>
      * Use this method to set costume encryptionKey
-     * If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
+     * If {@code key} is {@literal null}, {@link AES#ENCRYPTION_KEY} will be used instead.
      * </p>
      *
      * @param key supplied encryption key.
@@ -135,7 +134,7 @@ public class AES<T> {
      */
 
     public static <T> AES<T> setKey(String key) throws Exception {
-        return Que.<AES<T>>run(() -> encryptionKey = isNull(key) ? DEFAULT_ENCRYPTION_KEY : key).andCall(AES::new).get();
+        return Que.<AES<T>>run(() -> encryptionKey = isNull(key) ? ENCRYPTION_KEY : key).andCall(AES::new);
     }
 
     /**
@@ -151,11 +150,9 @@ public class AES<T> {
                 .andCall(() -> {
                     final var serializeData = serialize(itemToEncrypt);
                     return getEncoder().encodeToString(cipher.doFinal(serializeData));
-                }).get();
+                });
 
-        return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt))
-                .andCall(encrypt)
-                .get();
+        return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt)).andCall(encrypt);
     }
 
     /**
@@ -173,8 +170,7 @@ public class AES<T> {
         }).andCall(() -> Que.<T>execute(() -> {
             cipher.init(DECRYPT_MODE, secretKey);
         }).andCall(() -> {
-            @SuppressWarnings("unchecked") final T deserializeObject = (T) deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
-            return deserializeObject;
-        }).get()).get();
+            return deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
+        }));
     }
 }
