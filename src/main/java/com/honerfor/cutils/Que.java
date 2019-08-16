@@ -53,7 +53,7 @@ public class Que<T> {
     private static Que instance;
 
     /**
-     * <p>The method is used too get {@link Que} instance</p>
+     * <p>The method should be used too get {@link Que} instance</p>
      *
      * @param <T> Type of value
      * @return existing or newly created instance of {@link Que}
@@ -79,7 +79,10 @@ public class Que<T> {
     }
 
     /**
-     * This method will create a new instance of  {@link Que} class
+     * <p>
+     * This method will set {@code value} and returns instance of
+     * {@link Que} for other sequential Operations
+     * </p>
      *
      * @param value {@link Que} value
      * @param <T>   value Type
@@ -92,7 +95,39 @@ public class Que<T> {
     }
 
     /**
-     * This method will execute {@link Consumer} type variable.
+     * <p>
+     * This method will take a {@link Supplier} of Type T and will set {@code value} and returns instance of
+     * {@link Que} for other sequential Operations
+     * </p>
+     *
+     * @param supplier variable of Type value
+     * @param <T>      Type of value
+     * @return instance of {@link Que}
+     */
+    public static <T> Que<T> of(Supplier<T> supplier) {
+        final Que<T> instance = getInstance();
+        instance.setValue(supplier.get());
+        return instance;
+    }
+
+    /**
+     * <p>
+     * This method will take a {@link Callable} of Type T and will set {@code value} and returns instance of
+     * {@link Que} for other sequential Operations
+     * </p>
+     *
+     * @param callable variable of Type value
+     * @param <T>      Type of value
+     * @return instance of {@link Que}
+     */
+    public static <T> Que<T> of(Callable<T> callable) throws Exception {
+        final Que<T> instance = getInstance();
+        instance.setValue(callable.call());
+        return instance;
+    }
+
+    /**
+     * <p> This method will execute {@link Consumer} type variable.</p>
      *
      * @param consumer {@link Consumer} type variable.
      * @return existing instance of the {@link Que}
@@ -104,7 +139,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will run a {@link Runnable} instance.
+     * <p>This method will run a {@link Runnable} instance.</p>
      *
      * @param runnable {@link Runnable} type variable
      * @param <T>      Type of value
@@ -117,8 +152,10 @@ public class Que<T> {
     }
 
     /**
+     * <p>
      * This method will run a {@link Executable} instance
      * Use when Operation will throw an exception
+     * </p>
      *
      * @param executable {@link Runnable} type variable
      * @param <T>        Type of value
@@ -132,8 +169,10 @@ public class Que<T> {
     }
 
     /**
+     * <p>
      * This method will run a {@link Executable} instance
      * Use when Operation will throw an exception
+     * </p>
      *
      * @param executable {@link Executable} type variable
      * @return existing instance of {@link Que}
@@ -146,7 +185,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will asi supply data {@link Que#value} variable
+     * <p>This method will asi supply data {@link Que#value} variable</p>
      *
      * @param supplier {@link Supplier}  variable
      * @return existing instance of {@link Que}
@@ -157,7 +196,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will accept a {@link Consumer} type variable
+     * <p>This method will accept a {@link Consumer} type variable</p>
      *
      * @param consumer {@link Consumer} type variable
      * @return existing instance of {@link Que}
@@ -169,7 +208,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will execute a {@link Runnable} type variable
+     * <p>This method will execute a {@link Runnable} type variable</p>
      *
      * @param runnable {@link Runnable} type variable
      * @return existing instance of {@link Que}
@@ -181,7 +220,7 @@ public class Que<T> {
     }
 
     /**
-     * This method will execute {@link Callable} type variable
+     * <p>This method will execute {@link Callable} type variable</p>
      *
      * @param callable {@link Callable} type variable.
      * @return the result type of method {@code call}
@@ -193,7 +232,7 @@ public class Que<T> {
     }
 
     /**
-     * This method returns {@link Que#value}
+     * <p>This method returns {@link Que#value}</p>
      *
      * @return {@link Que#value}
      * @since 1.0
@@ -203,7 +242,7 @@ public class Que<T> {
     }
 
     /**
-     * This method returns {@link CompletableFuture} of {@link Que#value}
+     * <p>This method returns {@link CompletableFuture} of {@link Que#value}</p>
      *
      * @return {@link CompletableFuture} of {@link Que#value}
      * @since 1.0
