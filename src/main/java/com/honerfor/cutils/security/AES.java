@@ -62,15 +62,6 @@ public class AES<T> {
             "using the `AES.setKey(<Your_Key_here>)` method to set a unique Key. Got it?";
 
     /**
-     * <p>
-     * variable to hold {@link AES} instance. will be used to enforce singleton.
-     * </p>
-     *
-     * @since 1.0
-     */
-    private static AES instance;
-
-    /**
      * <p>Instance of {@link Cipher}</p>
      *
      * @since 1.0
