@@ -17,7 +17,6 @@
 package com.honerfor.cutils;
 
 import com.honerfor.cutils.function.Executable;
-import lombok.Setter;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -38,7 +37,6 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * @author B0BAI
  * @since 1.0
  */
-@Setter
 public class Que<T> {
 
     /**
@@ -67,6 +65,16 @@ public class Que<T> {
             }
         }
         return instance;
+    }
+
+    /**
+     * <p>This method is used to set {@link Que#get()} value.</p>
+     *
+     * @param value value to be set.z
+     * @since v1.0
+     */
+    private void setValue(T value) {
+        this.value = value;
     }
 
     /**
