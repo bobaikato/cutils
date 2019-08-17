@@ -69,12 +69,18 @@ public class Que<T> {
     }
 
     /**
-     * <p>This method is used to set {@link Que#get()} value.</p>
-     *
-     * @param value value to be set.z
-     * @since v1.0
+     * <p>Constructs an empty instance.</p>
      */
-    private void setValue(T value) {
+    private Que() {
+        this.value = null;
+    }
+
+    /**
+     * <p>Constructs an instance with the described value.</p>
+     *
+     * @param value the value to describe
+     */
+    private Que(T value) {
         this.value = value;
     }
 
@@ -89,9 +95,7 @@ public class Que<T> {
      * @return Returns instance of {@link Que}
      */
     public static <T> Que<T> of(T value) {
-        final Que<T> instance = getInstance();
-        instance.setValue(value);
-        return instance;
+        return new Que<>(value);
     }
 
     /**
@@ -105,9 +109,7 @@ public class Que<T> {
      * @return instance of {@link Que}
      */
     public static <T> Que<T> of(Supplier<T> supplier) {
-        final Que<T> instance = getInstance();
-        instance.setValue(supplier.get());
-        return instance;
+        return new Que<>(supplier.get());
     }
 
     /**
@@ -121,9 +123,7 @@ public class Que<T> {
      * @return instance of {@link Que}
      */
     public static <T> Que<T> of(Callable<T> callable) throws Exception {
-        final Que<T> instance = getInstance();
-        instance.setValue(callable.call());
-        return instance;
+        return new Que<>(callable.call());
     }
 
     /**
