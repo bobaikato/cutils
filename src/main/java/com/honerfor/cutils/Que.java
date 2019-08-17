@@ -29,7 +29,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 /**
  * <P>
  * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
- * to orchestrate operation while also, signalling precise action(s) & flow with full read(ability).
+ * to orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
  * </p>
  *
  * @param <T> type.
