@@ -42,8 +42,8 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 /**
  * <p>
- * This is an implementation of AAdvanced Encryption Standard.
- * This implementation can encrypt and decrypt Objects of any type.
+ * This is an implementation of Advanced Encryption Standard,
+ * to can encrypt and decrypt Objects of any type.
  * </p>
  *
  * @param <T> Type of value

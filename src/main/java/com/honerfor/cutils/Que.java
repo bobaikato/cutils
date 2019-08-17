@@ -28,8 +28,8 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * <P>
- * This is class called {@link Que} gotten from the word Cue.
- * This class will help give signals to operation..Use appropriately.
+ * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
+ * to orchestrate operation while also, signalling precise action(s) & flow with full read(ability).
  * </p>
  *
  * @param <T> type.
@@ -53,7 +53,7 @@ public class Que<T> {
     private static Que instance;
 
     /**
-     * <p>The method should be used too get {@link Que} instance</p>
+     * <p>The method should be used too get {@link Que} instance.</p>
      *
      * @param <T> Type of value
      * @return existing or newly created instance of {@link Que}
