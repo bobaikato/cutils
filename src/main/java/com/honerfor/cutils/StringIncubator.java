@@ -16,6 +16,8 @@
 
 package com.honerfor.cutils;
 
+import org.apache.commons.lang3.Validate;
+
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Objects;
@@ -23,7 +25,12 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * This is class is responsible for hatching Random Strings or Alpha-numeric String
+ * <p>
+ * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
+ * Session, ID etc. To generate random strings you can use the default the constructor that suit
+ * your purpose or the default option which will generate string of 64 characters.
+ *
+ * </p>
  *
  * <p>
  * Example/Usage:
@@ -44,11 +51,11 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class StringIncubator {
 
-    private final Random random;
+    private Random random;
 
-    private final char[] symbols;
+    private char[] symbols;
 
-    private final char[] buffer;
+    private char[] buffer;
 
     /**
      * <p>Upper-case Alphabets</p>
@@ -90,11 +97,15 @@ public class StringIncubator {
      * @since 2.0
      */
     public StringIncubator(int length, Random random, String symbols) {
-        if (length < 1) throw new IllegalArgumentException();
-        if (symbols.length() < 2) throw new IllegalArgumentException();
-        this.random = Objects.requireNonNull(random);
-        this.symbols = (symbols).toCharArray();
-        this.buffer = new char[length];
+        Que.run(() -> {
+            Validate.isTrue(length > 1, "String length cannot be less than 1", length);
+        }).andRun(() -> {
+            Validate.isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length());
+        }).andRun(() -> {
+            this.random = Objects.requireNonNull(random);
+            this.symbols = (symbols).toCharArray();
+            this.buffer = new char[length];
+        });
     }
 
     /**
@@ -130,7 +141,7 @@ public class StringIncubator {
     }
 
     /**
-     * <p>Create session identifiers</p>
+     * <p>Create session identifiers, default length of 64</p>
      *
      * @since 2.0
      */
