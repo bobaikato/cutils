@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Test List Partitioning")
 final class PartitionTest {
 
     @DisplayName("Should successfully Partition List by the provided sub-list Size.")
