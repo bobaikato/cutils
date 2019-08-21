@@ -62,21 +62,21 @@ public class StringIncubator {
      *
      * @since 2.0
      */
-    private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
      * <p>Lower-case Alphabets</p>
      *
      * @since 2.0
      */
-    private static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
+    public static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
 
     /**
      * <p>Digits variable</p>
      *
      * @since 2.0
      */
-    private static final String DIGITS = "0123456789";
+    public static final String DIGITS = "0123456789";
 
     /**
      * <p>Alpha-numeric variable</p>
