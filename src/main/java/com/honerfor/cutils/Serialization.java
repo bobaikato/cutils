@@ -26,9 +26,10 @@ import java.util.concurrent.Callable;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 /**
- * <p>Assists with the serialization process and performs additional functionality based
- * on serialization.</p>
- *
+ * <p>
+ * Assists with the serialization process and performs additional functionality based
+ * on serialization.
+ * </p>
  * <ul>
  * <li>Deep clone using serialization
  * <li>Serialize managing finally and IOException
