@@ -16,6 +16,7 @@
 
 package com.honerfor.cutils;
 
+import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
 
 import java.util.concurrent.Callable;
@@ -193,6 +194,20 @@ public class Que<T> {
      **/
     public T andSupply(Supplier<T> supplier) {
         return supplier.get();
+    }
+
+    /**
+     * <p>
+     * This method will deal data {@link Que#value} variable.
+     * Use this method if operation will throw an {@link Exception}.
+     * </p>
+     *
+     * @param dealer {@link Supplier}  variable
+     * @return existing instance of {@link Que}
+     * @since 2.0
+     **/
+    public T andDeal(Dealer<T> dealer) throws Exception {
+        return dealer.get();
     }
 
     /**
