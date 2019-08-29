@@ -22,7 +22,7 @@ package com.honerfor.cutils.function;
  * every time {@link Generator#generate()} is called.
  * </p>
  *
- * @param <T>
+ * @param <T> type of value
  * @author B0BAI
  * @since 2.0
  */
