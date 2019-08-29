@@ -137,11 +137,14 @@ public class AES<T> {
      * @since 1.0
      */
     public String encrypt(@Valid T itemToEncrypt) throws Exception {
-        final Callable<String> encrypt = () -> Que.<String>execute(() -> cipher.init(Cipher.ENCRYPT_MODE, secretKey))
-                .andCall(() -> {
-                    final var serializeData = serialize(itemToEncrypt);
-                    return getEncoder().encodeToString(cipher.doFinal(serializeData));
-                });
+        final Callable<String> encrypt = () -> Que.<String>execute(() -> {
+            synchronized (this) {
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            }
+        }).andCall(() -> {
+            final var serializeData = serialize(itemToEncrypt);
+            return getEncoder().encodeToString(cipher.doFinal(serializeData));
+        });
 
         return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt)).andCall(encrypt);
     }
@@ -159,7 +162,9 @@ public class AES<T> {
         return Que.<T>run(() -> {
             Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
         }).andCall(() -> Que.<T>execute(() -> {
-            cipher.init(DECRYPT_MODE, secretKey);
+            synchronized (this) {
+                cipher.init(DECRYPT_MODE, secretKey);
+            }
         }).andCall(() -> {
             return deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
         }));
