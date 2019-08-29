@@ -185,7 +185,7 @@ public class Que<T> {
     }
 
     /**
-     * <p>This method will asi supply data {@link Que#value} variable</p>
+     * <p>This method will supply data {@link Que#value} variable</p>
      *
      * @param supplier {@link Supplier}  variable
      * @return existing instance of {@link Que}
