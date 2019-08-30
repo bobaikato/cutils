@@ -16,23 +16,28 @@
 
 package com.honerfor.cutils.function;
 
+import java.util.function.Supplier;
+
 /**
- * <p>
- * Represent operations that will return unique/generated values
- * every time {@link Generator#generate()} is called.
- * </p>
+ * Represents a dealer of results. UnLike {@link Supplier} {@link Dealer#get()} can throw an exception
  *
- * @param <T> type of value
+ * <p>There is no requirement that a new or distinct result be returned each
+ * time the dealer is invoked.
+ *
+ * <p>This is a <a href="package-summary.html">functional interface</a>
+ * whose functional method is {@link #get()}.
+ *
+ * @param <T> the type of results supplied by this supplier
  * @author B0BAI
  * @since 2.0
  */
 @FunctionalInterface
-public interface Generator<T> {
+public interface Dealer<T> {
 
     /**
-     * <p>Generates values</p>
+     * Gets a result.
      *
-     * @return return generate values of T type.
+     * @return a result
      */
-    T generate();
+    T get() throws Exception;
 }

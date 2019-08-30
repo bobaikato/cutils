@@ -142,7 +142,6 @@ public class AES<T> {
                     final var serializeData = serialize(itemToEncrypt);
                     return getEncoder().encodeToString(cipher.doFinal(serializeData));
                 });
-
         return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt)).andCall(encrypt);
     }
 
