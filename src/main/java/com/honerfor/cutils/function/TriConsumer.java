@@ -60,11 +60,10 @@ public interface TriConsumer<X, Y, Z> {
      * @throws NullPointerException if {@code after} is null
      */
     default TriConsumer<X, Y, Z> andThen(TriConsumer<? super X, ? super Y, ? super Z> after) {
-        return Que.<TriConsumer<X, Y, Z>>run(() -> {
-            Objects.requireNonNull(after);
-        }).andSupply(() -> (a, b, c) -> {
-            accept(a, b, c);
-            after.accept(a, b, c);
-        });
+        return Que.<TriConsumer<X, Y, Z>>run(() -> Objects.requireNonNull(after))
+                .andSupply(() -> (a, b, c) -> {
+                    accept(a, b, c);
+                    after.accept(a, b, c);
+                });
     }
 }
