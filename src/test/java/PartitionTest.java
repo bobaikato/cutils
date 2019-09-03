@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ final class PartitionTest {
     @ParameterizedTest(name = "{index} => partitionSize={0}, list={1}")
     @MethodSource("partitionListInSubListIResource")
     void partitionListInSubListI(int partitionSize, List<?> list) {
-        final var partitionedList = Partition.of(list).into(partitionSize);
+        final Partition<?> partitionedList = Partition.of(list).into(partitionSize);
         Que.run(() -> assertEquals(partitionedList.size(), 3)).andRun(() -> {
             partitionedList.parallelStream().forEach(item -> {
                 assertEquals(item.size(), partitionSize);
@@ -44,16 +45,16 @@ final class PartitionTest {
 
     private static Stream<Arguments> partitionListInSubListIResource() {
         return Stream.of(
-                Arguments.of(3, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-                Arguments.of(2, List.of("A", "B", "C", "D", "E", "F")),
-                Arguments.of(4, List.of('a', 'b', 'c', '4', '5', '6', '7', '8', '9', 'd', 'e', 'f')),
+                Arguments.of(3, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)),
+                Arguments.of(2, Arrays.asList("A", "B", "C", "D", "E", "F")),
+                Arguments.of(4, Arrays.asList('a', 'b', 'c', '4', '5', '6', '7', '8', '9', 'd', 'e', 'f')),
                 Arguments.of(2, new ArrayList<List<Integer>>() {{
-                    add(List.of(1, 2));
-                    add(List.of(3, 4));
-                    add(List.of(5, 6));
-                    add(List.of(7, 8));
-                    add(List.of(9, 10));
-                    add(List.of(11, 12));
+                    add(Arrays.asList(1, 2));
+                    add(Arrays.asList(3, 4));
+                    add(Arrays.asList(5, 6));
+                    add(Arrays.asList(7, 8));
+                    add(Arrays.asList(9, 10));
+                    add(Arrays.asList(11, 12));
                 }})
         );
     }
@@ -62,7 +63,7 @@ final class PartitionTest {
     @ParameterizedTest(name = "{index} => partitionSize={0}, partitionedList={1}")
     @MethodSource("partitionListInSubListIIResource")
     void partitionListInSubListII(int partitionSize, List<?> list) {
-        final var partitionedList = Partition.of(list).into(partitionSize);
+        final Partition<?> partitionedList = Partition.of(list).into(partitionSize);
         Que.run(() -> assertEquals(partitionedList.size(), 1)).andRun(() -> {
             partitionedList.forEach(item -> assertNotEquals(item.size(), partitionSize));
         }).andRun(() -> {
@@ -72,9 +73,9 @@ final class PartitionTest {
 
     private static Stream<Arguments> partitionListInSubListIIResource() {
         return Stream.of(
-                Arguments.of(6, List.of(1, 2, 3, 4, 5)),
-                Arguments.of(7, List.of("A", "B", "C", "D", "E", "F")),
-                Arguments.of(20, List.of('a', 'b', 'c', '4', '5', '6', '9', 'd', 'e'))
+                Arguments.of(6, Arrays.asList(1, 2, 3, 4, 5)),
+                Arguments.of(7, Arrays.asList("A", "B", "C", "D", "E", "F")),
+                Arguments.of(20, Arrays.asList('a', 'b', 'c', '4', '5', '6', '9', 'd', 'e'))
         );
     }
 
@@ -103,9 +104,9 @@ final class PartitionTest {
 
     private static Stream<Arguments> partitionSizeLessThanOneResource() {
         return Stream.of(
-                Arguments.of(0, List.of(1, 2, 3, 4, 5)),
-                Arguments.of(-7, List.of("A", "B", "C", "D", "E", "F")),
-                Arguments.of(-2, List.of('a', 'b', 'c', 'd'))
+                Arguments.of(0, Arrays.asList(1, 2, 3, 4, 5)),
+                Arguments.of(-7, Arrays.asList("A", "B", "C", "D", "E", "F")),
+                Arguments.of(-2, Arrays.asList('a', 'b', 'c', 'd'))
         );
     }
 }
