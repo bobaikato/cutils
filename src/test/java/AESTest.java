@@ -57,18 +57,18 @@ final class AESTest {
     @ParameterizedTest(name = "{index} => output={0}, objectToBeDecrypted={1}")
     @MethodSource("customObjectResource")
     void decryptCustomObjectWithDefaultKey(PersonExample output, String objectToBeDecrypted) throws Exception {
-        final var decryptedObject = AES.<PersonExample>init().decrypt(objectToBeDecrypted);
+        final PersonExample decryptedObject = AES.<PersonExample>init().decrypt(objectToBeDecrypted);
         Que.run(() -> assertEquals(decryptedObject.age, output.age))
                 .andRun(() -> assertEquals(decryptedObject.name, output.name));
     }
 
     private static Stream<Arguments> customObjectResource() {
-        final var personExampleI = new PersonExample() {{
+        final PersonExample personExampleI = new PersonExample() {{
             setAge(10);
             setName("B0B");
         }};
 
-        final var personExampleII = new PersonExample() {{
+        final PersonExample personExampleII = new PersonExample() {{
             setAge(11);
             setName("PETER");
         }};

@@ -29,7 +29,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.concurrent.Callable;
 
 import static com.honerfor.cutils.Serialization.deserialize;
 import static com.honerfor.cutils.Serialization.serialize;
@@ -91,8 +90,8 @@ public class AES<T> {
      * @since 1.0
      */
     private AES() throws NoSuchPaddingException, NoSuchAlgorithmException {
-        var key = encryptionKey.getBytes(UTF_8);
-        final var messageDigest = MessageDigest.getInstance("SHA-1");
+        byte[] key = encryptionKey.getBytes(UTF_8);
+        final MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
         key = messageDigest.digest(key);
         key = Arrays.copyOf(key, 16);
         secretKey = new SecretKeySpec(key, "AES");
@@ -137,12 +136,15 @@ public class AES<T> {
      * @since 1.0
      */
     public String encrypt(@Valid T itemToEncrypt) throws Exception {
-        final Callable<String> encrypt = () -> Que.<String>execute(() -> cipher.init(Cipher.ENCRYPT_MODE, secretKey))
+        return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt))
                 .andCall(() -> {
-                    final var serializeData = serialize(itemToEncrypt);
-                    return getEncoder().encodeToString(cipher.doFinal(serializeData));
+                    return Que.<String>execute(() -> {
+                        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+                    }).andCall(() -> {
+                        final byte[] serializeData = serialize(itemToEncrypt);
+                        return getEncoder().encodeToString(cipher.doFinal(serializeData));
+                    });
                 });
-        return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt)).andCall(encrypt);
     }
 
     /**
@@ -155,12 +157,12 @@ public class AES<T> {
      */
 
     public T decrypt(@NotNull String itemToDecrypt) throws Exception {
-        return Que.<T>run(() -> {
-            Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
-        }).andCall(() -> Que.<T>execute(() -> {
-            cipher.init(DECRYPT_MODE, secretKey);
-        }).andCall(() -> {
-            return deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
-        }));
+        return Que.<T>run(() -> Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt))
+                .andCall(() -> {
+                    return Que.<T>execute(() -> cipher.init(DECRYPT_MODE, secretKey))
+                            .andCall(() -> {
+                                return deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
+                            });
+                });
     }
 }

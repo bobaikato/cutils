@@ -40,12 +40,12 @@ public interface ThrowingFunction<T, R> {
      *
      * @param t the function argument if Type T
      * @return the function result
-     * @throws Exception any excetion thrown when applying function
+     * @throws Exception any exception thrown when applying function
      */
     R apply(T t) throws Exception;
 
     @SuppressWarnings("unchecked")
-    private static <T extends Exception, R> R sneakyThrow(Exception ex) throws T {
+    static <T extends Exception, R> R sneakyThrow(Exception ex) throws T {
         throw (T) ex;
     }
 

@@ -21,7 +21,6 @@ import org.apache.commons.lang3.Validate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.util.concurrent.Callable;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
@@ -55,14 +54,13 @@ public class Serialization extends SerializationUtils {
      * @since 1.0
      */
     public static byte[] serialize(Object object) throws Exception {
-        final Callable<byte[]> serialize = () -> {
-            final var outputStream = new ByteArrayOutputStream(512);
-            final var os = new ObjectOutputStream(outputStream);
+        return Que.<byte[]>run(() -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null.")).andCall(() -> {
+            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
+            final ObjectOutputStream os = new ObjectOutputStream(outputStream);
             return Que.<byte[]>execute(() -> os.writeObject(object))
                     .andExecute(os::flush)
                     .andExecute(os::close)
                     .andSupply(outputStream::toByteArray);
-        };
-        return Que.<byte[]>run(() -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null.")).andCall(serialize);
+        });
     }
 }
