@@ -36,7 +36,7 @@ class StringIncubatorTest {
     @ParameterizedTest(name = "{index} => Length={0}, Random Instance={1}")
     @MethodSource("resourceI")
     void shouldHatchRandomStringOfSpecifyLength(int length, Random random) {
-        final var hatchedString = new StringIncubator(length, random).hatch();
+        final String hatchedString = new StringIncubator(length, random).hatch();
         Que.run(() -> {
             assertNotEquals(hatchedString, null);
         }).andRun(() -> {
@@ -86,7 +86,7 @@ class StringIncubatorTest {
     @Test
     @DisplayName("Should successfully hatch String with 64 characters.")
     void defaultHatchStringSizeShouldBe64() {
-        final var hatchedString = new StringIncubator().hatch();
+        final String hatchedString = new StringIncubator().hatch();
         assertEquals(hatchedString.length(), 64);
     }
 
