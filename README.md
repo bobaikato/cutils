@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Maven Central](https://img.shields.io/maven-central/v/com.honerfor/cutils)](https://search.maven.org/artifact/com.honerfor/cutils)
 [![Javadocs](https://javadoc.io/badge/com.honerfor/cutils.svg?color=brown)](https://javadoc.io/doc/com.honerfor/cutils)
-[![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=development)](https://travis-ci.org/Honerfor/cutils)
+[![Build Status](https://travis-ci.org/Honerfor/cutils.svg)](https://travis-ci.org/Honerfor/cutils)
 
 A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/com.honerfor/cutils). If you have any questions related to usage, simple open an issue.
 
