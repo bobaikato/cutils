@@ -18,6 +18,18 @@ jobs:
       - run: mvn help:evaluate -N -Dexpression=project.version|grep -v ‘\[’
       - run: export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v ‘\[’)
 
+      - run:
+          name: import GPG key
+          command: echo "$GPG_SECRET_KEYS" | base64 --decode | "$GPG_EXECUTABLE" --import
+
+      - run:
+          name: import GPG ownertrust
+          command: echo "$GPG_OWNERTRUST" | base64 --decode | "$GPG_EXECUTABLE" --import-ownertrust
+
+      - run:
+          name: decrypt secrets
+          command: gpg --no-tty --batch --passphrase "$GPG_PASSPHRASE" --pinentry-mode loopback --output secrets.env --decrypt secrets.env.gpg
+
       - save_cache:
           paths:
             - ~/.m2
