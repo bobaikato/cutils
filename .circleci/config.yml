@@ -1,0 +1,27 @@
+version: 2 # use CircleCI 2.0
+jobs:
+  build:
+
+    working_directory: ~/cutils
+
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:8-jdk-stretch-node-browsers-legacy
+
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: cutils-{{ checksum "pom.xml" }}
+          
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: cutils-{{ checksum "pom.xml" }}
+
+      - run: mvn package -B # run the actual tests
+
+      - store_test_results:
+          path: target/surefire-reports
+
+      - run: mvn integration-test

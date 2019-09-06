@@ -1,0 +1,44 @@
+language: java
+
+jdk: openjdk8
+
+before_install:
+    - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+    - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+
+install: mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+
+## Build and release to maven central
+script: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
+
+## Get the project version
+before_deploy:
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v ‘\[’
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v ‘\[’)
+
+build: mvn clean && mvn -B verify  && mvn -DskipTests clean dependency:list install
+
+
+
+## Create release in GitHub
+deploy:
+  provider: releases
+  api_key:
+    secure: Z/sNaWQe0qDQ8ZclswkW4A5DsDyGTRf4cvcZf1BLU6zB+lPDBB6sBXkjWjSakf//nh4cC8P6LklABXuQNTNKK1OXA5p/Ljli2t1XIlFPJhjnBMokmyHW/ogEUnK3af6a23SJAdSuuByr1Dlyt9NVIzhGsa3GlZ7jWBs+7fXuT+dpsJ7t/7wjrKnLB4nwBsXNVDsQl4e+4IZBMnB+FrmOKeX7aya6lXc084Yw7lSz8wskBUJ+3A6oUoqZ4I0GiHS8sqqqv+dj98RdqDep4VYsuJASUO/cQO0FoQkyzSTVKfZTwZhQA5nvZSND/haISPO49SGLlhMRsjiqLtr/2lPsXt/ppKfyn7Y+Zld6hd0hfC+xF2ZQaEjmo0UTPWqLY3DggmK7PWzcHdSTSug7zSxh0BqCuCqGBhJvInb1emOOVafjMvjtI7x+kljOg7DtpkUaRoBKzXRZHoe6LP4mXBifWkOuiVjTyCd8CT2cDdrwITHwnd2RgpcgG8+2lECDii6XBTvdvqyZU1rqfo5wJyhzEiKZukCr+nx4zRlxQYF+WXt0u6iaJKn5S/8zjKDRO4xDQpMswWH18RHy2PkCu3B0i63t5Xhr+Jz28jRAoGWvY2uXsjgZvbfStMuyk3WqxSmw4U+FI/y59XPgpd4IXD6Jwh5mYQpwO4x7yXoCj9NsdUc=
+  file: target/cutils-$project_version.jar
+  skip_cleanup: true
+  on:
+    repo: Honerfor/cutils
+    tags: true
+  name: “$project_version”
+
+cache:
+  directories:
+    - “~/.m2/repository”
+
+## Send a slack notification
+## Send a slack notification
+notifications:
+  email: false
+  slack:
+    secure: moDwQWUlItBq4zVcC+Q2ink9SqAePrKttJP1+DvU+sD+m5BvXFkexUtyUbAXdmAjxxSKLTCDlpANuZCiXL1g0QYKYz3FeDZBMvsWmGIAV/jkqG96QBflseYpE4wFgDqxqToREocdHM03eDiMl95oK3jl+5oDIrcxqEfjHoJwFgyFnba+CIZ/QWZBEkL1e6a9WhZ9fsc3/jgW3enwSCUDssfPxm2uhTCfbPKsUaR3qx3hcI7Z0wgEtyG1IkymbGecXV4dlUhSY5sIau4c0YXIKTjXfKqZYEjNGAw3xM3Jain3idBlQdB09sTExe2gK/jLPeWWOXZiea8BHUlzQ6rtHxl21f0/+59/4Ax771lM5HGEe5Bv5eFcQP0G4C9/1BXEBxvITvlt5UKww7xJF82znPCiQiZkpB86SSN+gd8VJbcvz0YsunTSSD/vYeWei5OhgOx1ANjlAZZYAc3wGbjA1vFIUj4lW4E9hKH+2QxH5l0D6hc4j1RLE2nmb/x93K1m0Lo3M8JY/m+jfy/FSyTfHq758XCofe2PAlCmWON+AJ0HHagZ7ExxTtu0+veQb1Gfpa7wjgrPS864MuA5g09xTxIhxpVgvk0zRh0xQbJC6LBIsfqTCFCeR47jektaB683rcWgSdFSWi5dnQ0f/EnI/0N0iK1NHRTaGPmqom7uwHE=
