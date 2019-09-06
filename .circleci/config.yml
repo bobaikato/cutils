@@ -13,10 +13,7 @@ jobs:
 
       - restore_cache:
           key: cutils-{{ checksum "pom.xml" }}
-
-      - run: mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-      - run: export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
-
+          
       - save_cache:
           paths:
             - ~/.m2
@@ -26,8 +23,5 @@ jobs:
 
       - store_test_results:
           path: target/surefire-reports
-
-      - store_artifacts:
-          path: target/cutils-$project_version.jar
 
       - run: mvn integration-test
