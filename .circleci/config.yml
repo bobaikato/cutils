@@ -14,7 +14,6 @@ jobs:
       - restore_cache:
           key: cutils-{{ checksum "pom.xml" }}
 
-      - run: mvn clean test && mvn -B verify
       - run: mvn help:evaluate -N -Dexpression=project.version|grep -v ‘\[’
       - run: export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v ‘\[’)
 
