@@ -141,6 +141,17 @@ public class StringIncubator {
     }
 
     /**
+     * <p>Create an alphanumeric strings from a secure generator.</p>
+     *
+     * @param symbols String to generate the hatched values
+     * @param length  of hatched string/value
+     * @since 3.0
+     */
+    public StringIncubator(int length, String symbols) {
+        this(length, new SecureRandom(), symbols);
+    }
+
+    /**
      * <p>Create session identifiers, default length of 64</p>
      *
      * @since 2.0
