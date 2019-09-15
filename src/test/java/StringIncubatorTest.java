@@ -90,6 +90,13 @@ class StringIncubatorTest {
         assertEquals(hatchedString.length(), 64);
     }
 
+    @Test
+    @DisplayName("Should successfully hatch String from supplied symbol of specified length characters.")
+    void defaultHatchStringSizeShouldBeOFSpecifiedSizeAndSymbol() {
+        final String hatchedString = new StringIncubator(12, "AaDdZz").hatch();
+        assertEquals(hatchedString.length(), 12);
+    }
+
     @DisplayName("Should throw IllegalArgumentException when specified length is less than 1.")
     @ParameterizedTest(name = "{index} => Length={0}")
     @MethodSource("resourceIII")
