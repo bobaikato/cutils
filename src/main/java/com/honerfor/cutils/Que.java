@@ -19,6 +19,7 @@ package com.honerfor.cutils;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -51,7 +52,7 @@ public class Que<T> {
      *
      * @since 1.0
      */
-    private static Que instance;
+    private static WeakReference<Que> instance;
 
     /**
      * <p>The method should be used too get {@link Que} instance.</p>
@@ -63,10 +64,21 @@ public class Que<T> {
     private static <T> Que<T> getInstance() {
         if (isNull(instance)) {
             synchronized (Que.class) {
-                if (isNull(instance)) instance = new Que<T>();
+                if (isNull(instance)) instance = new WeakReference<>(new Que<T>());
             }
         }
-        return instance;
+        return instance.get();
+    }
+
+    /**
+     * @param value the {@code value} of the reference
+     * @param <T>   Type of the {@code value}
+     * @return an instance of {@link Que}
+     * @implNote This method is a helper method used to create {@link Que} reference of a {@code value}
+     * @since 3.0
+     */
+    private static <T> Que<T> createReference(T value) {
+        return new WeakReference<>(new Que<T>(value)).get();
     }
 
     /**
@@ -96,7 +108,7 @@ public class Que<T> {
      * @return Returns instance of {@link Que}
      */
     public static <T> Que<T> of(T value) {
-        return new Que<>(value);
+        return createReference(value);
     }
 
     /**
@@ -110,7 +122,7 @@ public class Que<T> {
      * @return instance of {@link Que}
      */
     public static <T> Que<T> of(Supplier<T> supplier) {
-        return new Que<>(supplier.get());
+        return createReference(supplier.get());
     }
 
     /**
@@ -124,7 +136,7 @@ public class Que<T> {
      * @return instance of {@link Que}
      */
     public static <T> Que<T> of(Callable<T> callable) throws Exception {
-        return new Que<>(callable.call());
+        return createReference(callable.call());
     }
 
     /**
