@@ -20,6 +20,7 @@ import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
 
 import java.lang.ref.WeakReference;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -276,5 +277,15 @@ public class Que<T> {
      */
     public CompletableFuture<T> completableFuture() {
         return completedFuture(this.value);
+    }
+
+    /**
+     * <p>This method returns {@link Optional} of {@link Que#value}</p>
+     *
+     * @return {@link Optional} of {@link Que#value}
+     * @since 3.0
+     */
+    public Optional<T> optional() {
+        return Optional.ofNullable(this.value);
     }
 }
