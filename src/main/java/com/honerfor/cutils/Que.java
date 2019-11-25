@@ -79,7 +79,7 @@ public class Que<T> {
      * @since 3.0
      */
     private static <T> Que<T> createReference(T value) {
-        return new WeakReference<>(new Que<T>(value)).get();
+        return new WeakReference<>(new Que<>(value)).get();
     }
 
     /**

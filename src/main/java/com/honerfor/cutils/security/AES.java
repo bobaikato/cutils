@@ -137,14 +137,11 @@ public class AES<T> {
      */
     public String encrypt(@Valid T itemToEncrypt) throws Exception {
         return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt))
-                .andCall(() -> {
-                    return Que.<String>execute(() -> {
-                        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-                    }).andCall(() -> {
-                        final byte[] serializeData = serialize(itemToEncrypt);
-                        return getEncoder().encodeToString(cipher.doFinal(serializeData));
-                    });
-                });
+                .andCall(() -> Que.<String>execute(() -> cipher.init(Cipher.ENCRYPT_MODE, secretKey))
+                        .andCall(() -> {
+                            final byte[] serializeData = serialize(itemToEncrypt);
+                            return getEncoder().encodeToString(cipher.doFinal(serializeData));
+                        }));
     }
 
     /**
@@ -158,11 +155,7 @@ public class AES<T> {
 
     public T decrypt(@NotNull String itemToDecrypt) throws Exception {
         return Que.<T>run(() -> Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt))
-                .andCall(() -> {
-                    return Que.<T>execute(() -> cipher.init(DECRYPT_MODE, secretKey))
-                            .andCall(() -> {
-                                return deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
-                            });
-                });
+                .andCall(() -> Que.<T>execute(() -> cipher.init(DECRYPT_MODE, secretKey))
+                        .andCall(() -> deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)))));
     }
 }

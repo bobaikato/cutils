@@ -54,13 +54,14 @@ public class Serialization extends SerializationUtils {
      * @since 1.0
      */
     public static byte[] serialize(Object object) throws Exception {
-        return Que.<byte[]>run(() -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null.")).andCall(() -> {
-            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
-            final ObjectOutputStream os = new ObjectOutputStream(outputStream);
-            return Que.<byte[]>execute(() -> os.writeObject(object))
-                    .andExecute(os::flush)
-                    .andExecute(os::close)
-                    .andSupply(outputStream::toByteArray);
-        });
+        return Que.<byte[]>run(() -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null."))
+                .andCall(() -> {
+                    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
+                    final ObjectOutputStream os = new ObjectOutputStream(outputStream);
+                    return Que.<byte[]>execute(() -> os.writeObject(object))
+                            .andExecute(os::flush)
+                            .andExecute(os::close)
+                            .andSupply(outputStream::toByteArray);
+                });
     }
 }
