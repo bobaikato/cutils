@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 /**
  * <p>
@@ -100,10 +101,10 @@ public class StringIncubator {
         Que.run(() -> Validate.isTrue(length > 1, "String length cannot be less than 1", length))
                 .andRun(() -> Validate.isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length()))
                 .andRun(() -> {
-            this.random = Objects.requireNonNull(random);
-            this.symbols = (symbols).toCharArray();
-            this.buffer = new char[length];
-        });
+                    this.random = Objects.requireNonNull(random);
+                    this.symbols = (symbols).toCharArray();
+                    this.buffer = new char[length];
+                });
     }
 
     /**
@@ -164,10 +165,7 @@ public class StringIncubator {
      * @since 2.0
      */
     public String hatch() {
-        int bound = buffer.length;
-        for (int idx = 0; idx < bound; idx++) {
-            buffer[idx] = symbols[random.nextInt(symbols.length)];
-        }
+        IntStream.range(0, buffer.length).forEachOrdered(idx -> buffer[idx] = symbols[random.nextInt(symbols.length)]);
         return new String(buffer);
     }
 }
