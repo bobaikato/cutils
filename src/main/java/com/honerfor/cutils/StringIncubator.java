@@ -97,11 +97,9 @@ public class StringIncubator {
      * @since 2.0
      */
     public StringIncubator(int length, Random random, String symbols) {
-        Que.run(() -> {
-            Validate.isTrue(length > 1, "String length cannot be less than 1", length);
-        }).andRun(() -> {
-            Validate.isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length());
-        }).andRun(() -> {
+        Que.run(() -> Validate.isTrue(length > 1, "String length cannot be less than 1", length))
+                .andRun(() -> Validate.isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length()))
+                .andRun(() -> {
             this.random = Objects.requireNonNull(random);
             this.symbols = (symbols).toCharArray();
             this.buffer = new char[length];
