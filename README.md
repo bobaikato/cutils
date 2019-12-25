@@ -13,7 +13,7 @@ A package of utilities classes intended to enhance and simplify Java development
 <dependency>
   <groupId>com.honerfor</groupId>
   <artifactId>cutils</artifactId>
-  <version>3.1.0</version>
+  <version>3.2.0</version>
 </dependency> 
 ```
 - Gradle Groovy
