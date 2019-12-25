@@ -18,11 +18,11 @@ A package of utilities classes intended to enhance and simplify Java development
 ```
 - Gradle Groovy
 ```
-implementation 'com.honerfor:cutils:3.1.0'
+implementation 'com.honerfor:cutils:3.2.0'
 ```
 - Gradle Kotlin
 ```
-compile("com.honerfor:cutils:3.1.0")
+compile("com.honerfor:cutils:3.2.0")
 ```
 - [More, and others](https://search.maven.org/artifact/com.honerfor/cutils)
 
