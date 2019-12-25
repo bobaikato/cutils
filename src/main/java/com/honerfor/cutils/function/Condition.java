@@ -32,6 +32,18 @@ public interface Condition {
      * <p>Check the condition</p>
      *
      * @return the final condition of boolean
+     * @since 1.0
      */
     boolean isMet();
+
+    /**
+     * <p>
+     * Negates the condition. True is condition isn't met and False when condition is met.</p>
+     *
+     * @return the final negation of the actual condition of boolean.
+     * @since 3.0
+     */
+    default boolean isNotMet() {
+        return !this.isMet();
+    }
 }
