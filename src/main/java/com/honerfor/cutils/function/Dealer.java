@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,16 +19,18 @@ package com.honerfor.cutils.function;
 import java.util.function.Supplier;
 
 /**
- * Represents a dealer of results. UnLike {@link Supplier} {@link Dealer#get()} can throw an exception
+ * Represents a dealer of results. UnLike {@link Supplier} {@link Dealer#get()} can throw an exception.
+ * Uses the {@link Dealer} instead of {@link Supplier} if an {@link Exception} will be thrown an
+ * operation prior to the supplying of a result.
  *
- * <p>There is no requirement that a new or distinct result be returned each
- * time the dealer is invoked.
+ * <p>There is no requirement that the {@link Dealer} will return distinct result when called.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #get()}.
  *
- * @param <T> the type of results supplied by this supplier
+ * @param <T> the type of results supplied by this supplier.
  * @author B0BAI
+ * @see Supplier
  * @since 2.0
  */
 @FunctionalInterface

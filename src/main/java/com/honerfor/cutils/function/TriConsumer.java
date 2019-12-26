@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,9 +28,9 @@ import java.util.function.Consumer;
  * Unlike most other functional interfaces, {@code TriConsumer} is expected
  * to operate via side-effects.
  *
- * @param <X> the type of the first argument to the operation
- * @param <Y> the type of the second argument to the operation
- * @param <Z> the type of the third argument to the operation
+ * @param <X> the type of the first argument to the operation.
+ * @param <Y> the type of the second argument to the operation.
+ * @param <Z> the type of the third argument to the operation.
  * @author B0BAI
  * @see BiConsumer
  * @since 2.0
