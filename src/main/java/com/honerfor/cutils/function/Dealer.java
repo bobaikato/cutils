@@ -16,20 +16,22 @@
 
 package com.honerfor.cutils.function;
 
+import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 /**
- * Represents a dealer of results. UnLike {@link Supplier} {@link Dealer#get()} can throw an exception.
- * Uses the {@link Dealer} instead of {@link Supplier} if an {@link Exception} will be thrown an
+ * Represents a dealer of results. UnLike {@link Supplier} and like {@link Callable}, {@link Dealer#deal()} throw an {@link Exception}.
+ * Uses the {@link Dealer} instead of {@link Supplier} if an {@link Exception} will be thrown for the
  * operation prior to the supplying of a result.
  *
  * <p>There is no requirement that the {@link Dealer} will return distinct result when called.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #get()}.
+ * whose functional method is {@link #deal()}.
  *
  * @param <T> the type of results supplied by this supplier.
  * @author B0BAI
+ * @see Callable
  * @see Supplier
  * @since 2.0
  */
@@ -41,5 +43,5 @@ public interface Dealer<T> {
      *
      * @return a result
      */
-    T get() throws Exception;
+    T deal() throws Exception;
 }
