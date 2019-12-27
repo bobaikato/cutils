@@ -16,6 +16,7 @@
 
 package com.honerfor.cutils;
 
+import com.honerfor.cutils.function.Accepter;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
 
@@ -27,12 +28,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.Objects.isNull;
-import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * <P>
  * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
- * to orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
+ * orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
  * </p>
  *
  * @param <T> type.
@@ -56,7 +56,7 @@ public class Que<T> {
     private static WeakReference<Que> instance;
 
     /**
-     * <p>The method should be used too get {@link Que} instance.</p>
+     * <p>The method should be used to get {@link Que} instance.</p>
      *
      * @param <T> Type of value
      * @return existing or newly created instance of {@link Que}
@@ -79,7 +79,8 @@ public class Que<T> {
      * @since 3.0
      */
     private static <T> Que<T> createReference(T value) {
-        return new WeakReference<>(new Que<>(value)).get();
+        return new WeakReference<>(new Que<>(value))
+                .get();
     }
 
     /**
@@ -109,12 +110,12 @@ public class Que<T> {
      * @return Returns instance of {@link Que}
      */
     public static <T> Que<T> of(T value) {
-        return createReference(value);
+        return Que.createReference(value);
     }
 
     /**
      * <p>
-     * This method will take a {@link Supplier} of Type T and will set {@code value} and returns instance of
+     * This method will take a {@link Supplier} of Type t and will set {@code value} and returns instance of
      * {@link Que} for other sequential Operations
      * </p>
      *
@@ -123,25 +124,25 @@ public class Que<T> {
      * @return instance of {@link Que}
      */
     public static <T> Que<T> of(Supplier<T> supplier) {
-        return createReference(supplier.get());
+        return Que.createReference(supplier.get());
     }
 
     /**
      * <p>
-     * This method will take a {@link Callable} of Type T and will set {@code value} and returns instance of
+     * This method will take a {@link Dealer} of Type {@code t} and will set {@code value} and returns instance of
      * {@link Que} for other sequential Operations
      * </p>
      *
-     * @param callable variable of Type value
-     * @param <T>      Type of value
+     * @param dealer variable of Type value
+     * @param <T>    Type of value
      * @return instance of {@link Que}
      */
-    public static <T> Que<T> of(Callable<T> callable) throws Exception {
-        return createReference(callable.call());
+    public static <T> Que<T> as(Dealer<T> dealer) throws Exception {
+        return Que.createReference(dealer.deal());
     }
 
     /**
-     * <p> This method will execute {@link Consumer} type variable.</p>
+     * <p> This method will consume execute {@link Consumer} type variable.</p>
      *
      * @param consumer {@link Consumer} type variable.
      * @return existing instance of the {@link Que}
@@ -149,6 +150,18 @@ public class Que<T> {
      */
     public Que<T> run(Consumer<T> consumer) {
         consumer.accept(this.value);
+        return this;
+    }
+
+    /**
+     * <p> This method will Accept and execute {@link Accepter} type variable.</p>
+     *
+     * @param accepter {@link Accepter} type variable.
+     * @return existing instance of the {@link Que}
+     * @since 1.0
+     */
+    public Que<T> execute(Accepter<T> accepter) throws Exception {
+        accepter.accept(this.value);
         return this;
     }
 
@@ -162,7 +175,7 @@ public class Que<T> {
      */
     public static <T> Que<T> run(Runnable runnable) {
         runnable.run();
-        return getInstance();
+        return Que.getInstance();
     }
 
     /**
@@ -179,7 +192,7 @@ public class Que<T> {
      */
     public static <T> Que<T> execute(Executable executable) throws Exception {
         executable.execute();
-        return getInstance();
+        return Que.getInstance();
     }
 
     /**
@@ -205,26 +218,26 @@ public class Que<T> {
      * @return existing instance of {@link Que}
      * @since 1.0
      **/
-    public T andSupply(Supplier<T> supplier) {
-        return supplier.get();
+    public Que<T> andSupply(Supplier<T> supplier) {
+        return Que.createReference(supplier.get());
     }
 
     /**
      * <p>
      * This method will deal data {@link Que#value} variable.
-     * Use this method if operation will throw an {@link Exception}.
+     * Use this method in place of {@link Supplier} if operation will throw an {@link Exception}.
      * </p>
      *
-     * @param dealer {@link Supplier}  variable
+     * @param dealer {@link Dealer}  variable
      * @return existing instance of {@link Que}
      * @since 2.0
      **/
-    public T andDeal(Dealer<T> dealer) throws Exception {
-        return dealer.get();
+    public Que<T> andDeal(Dealer<T> dealer) throws Exception {
+        return Que.createReference(dealer.deal());
     }
 
     /**
-     * <p>This method will accept a {@link Consumer} type variable</p>
+     * <p>This method will consume a {@link Consumer} type variable</p>
      *
      * @param consumer {@link Consumer} type variable
      * @return existing instance of {@link Que}
@@ -232,6 +245,21 @@ public class Que<T> {
      */
     public Que<T> andConsume(Consumer<T> consumer) {
         consumer.accept(this.value);
+        return this;
+    }
+
+    /**
+     * <p>
+     * This method will accept na {@link Accepter} type variable.
+     * Use when operation will/may throw and {@link Exception}
+     * </p>
+     *
+     * @param accepter {@link Consumer} type variable
+     * @return existing instance of {@link Que}
+     * @since 1.0
+     */
+    public Que<T> andAccept(Accepter<T> accepter) throws Exception {
+        accepter.accept(this.value);
         return this;
     }
 
@@ -255,8 +283,8 @@ public class Que<T> {
      * @throws Exception instance of any exception thrown.
      * @since 1.0
      */
-    public T andCall(Callable<T> callable) throws Exception {
-        return callable.call();
+    public Que<T> andCall(Callable<T> callable) throws Exception {
+        return Que.createReference(callable.call());
     }
 
     /**
@@ -276,7 +304,7 @@ public class Que<T> {
      * @since 1.0
      */
     public CompletableFuture<T> completableFuture() {
-        return completedFuture(this.value);
+        return CompletableFuture.completedFuture(this.value);
     }
 
     /**

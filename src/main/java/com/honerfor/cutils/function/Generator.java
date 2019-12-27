@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,13 +17,15 @@
 package com.honerfor.cutils.function;
 
 /**
+ * Represent operations that will return unique/generated values every time {@link Generator#generate()} is called.
  * <p>
- * Represent operations that will return unique/generated values
- * every time {@link Generator#generate()} is called.
- * </p>
+ * Please note that the onus is on you to provide the implementation that will return the unique values.
+ * Else {@link Generator} Function will have the same behavior as the {@link Dealer} and {@link Runnable}.
  *
- * @param <T> type of value
+ * @param <T> type of value.
  * @author B0BAI
+ * @see Runnable
+ * @see Dealer
  * @since 2.0
  */
 @FunctionalInterface
@@ -33,6 +35,7 @@ public interface Generator<T> {
      * <p>Generates values</p>
      *
      * @return return generate values of T type.
+     * @since 2.o
      */
     T generate();
 }
