@@ -236,6 +236,21 @@ public class Que<T> {
     }
 
     /**
+     * <p>
+     * This method will accept na {@link Accepter} type variable.
+     * Use when operation will/may throw and {@link Exception}
+     * </p>
+     *
+     * @param accepter {@link Consumer} type variable
+     * @return existing instance of {@link Que}
+     * @since 1.0
+     */
+    public Que<T> andAccept(Accepter<T> accepter) throws Exception {
+        accepter.accept(this.value);
+        return this;
+    }
+
+    /**
      * <p>This method will execute a {@link Runnable} type variable</p>
      *
      * @param runnable {@link Runnable} type variable
