@@ -153,6 +153,18 @@ public class Que<T> {
     }
 
     /**
+     * <p> This method will Accept and execute {@link Accepter} type variable.</p>
+     *
+     * @param accepter {@link Accepter} type variable.
+     * @return existing instance of the {@link Que}
+     * @since 1.0
+     */
+    public Que<T> execute(Accepter<T> accepter) throws Exception {
+        accepter.accept(this.value);
+        return this;
+    }
+
+    /**
      * <p>This method will run a {@link Runnable} instance.</p>
      *
      * @param runnable {@link Runnable} type variable
