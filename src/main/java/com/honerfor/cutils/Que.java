@@ -128,16 +128,16 @@ public class Que<T> {
 
     /**
      * <p>
-     * This method will take a {@link Callable} of Type T and will set {@code value} and returns instance of
+     * This method will take a {@link Dealer} of Type {@code t} and will set {@code value} and returns instance of
      * {@link Que} for other sequential Operations
      * </p>
      *
-     * @param callable variable of Type value
+     * @param dealer variable of Type value
      * @param <T>      Type of value
      * @return instance of {@link Que}
      */
-    public static <T> Que<T> of(Callable<T> callable) throws Exception {
-        return createReference(callable.call());
+    public static <T> Que<T> as(Dealer<T> dealer) throws Exception {
+        return Que.createReference(dealer.deal());
     }
 
     /**
