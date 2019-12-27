@@ -16,8 +16,6 @@
 
 package com.honerfor.cutils.function;
 
-import com.honerfor.cutils.Que;
-
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -60,10 +58,11 @@ public interface TriConsumer<X, Y, Z> {
      * @throws NullPointerException if {@code after} is null
      */
     default TriConsumer<X, Y, Z> andThen(TriConsumer<? super X, ? super Y, ? super Z> after) {
-        return Que.<TriConsumer<X, Y, Z>>run(() -> Objects.requireNonNull(after))
-                .andSupply(() -> (a, b, c) -> {
-                    accept(a, b, c);
-                    after.accept(a, b, c);
-                });
+        Objects.requireNonNull(after);
+
+        return (a, b, c) -> {
+            accept(a, b, c);
+            after.accept(a, b, c);
+        };
     }
 }
