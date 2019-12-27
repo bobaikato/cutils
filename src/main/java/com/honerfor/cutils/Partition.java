@@ -76,7 +76,8 @@ public class Partition<T> extends AbstractList<List<T>> {
     public Partition<T> into(int sublistSize) {
         return Que.<Partition<T>>run(() -> Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0."))
                 .andRun(() -> this.sublistSize = sublistSize)
-                .andSupply(() -> this);
+                .andSupply(() -> this)
+                .get();
     }
 
     @Override
@@ -88,7 +89,8 @@ public class Partition<T> extends AbstractList<List<T>> {
             if (start > end) {
                 throw new IndexOutOfBoundsException(format("Index %d is out of the list range <0,%d>", index, this.size() - 1));
             }
-        }).andSupply(() -> new ArrayList<>(list.subList(start, end)));
+        }).andSupply(() -> new ArrayList<>(list.subList(start, end)))
+                .get();
     }
 
     @Override
