@@ -16,6 +16,7 @@
 
 package com.honerfor.cutils;
 
+import com.honerfor.cutils.function.Accepter;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
 
@@ -27,12 +28,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.Objects.isNull;
-import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * <P>
  * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
- * to orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
+ * orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
  * </p>
  *
  * @param <T> type.
@@ -56,7 +56,7 @@ public class Que<T> {
     private static WeakReference<Que> instance;
 
     /**
-     * <p>The method should be used too get {@link Que} instance.</p>
+     * <p>The method should be used to get {@link Que} instance.</p>
      *
      * @param <T> Type of value
      * @return existing or newly created instance of {@link Que}
@@ -79,7 +79,8 @@ public class Que<T> {
      * @since 3.0
      */
     private static <T> Que<T> createReference(T value) {
-        return new WeakReference<>(new Que<>(value)).get();
+        return new WeakReference<>(new Que<>(value))
+                .get();
     }
 
     /**
@@ -109,12 +110,12 @@ public class Que<T> {
      * @return Returns instance of {@link Que}
      */
     public static <T> Que<T> of(T value) {
-        return createReference(value);
+        return Que.createReference(value);
     }
 
     /**
      * <p>
-     * This method will take a {@link Supplier} of Type T and will set {@code value} and returns instance of
+     * This method will take a {@link Supplier} of Type t and will set {@code value} and returns instance of
      * {@link Que} for other sequential Operations
      * </p>
      *
@@ -123,7 +124,7 @@ public class Que<T> {
      * @return instance of {@link Que}
      */
     public static <T> Que<T> of(Supplier<T> supplier) {
-        return createReference(supplier.get());
+        return Que.createReference(supplier.get());
     }
 
     /**
@@ -133,7 +134,7 @@ public class Que<T> {
      * </p>
      *
      * @param dealer variable of Type value
-     * @param <T>      Type of value
+     * @param <T>    Type of value
      * @return instance of {@link Que}
      */
     public static <T> Que<T> as(Dealer<T> dealer) throws Exception {
@@ -141,7 +142,7 @@ public class Que<T> {
     }
 
     /**
-     * <p> This method will execute {@link Consumer} type variable.</p>
+     * <p> This method will consume execute {@link Consumer} type variable.</p>
      *
      * @param consumer {@link Consumer} type variable.
      * @return existing instance of the {@link Que}
@@ -174,7 +175,7 @@ public class Que<T> {
      */
     public static <T> Que<T> run(Runnable runnable) {
         runnable.run();
-        return getInstance();
+        return Que.getInstance();
     }
 
     /**
@@ -191,7 +192,7 @@ public class Que<T> {
      */
     public static <T> Que<T> execute(Executable executable) throws Exception {
         executable.execute();
-        return getInstance();
+        return Que.getInstance();
     }
 
     /**
@@ -236,7 +237,7 @@ public class Que<T> {
     }
 
     /**
-     * <p>This method will accept a {@link Consumer} type variable</p>
+     * <p>This method will consume a {@link Consumer} type variable</p>
      *
      * @param consumer {@link Consumer} type variable
      * @return existing instance of {@link Que}
@@ -303,7 +304,7 @@ public class Que<T> {
      * @since 1.0
      */
     public CompletableFuture<T> completableFuture() {
-        return completedFuture(this.value);
+        return CompletableFuture.completedFuture(this.value);
     }
 
     /**
