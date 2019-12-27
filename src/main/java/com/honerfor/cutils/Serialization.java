@@ -61,7 +61,8 @@ public class Serialization extends SerializationUtils {
                     return Que.<byte[]>execute(() -> os.writeObject(object))
                             .andExecute(os::flush)
                             .andExecute(os::close)
-                            .andSupply(outputStream::toByteArray);
-                });
+                            .andSupply(outputStream::toByteArray)
+                            .get();
+                }).get();
     }
 }
