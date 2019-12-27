@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test Random String Hatching.")
-class StringIncubatorTest {
+final class StringIncubatorTest {
 
     @DisplayName("Should successfully hatch specify length of random String.")
     @ParameterizedTest(name = "{index} => Length={0}, Random Instance={1}")
