@@ -217,22 +217,22 @@ public class Que<T> {
      * @return existing instance of {@link Que}
      * @since 1.0
      **/
-    public T andSupply(Supplier<T> supplier) {
-        return supplier.get();
+    public Que<T> andSupply(Supplier<T> supplier) {
+        return Que.createReference(supplier.get());
     }
 
     /**
      * <p>
      * This method will deal data {@link Que#value} variable.
-     * Use this method if operation will throw an {@link Exception}.
+     * Use this method in place of {@link Supplier} if operation will throw an {@link Exception}.
      * </p>
      *
-     * @param dealer {@link Supplier}  variable
+     * @param dealer {@link Dealer}  variable
      * @return existing instance of {@link Que}
      * @since 2.0
      **/
-    public T andDeal(Dealer<T> dealer) throws Exception {
-        return dealer.get();
+    public Que<T> andDeal(Dealer<T> dealer) throws Exception {
+        return Que.createReference(dealer.deal());
     }
 
     /**
@@ -282,8 +282,8 @@ public class Que<T> {
      * @throws Exception instance of any exception thrown.
      * @since 1.0
      */
-    public T andCall(Callable<T> callable) throws Exception {
-        return callable.call();
+    public Que<T> andCall(Callable<T> callable) throws Exception {
+        return Que.createReference(callable.call());
     }
 
     /**
