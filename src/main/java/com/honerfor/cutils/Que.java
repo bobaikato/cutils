@@ -96,7 +96,7 @@ public class Que<T> {
      * @param value the value to describe
      */
     private Que(T value) {
-        this.value = Objects.requireNonNull(value);;
+        this.value = value;
     }
 
     /**
