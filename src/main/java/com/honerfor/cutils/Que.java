@@ -294,9 +294,6 @@ public class Que<T> {
      * @since 1.0
      */
     public T get() {
-        if (Objects.isNull(value)) {
-            throw new NoSuchElementException("No value present");
-        }
         return value;
     }
 
