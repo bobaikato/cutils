@@ -20,7 +20,8 @@ import com.honerfor.cutils.function.Accepter;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
 
-import java.lang.ref.WeakReference;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -53,7 +54,7 @@ public class Que<T> {
      *
      * @since 1.0
      */
-    private static WeakReference<Que> instance;
+    private static Que instance;
 
     /**
      * <p>The method should be used to get {@link Que} instance.</p>
@@ -65,10 +66,10 @@ public class Que<T> {
     private static <T> Que<T> getInstance() {
         if (isNull(instance)) {
             synchronized (Que.class) {
-                if (isNull(instance)) instance = new WeakReference<>(new Que<T>());
+                if (isNull(instance)) instance = new Que<T>();
             }
         }
-        return instance.get();
+        return instance;
     }
 
     /**
@@ -79,8 +80,7 @@ public class Que<T> {
      * @since 3.0
      */
     private static <T> Que<T> createReference(T value) {
-        return new WeakReference<>(new Que<>(value))
-                .get();
+        return new Que<>(value);
     }
 
     /**
@@ -294,7 +294,7 @@ public class Que<T> {
      * @since 1.0
      */
     public T get() {
-        return this.value;
+        return value;
     }
 
     /**
