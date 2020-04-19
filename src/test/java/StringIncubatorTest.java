@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import com.honerfor.cutils.Que;
 import com.honerfor.cutils.StringIncubator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Test Random String Hatching.")
 final class StringIncubatorTest {
@@ -37,11 +38,8 @@ final class StringIncubatorTest {
     @MethodSource("resourceI")
     void shouldHatchRandomStringOfSpecifyLength(int length, Random random) {
         final String hatchedString = new StringIncubator(length, random).hatch();
-        Que.run(() -> {
-            assertNotEquals(hatchedString, null);
-        }).andRun(() -> {
-            assertEquals(hatchedString.length(), length);
-        });
+        assertNotEquals(hatchedString, null);
+        assertEquals(hatchedString.length(), length);
     }
 
     private static Stream<Arguments> resourceI() {
@@ -57,13 +55,9 @@ final class StringIncubatorTest {
     @ParameterizedTest(name = "{index} => First hatch={0}, Second hatch={1}")
     @MethodSource("resourceII")
     void shouldHatchUniqueStringsOfSpecifyLength(String firstString, String secondString) {
-        Que.run(() -> {
-            assertNotEquals(firstString, null);
-        }).andRun(() -> {
-            assertNotEquals(secondString, null);
-        }).andRun(() -> {
-            assertNotEquals(firstString, secondString);
-        });
+        assertNotEquals(firstString, null);
+        assertNotEquals(secondString, null);
+        assertNotEquals(firstString, secondString);
     }
 
     private static Stream<Arguments> resourceII() {
@@ -117,9 +111,7 @@ final class StringIncubatorTest {
     @ParameterizedTest(name = "{index} => Symbol={0}, Length={1}")
     @MethodSource("resourceIV")
     void throwIllegalArgumentExceptionOnInvalidSymbol(String symbol) {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new StringIncubator(12, new SecureRandom(), symbol).hatch();
-        });
+        assertThrows(IllegalArgumentException.class, () -> new StringIncubator(12, new SecureRandom(), symbol).hatch());
     }
 
     private static Stream<Arguments> resourceIV() {

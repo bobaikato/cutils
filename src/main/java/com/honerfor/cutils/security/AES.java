@@ -16,7 +16,6 @@
 
 package com.honerfor.cutils.security;
 
-import com.honerfor.cutils.Que;
 import org.apache.commons.lang3.Validate;
 
 import javax.crypto.BadPaddingException;
@@ -56,7 +55,7 @@ public class AES<T> {
      *
      * @since 1.0
      */
-    private static String ENCRYPTION_KEY = "{bMJR_QG$qvY?R*wGT2Sn9RU=GvKx_yu7Uyz^E*!*SjgaEh4K34JK8yTLB44!Z77R6z^DijHEi5GaaYA6apf3!}" +
+    private final static String DEFAULT_ENCRYPTION_KEY = "{bMJR_QG$qvY?R*wGT2Sn9RU=GvKx_yu7Uyz^E*!*SjgaEh4K34JK8yTLB44!Z77R6z^DijHEi5GaaYA6apf3!}" +
             "This is clearly a default Key. If you are doing something serious, please consider" +
             "using the `AES.setKey(<Your_Key_here>)` method to set a unique Key. Got it?";
 
@@ -77,7 +76,7 @@ public class AES<T> {
     /**
      * <p>Encryption Key, set by user.</p>
      *
-     * @implSpec If this is null, {@link AES#ENCRYPTION_KEY} will be used.
+     * @implSpec If this is null, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used.
      * @since 1.0
      */
     private static String encryptionKey;
@@ -103,32 +102,29 @@ public class AES<T> {
      *
      * @param <T> Type of value
      * @return Instance of {@link AES}
-     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @throws NoSuchAlgorithmException,NoSuchAlgorithmException exceptions
      * @since 1.0
      */
-    public static <T> AES<T> init() throws Exception {
-        return Que.<AES<T>>run(() -> encryptionKey = ENCRYPTION_KEY)
-                .andCall(AES::new)
-                .get();
+    public static <T> AES<T> init() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        return init(DEFAULT_ENCRYPTION_KEY);
     }
 
     /**
      * <p>
      * Use this method to set costume encryptionKey
-     * If {@code key} is {@literal null}, {@link AES#ENCRYPTION_KEY} will be used instead.
+     * If {@code key} is {@literal null}, {@link AES#DEFAULT_ENCRYPTION_KEY} will be used instead.
      * </p>
      *
-     * @param key supplied encryption key.
-     * @param <T> Type of value
+     * @param userEncryptionKey supplied encryption key.
+     * @param <T>               Type of value
      * @return Instance of {@link AES}
-     * @throws Exception instance {@link NoSuchAlgorithmException}, {@link NoSuchPaddingException}
+     * @throws NoSuchAlgorithmException,NoSuchAlgorithmException exceptions
      * @since 1.0
      */
 
-    public static <T> AES<T> setKey(String key) throws Exception {
-        return Que.<AES<T>>run(() -> encryptionKey = isNull(key) ? ENCRYPTION_KEY : key)
-                .andCall(AES::new)
-                .get();
+    public static <T> AES<T> init(String userEncryptionKey) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        encryptionKey = isNull(userEncryptionKey) ? DEFAULT_ENCRYPTION_KEY : userEncryptionKey;
+        return new AES<>();
     }
 
     /**
@@ -139,16 +135,11 @@ public class AES<T> {
      * @throws Exception instance of any exception thrown
      * @since 1.0
      */
-    public String encrypt(@Valid T itemToEncrypt) throws Exception {
-        final String encryptedString = Que.<String>execute(() -> cipher.init(Cipher.ENCRYPT_MODE, secretKey))
-                .andCall(() -> {
-                    final byte[] serializeData = serialize(itemToEncrypt);
-                    return getEncoder().encodeToString(cipher.doFinal(serializeData));
-                }).get();
-
-        return Que.<String>run(() -> Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt))
-                .andCall(() -> encryptedString)
-                .get();
+    public String encrypt(@Valid final T itemToEncrypt) throws Exception {
+        Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        final byte[] serializeData = serialize(itemToEncrypt);
+        return getEncoder().encodeToString(cipher.doFinal(serializeData));
     }
 
     /**
@@ -160,13 +151,9 @@ public class AES<T> {
      * @since 1.0
      */
 
-    public T decrypt(@NotNull String itemToDecrypt) throws Exception {
-        final T decryptedItem = Que.<T>execute(() -> cipher.init(DECRYPT_MODE, secretKey))
-                .andCall(() -> deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)))).
-                        get();
-
-        return Que.<T>run(() -> Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt))
-                .andCall(() -> decryptedItem)
-                .get();
+    public T decrypt(@NotNull final String itemToDecrypt) throws Exception {
+        Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
+        cipher.init(DECRYPT_MODE, secretKey);
+        return deserialize(cipher.doFinal(getDecoder().decode(itemToDecrypt)));
     }
 }
