@@ -13,16 +13,16 @@ A package of utilities classes intended to enhance and simplify Java development
 <dependency>
   <groupId>com.honerfor</groupId>
   <artifactId>cutils</artifactId>
-  <version>4.0.1</version>
+  <version>4.1.0</version>
 </dependency> 
 ```
 - Gradle Groovy
 ```
-implementation 'com.honerfor:cutils:4.0.1'
+implementation 'com.honerfor:cutils:4.1.0'
 ```
 - Gradle Kotlin
 ```
-compile("com.honerfor:cutils:4.0.1")
+compile("com.honerfor:cutils:4.1.0")
 ```
 - [More, and others](https://search.maven.org/artifact/com.honerfor/cutils)
 
