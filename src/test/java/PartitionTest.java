@@ -15,7 +15,6 @@
  */
 
 import com.honerfor.cutils.Partition;
-import com.honerfor.cutils.Que;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,7 +25,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Test List Partitioning")
 final class PartitionTest {
@@ -36,11 +37,8 @@ final class PartitionTest {
     @MethodSource("partitionListInSubListIResource")
     void partitionListInSubListI(int partitionSize, List<?> list) {
         final Partition<?> partitionedList = Partition.of(list).into(partitionSize);
-        Que.run(() -> assertEquals(partitionedList.size(), 3)).andRun(() -> {
-            partitionedList.parallelStream().forEach(item -> {
-                assertEquals(item.size(), partitionSize);
-            });
-        });
+        assertEquals(partitionedList.size(), 3);
+        partitionedList.parallelStream().forEach(item -> assertEquals(item.size(), partitionSize));
     }
 
     private static Stream<Arguments> partitionListInSubListIResource() {
@@ -64,11 +62,9 @@ final class PartitionTest {
     @MethodSource("partitionListInSubListIIResource")
     void partitionListInSubListII(int partitionSize, List<?> list) {
         final Partition<?> partitionedList = Partition.of(list).into(partitionSize);
-        Que.run(() -> assertEquals(partitionedList.size(), 1)).andRun(() -> {
-            partitionedList.forEach(item -> assertNotEquals(item.size(), partitionSize));
-        }).andRun(() -> {
-            partitionedList.forEach(item -> assertEquals(item.size(), list.size()));
-        });
+        assertEquals(partitionedList.size(), 1);
+        partitionedList.forEach(item -> assertNotEquals(item.size(), partitionSize));
+        partitionedList.forEach(item -> assertEquals(item.size(), list.size()));
     }
 
     private static Stream<Arguments> partitionListInSubListIIResource() {
@@ -84,9 +80,7 @@ final class PartitionTest {
     @ParameterizedTest(name = "{index} => partitionSize={0}, partitionedList={1}")
     @MethodSource("partitionListNullResource")
     void nullPointerExceptionForNullListPartition(int partitionSize, List<?> list) {
-        assertThrows(NullPointerException.class, () -> {
-            Partition.of(list).into(partitionSize);
-        });
+        assertThrows(NullPointerException.class, () -> Partition.of(list).into(partitionSize));
     }
 
     private static Stream<Arguments> partitionListNullResource() {
@@ -97,9 +91,7 @@ final class PartitionTest {
     @ParameterizedTest(name = "{index} => partitionSize={0}, partitionedList={1}")
     @MethodSource("partitionSizeLessThanOneResource")
     void illegalArgumentExceptionForPartition(int partitionSize, List<?> list) {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Partition.of(list).into(partitionSize);
-        });
+        assertThrows(IllegalArgumentException.class, () -> Partition.of(list).into(partitionSize));
     }
 
     private static Stream<Arguments> partitionSizeLessThanOneResource() {

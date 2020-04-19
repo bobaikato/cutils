@@ -16,7 +16,6 @@
 
 package functions;
 
-import com.honerfor.cutils.Que;
 import com.honerfor.cutils.function.Condition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,8 +34,8 @@ final class ConditionTest {
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("trueConditionFunctions")
     void verifyReturnExpectedValuesOfSameType(Condition condition) {
-        Que.run(() -> assertTrue(condition.isMet()))
-                .andRun(() -> assertFalse(condition.isNotMet()));
+        assertTrue(condition.isMet());
+        assertFalse(condition.isNotMet());
     }
 
     private static Stream<Arguments> trueConditionFunctions() {
@@ -54,8 +53,8 @@ final class ConditionTest {
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("falseConditionFunctions")
     void verifyDealerThrowsException(Condition condition) {
-        Que.run(() -> assertFalse(condition.isMet()))
-                .andRun(() -> assertTrue(condition.isNotMet()));
+        assertFalse(condition.isMet());
+        assertTrue(condition.isNotMet());
     }
 
     private static Stream<Arguments> falseConditionFunctions() {

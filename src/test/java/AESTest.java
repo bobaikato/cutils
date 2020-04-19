@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import com.honerfor.cutils.Que;
 import com.honerfor.cutils.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,20 +45,28 @@ final class AESTest {
         }
     }
 
-    @DisplayName("Should successfully Encrypt Custom Object with default Encryption Key")
-    @ParameterizedTest(name = "{index} => objectToBeEncrypted={0}, encryptedString={1}")
+    @DisplayName("Should successfully Encrypt and Decrypt Custom Object with Custom Encryption Key")
+    @ParameterizedTest(name = "{index} => input={0}")
     @MethodSource("customObjectResource")
-    void encryptCustomObjectWithDefaultKey(PersonExample objectToBeEncrypted, String encryptedString) throws Exception {
-        assertEquals(AES.<PersonExample>init().encrypt(objectToBeEncrypted), encryptedString);
+    void encryptionAndDecryptionCustomObjectWithCustomKey(PersonExample input) throws Exception {
+        final AES<PersonExample> aes = AES.init("P37s0n3x4mpl3-Cust0m-k3y");
+        final String encryptedPersonExample = aes.encrypt(input);
+        final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
+
+        assertEquals(decryptedPersonExample.age, input.age);
+        assertEquals(decryptedPersonExample.name, input.name);
     }
 
-    @DisplayName("Should successfully Decrypt Custom Object with default Encryption Key")
-    @ParameterizedTest(name = "{index} => output={0}, objectToBeDecrypted={1}")
+    @DisplayName("Should successfully Encrypt and Decrypt Custom Object with default Encryption Key")
+    @ParameterizedTest(name = "{index} => input={0}")
     @MethodSource("customObjectResource")
-    void decryptCustomObjectWithDefaultKey(PersonExample output, String objectToBeDecrypted) throws Exception {
-        final PersonExample decryptedObject = AES.<PersonExample>init().decrypt(objectToBeDecrypted);
-        Que.run(() -> assertEquals(decryptedObject.age, output.age))
-                .andRun(() -> assertEquals(decryptedObject.name, output.name));
+    void encryptionAndDecryptionCustomObjectWithDefaultKey(PersonExample input) throws Exception {
+        final AES<PersonExample> aes = AES.init();
+        final String encryptedPersonExample = aes.encrypt(input);
+        final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
+
+        assertEquals(decryptedPersonExample.age, input.age);
+        assertEquals(decryptedPersonExample.name, input.name);
     }
 
     private static Stream<Arguments> customObjectResource() {
@@ -74,8 +81,8 @@ final class AESTest {
         }};
 
         return Stream.of(
-                Arguments.of(personExampleI, "k/h51sKoS2yWgcKvNhliYzA6kk8zDzYpyo85kc9pIGPubzz9sh1vu1SsYgb6Q8RZmeXrtK57KSUDM4k7IGTDx3PyZ4bO9aI6O3MvXNTdFJRYckqsFTrd44/SITmttWuQQTCURIIDi+9M6hmOlzDlOw=="),
-                Arguments.of(personExampleII, "k/h51sKoS2yWgcKvNhliY3WL2bHdh+kr98PishwlCxDubzz9sh1vu1SsYgb6Q8RZmeXrtK57KSUDM4k7IGTDx3PyZ4bO9aI6O3MvXNTdFJRYckqsFTrd44/SITmttWuQ7GZFcqV1QoCyO1ZXkaVY1q/ufFS7PBuKBEutuQn8fQM=")
+                Arguments.of(personExampleI),
+                Arguments.of(personExampleII)
         );
     }
 
@@ -117,7 +124,7 @@ final class AESTest {
     @ParameterizedTest(name = "{index} => itemToBeEncrypted={0}, encryptedString={1}")
     @MethodSource("customKeyEncryptionResource")
     void encryptObjectWithCustomKey(Object itemToBeEncrypted, String encryptedString) throws Exception {
-        assertEquals(AES.setKey("My-Custom-Key").encrypt(itemToBeEncrypted), encryptedString);
+        assertEquals(AES.init("My-Custom-Key").encrypt(itemToBeEncrypted), encryptedString);
     }
 
     private static Stream<Arguments> customKeyEncryptionResource() {
@@ -133,16 +140,14 @@ final class AESTest {
     @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
     @MethodSource("customKeyOperationResource")
     void decryptObjectWithCustomKey(Object output, String itemToBeDecrypted) throws Exception {
-        assertEquals(AES.setKey("My-Custom-Key").decrypt(itemToBeDecrypted), output);
+        assertEquals(AES.init("My-Custom-Key").decrypt(itemToBeDecrypted), output);
     }
 
     @DisplayName("Should Throw BadPaddingException when using a different key to decrypt.")
     @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
     @MethodSource("customKeyOperationResource")
-    void throwBadPaddingExceptionOnDecryption(Object output, String itemToBeDecrypted) throws Exception {
-        assertThrows(BadPaddingException.class, () -> {
-            assertEquals(AES.setKey("The-Wrong-Custom-Encryption-Key").decrypt(itemToBeDecrypted), output);
-        });
+    void throwBadPaddingExceptionOnDecryption(Object output, String itemToBeDecrypted) {
+        assertThrows(BadPaddingException.class, () -> assertEquals(AES.init("The-Wrong-Custom-Encryption-Key").decrypt(itemToBeDecrypted), output));
     }
 
     private static Stream<Arguments> customKeyOperationResource() {
@@ -157,7 +162,7 @@ final class AESTest {
     @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
-    void throwIllegalArgumentExceptionOnEncryption(Object value) throws Exception {
+    void throwIllegalArgumentExceptionOnEncryption(Object value) {
         assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
     }
 
@@ -165,7 +170,7 @@ final class AESTest {
     @DisplayName("Should Throw IllegalArgumentException when trying to decrypt Null values.")
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
-    void throwIllegalArgumentExceptionOnDecryption(String value) throws Exception {
+    void throwIllegalArgumentExceptionOnDecryption(String value) {
         assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
     }
 
