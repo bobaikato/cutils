@@ -20,6 +20,7 @@ import com.honerfor.cutils.Serialization;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,6 +28,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +37,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * <p>
@@ -129,10 +132,17 @@ public class AES<T> {
      * @since 1.0
      */
     public String encrypt(@Valid final T itemToEncrypt) throws Exception {
-        final SecureRandom secureRandom = new SecureRandom();
 
-        final byte[] iv = new byte[GCM_IV_LENGTH]; //NEVER REUSE THIS IV WITH SAME KEY
-        secureRandom.nextBytes(iv);
+        final Supplier<byte[]> ivSupplier = () -> {
+            final SecureRandom secureRandom = new SecureRandom();
+            final byte[] iv = new byte[GCM_IV_LENGTH]; //NEVER REUSE THIS IV WITH SAME KEY
+            do {
+                secureRandom.nextBytes(iv);
+            } while (iv[0] == 0);
+            return iv;
+        };
+
+        final byte[] iv = ivSupplier.get();
 
         final GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv); //128 bit auth tag length
         this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey, parameterSpec);
