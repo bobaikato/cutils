@@ -15,21 +15,23 @@
  */
 
 import com.honerfor.cutils.security.AES;
+import lombok.ToString;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import javax.crypto.BadPaddingException;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Test AES Encryption and Decryption operation.")
 final class AESTest {
 
+    @ToString
     private static class PersonExample implements Serializable {
         private static final long serialVersionUID = -4359123926347587815L;
 
@@ -48,8 +50,8 @@ final class AESTest {
     @DisplayName("Should successfully Encrypt and Decrypt Custom Object with Custom Encryption Key")
     @ParameterizedTest(name = "{index} => input={0}")
     @MethodSource("customObjectResource")
-    void encryptionAndDecryptionCustomObjectWithCustomKey(PersonExample input) throws Exception {
-        final AES<PersonExample> aes = AES.init("P37s0n3x4mpl3-Cust0m-k3y");
+    void encryptionAndDecryptionCustomObjectWithCustomKey(final PersonExample input, final String key) throws Exception {
+        final AES<PersonExample> aes = AES.init(key);
         final String encryptedPersonExample = aes.encrypt(input);
         final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
 
@@ -58,12 +60,11 @@ final class AESTest {
     }
 
     @DisplayName("Should successfully Encrypt and Decrypt Custom Object with default Encryption Key")
-    @ParameterizedTest(name = "{index} => input={0}")
+    @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("customObjectResource")
-    void encryptionAndDecryptionCustomObjectWithDefaultKey(PersonExample input) throws Exception {
-        final AES<PersonExample> aes = AES.init();
-        final String encryptedPersonExample = aes.encrypt(input);
-        final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
+    void encryptionAndDecryptionCustomObjectWithDefaultKey(final PersonExample input) throws Exception {
+        final String encryptedPersonExample = AES.init().encrypt(input);
+        final PersonExample decryptedPersonExample = AES.<PersonExample>init().decrypt(encryptedPersonExample);
 
         assertEquals(decryptedPersonExample.age, input.age);
         assertEquals(decryptedPersonExample.name, input.name);
@@ -81,88 +82,16 @@ final class AESTest {
         }};
 
         return Stream.of(
-                Arguments.of(personExampleI),
-                Arguments.of(personExampleII)
+                Arguments.of(personExampleI, "P37s0n3x4mpl3-Cust0m-k3y"),
+                Arguments.of(personExampleII, "n3w P37s0n3x4mpl3-Cust0m-k3y")
         );
     }
 
-
-    @DisplayName("Should successfully Encrypt Objects with default Encryption Key")
-    @ParameterizedTest(name = "{index} => itemToBeEncrypted={0}, encryptedString={1}")
-    @MethodSource("defaultKeyEncryptionResource")
-    void encryptObjectWithDefaultKey(Object itemToBeEncrypted, String encryptedString) throws Exception {
-        assertEquals(AES.init().encrypt(itemToBeEncrypted), encryptedString);
-    }
-
-    private static Stream<Arguments> defaultKeyEncryptionResource() {
-        return Stream.of(
-                Arguments.of("Testing Encryption", "H4t4eUdXKswQTwVueHkP1gOX0wuogYDuoYxzx/ZKX/A="),
-                Arguments.of(89.02, "cUrT5eqdnoFAkDBIVSUOQ6fDYnWQ4oBetbvYjnVcLwLE/l56Rt3nnB/hPtLdq4/xB1Kt2tlf3xnFzQGL4fXHG8+3w3eypuUVDJYLRsO5O+itutmNHten5ba1M9/8akaK"),
-                Arguments.of(100L, "omzt94M4J4KgvD4bL96b5nRaatd5d/EifjppGVmbcHA1+gUewP82qIiEebKXpWT6I1hJYxfRC52dAEFODiCu3f1keWLMhLusNsosaFKu3tNrYMLDMo7W2Bp6aeAk1hKG"),
-                Arguments.of(88, "uMwQNEYSTmbQ5f6gD+pjoy1y8EYL7J1oAt8EQnDYMUwJL40q4cl1l2R7hZ3e0cRQ8g6xqg0iEvgWdubU7wbvoGXlY506qJZ9debfcHERf3uyl/TQ3eBqnqRxvb06maQJ")
-        );
-    }
-
-    @DisplayName("Should successfully Decrypt Objects with default Encryption Key")
-    @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("defaultKeyDecryptionResource")
-    void decryptObjectWithDefaultKey(Object output, String itemToBeDecrypted) throws Exception {
-        assertEquals(AES.init().decrypt(itemToBeDecrypted), output);
-    }
-
-    private static Stream<Arguments> defaultKeyDecryptionResource() {
-        return Stream.of(
-                Arguments.of("Testing Decryption", "cj/1cfdTniTzIFsuUrpEXjLcjtYNRMPk3Ty2QRqGs8A="),
-                Arguments.of(88.02, "cUrT5eqdnoFAkDBIVSUOQ6fDYnWQ4oBetbvYjnVcLwLE/l56Rt3nnB/hPtLdq4/xB1Kt2tlf3xnFzQGL4fXHG/dwvhJqtcX4F5LZRtZU35qtutmNHten5ba1M9/8akaK"),
-                Arguments.of(12L, "omzt94M4J4KgvD4bL96b5nRaatd5d/EifjppGVmbcHA1+gUewP82qIiEebKXpWT6I1hJYxfRC52dAEFODiCu3f1keWLMhLusNsosaFKu3tMNEFs6ZdgnATPRNNqhitiW"),
-                Arguments.of(100, "uMwQNEYSTmbQ5f6gD+pjoy1y8EYL7J1oAt8EQnDYMUwJL40q4cl1l2R7hZ3e0cRQ8g6xqg0iEvgWdubU7wbvoGXlY506qJZ9debfcHERf3uavmXNdMC7lj1HsjpptQuS")
-        );
-    }
-
-
-    @DisplayName("Should successfully Encrypt Objects with Custom Encryption Key")
-    @ParameterizedTest(name = "{index} => itemToBeEncrypted={0}, encryptedString={1}")
-    @MethodSource("customKeyEncryptionResource")
-    void encryptObjectWithCustomKey(Object itemToBeEncrypted, String encryptedString) throws Exception {
-        assertEquals(AES.init("My-Custom-Key").encrypt(itemToBeEncrypted), encryptedString);
-    }
-
-    private static Stream<Arguments> customKeyEncryptionResource() {
-        return Stream.of(
-                Arguments.of("Testing Decryption", "s68hIJWxSG09ZQjbGF/6oQ4c2a8wHXnHPbR92wV2PQk="),
-                Arguments.of(89.02, "4OkXLhHBDmq54mtV2fp+kTj4xtONwwKNUx6rjppRT0b/E/WueHmSEwGiAYXRPRwQCEEWOcTcW+p1BRNnraepjyagvKE+vb2iUKesV2BwH3j8aFusIpAE7+Ei61R1qdjD"),
-                Arguments.of(100L, "sFaXqId3I2kIVEgrLjdRw7pVdlfITHrLJIq3LkkLCTFUR64LJymRedu7Ez+ULbjvq9xZw2Fhei0SXu4O6WCF800jKhHkXp26VPLZOpPwEKwk6XfWZyr/I6IyC7S7DAwJ"),
-                Arguments.of(88, "QDj1XtBhN4ejgbKLvqoEFB6wtvEvCfL5TzD69/Kw/NJXubz9WruX2JV8Kmr+QyqPfQ6AoqIq915Do0P3TehkvWBXYSVT2xfFT+wCAUcKlNLXxL1Jfpy+d61abGNw/NYC")
-        );
-    }
-
-    @DisplayName("Should successfully Decrypt Objects with Custom Encryption Key")
-    @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("customKeyOperationResource")
-    void decryptObjectWithCustomKey(Object output, String itemToBeDecrypted) throws Exception {
-        assertEquals(AES.init("My-Custom-Key").decrypt(itemToBeDecrypted), output);
-    }
-
-    @DisplayName("Should Throw BadPaddingException when using a different key to decrypt.")
-    @ParameterizedTest(name = "{index} => output={0}, itemToBeDecrypted={1}")
-    @MethodSource("customKeyOperationResource")
-    void throwBadPaddingExceptionOnDecryption(Object output, String itemToBeDecrypted) {
-        assertThrows(BadPaddingException.class, () -> assertEquals(AES.init("The-Wrong-Custom-Encryption-Key").decrypt(itemToBeDecrypted), output));
-    }
-
-    private static Stream<Arguments> customKeyOperationResource() {
-        return Stream.of(
-                Arguments.of("Testing Decryption", "s68hIJWxSG09ZQjbGF/6oQ4c2a8wHXnHPbR92wV2PQk="),
-                Arguments.of(88.02, "4OkXLhHBDmq54mtV2fp+kTj4xtONwwKNUx6rjppRT0b/E/WueHmSEwGiAYXRPRwQCEEWOcTcW+p1BRNnraepj9+0m+rBHV6y9rYG23WjWvj8aFusIpAE7+Ei61R1qdjD"),
-                Arguments.of(12L, "sFaXqId3I2kIVEgrLjdRw7pVdlfITHrLJIq3LkkLCTFUR64LJymRedu7Ez+ULbjvq9xZw2Fhei0SXu4O6WCF800jKhHkXp26VPLZOpPwEKxcoqbv9ZjMry86fV58n9xB"),
-                Arguments.of(100, "QDj1XtBhN4ejgbKLvqoEFB6wtvEvCfL5TzD69/Kw/NJXubz9WruX2JV8Kmr+QyqPfQ6AoqIq915Do0P3TehkvWBXYSVT2xfFT+wCAUcKlNJPHzF9LHPhWeLllqVEm959")
-        );
-    }
 
     @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
-    void throwIllegalArgumentExceptionOnEncryption(Object value) {
+    void throwIllegalArgumentExceptionOnEncryption(final Object value) {
         assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
     }
 
@@ -170,7 +99,7 @@ final class AESTest {
     @DisplayName("Should Throw IllegalArgumentException when trying to decrypt Null values.")
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
-    void throwIllegalArgumentExceptionOnDecryption(String value) {
+    void throwIllegalArgumentExceptionOnDecryption(final String value) {
         assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
     }
 
@@ -178,6 +107,89 @@ final class AESTest {
         return Stream.of(
                 Arguments.of(""),
                 Arguments.of((Object) null)
+        );
+    }
+
+    @DisplayName("Should successfully encrypt String type values With Default Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("stringEncryptionValues")
+    void shouldEncryptStringTypeValues(final String input) throws Exception {
+        final String encryptValue = AES.init().encrypt(input);
+        final String decryptedValue = AES.<String>init().decrypt(encryptValue);
+
+        assertTrue(decryptedValue.equalsIgnoreCase(input));
+    }
+
+    @DisplayName("Should successfully encrypt String type values With Custom Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("stringEncryptionValues")
+    void shouldEncryptStringTypeValuesWithCustomKey(final String input, final String key) throws Exception {
+        final String encryptValue = AES.init(key).encrypt(input);
+        final String decryptedValue = AES.<String>init(key).decrypt(encryptValue);
+
+        assertTrue(decryptedValue.equalsIgnoreCase(input));
+    }
+
+    private static Stream<Arguments> stringEncryptionValues() {
+        return Stream.of(
+                Arguments.of("Encryption Test", "Xyx"),
+                Arguments.of("GCM Encryption test", "A K3y")
+        );
+    }
+
+    @DisplayName("Should successfully encrypt Integers type values With Default Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("intEncryptionValues")
+    void shouldEncryptIntTypeValues(final int input) throws Exception {
+        final String encryptValue = AES.init().encrypt(input);
+        final int decryptedValue = AES.<Integer>init().decrypt(encryptValue);
+
+        assertEquals(input, decryptedValue);
+    }
+
+    @DisplayName("Should successfully encrypt Integers type values With Custom Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("intEncryptionValues")
+    void shouldEncryptIntTypeValuesWithCustomKey(final int input, final String key) throws Exception {
+        final String encryptValue = AES.init(key).encrypt(input);
+        final int decryptedValue = AES.<Integer>init(key).decrypt(encryptValue);
+
+        assertEquals(input, decryptedValue);
+    }
+
+    private static Stream<Arguments> intEncryptionValues() {
+        return Stream.of(
+                Arguments.of("10020", "K3y"),
+                Arguments.of("1929", "K37"),
+                Arguments.of("-199", "620w37")
+        );
+    }
+
+    @DisplayName("Should successfully encrypt Double type values With Default Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("doubleEncryptionValues")
+    void shouldEncryptDoubleTypeValues(final double input) throws Exception {
+        final String encryptValue = AES.init().encrypt(input);
+        final double decryptedValue = AES.<Double>init().decrypt(encryptValue);
+
+        assertEquals(input, decryptedValue);
+    }
+
+    @DisplayName("Should successfully encrypt Double type values With Custom Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("doubleEncryptionValues")
+    void shouldEncryptDoubleTypeValuesWithCustomKey(double input, String key) throws Exception {
+        final String encryptValue = AES.init(key).encrypt(input);
+        final double decryptedValue = AES.<Double>init(key).decrypt(encryptValue);
+
+        assertEquals(input, decryptedValue);
+    }
+
+    private static Stream<Arguments> doubleEncryptionValues() {
+        return Stream.of(
+                Arguments.of("10.020", "l0.p3zz"),
+                Arguments.of("192.99", "l0p3zz"),
+                Arguments.of("-1.99", "0p3zz")
         );
     }
 }
