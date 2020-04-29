@@ -166,6 +166,6 @@ public class StringIncubator {
      */
     public String hatch() {
         IntStream.range(0, buffer.length).forEachOrdered(idx -> buffer[idx] = symbols[random.nextInt(symbols.length)]);
-        return new String(buffer);
+        return String.valueOf(buffer);
     }
 }
