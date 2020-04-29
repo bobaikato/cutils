@@ -21,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import javax.crypto.AEADBadTagException;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
@@ -95,7 +96,6 @@ final class AESTest {
         assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
     }
 
-
     @DisplayName("Should Throw IllegalArgumentException when trying to decrypt Null values.")
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
@@ -107,6 +107,24 @@ final class AESTest {
         return Stream.of(
                 Arguments.of(""),
                 Arguments.of((Object) null)
+        );
+    }
+
+
+    @DisplayName("Should Throw AEADBadTagException when trying to decrypt with wrong Key.")
+    @ParameterizedTest(name = "{index} => value={0}")
+    @MethodSource("illegalXValuesResource")
+    void shouldThrowAEADBadTagExceptionOnDecryption(final String input, final String key) throws Exception {
+        assertThrows(AEADBadTagException.class, () -> {
+            final String encryptValue = AES.init(key).encrypt(input);
+            AES.<String>init().decrypt(encryptValue);
+        });
+    }
+
+    private static Stream<Arguments> illegalXValuesResource() {
+        return Stream.of(
+                Arguments.of("Should fail", "s0m3 K3y"),
+                Arguments.of("Should Also fail", "4n0th37 k3Y")
         );
     }
 
