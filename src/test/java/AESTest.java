@@ -135,7 +135,7 @@ final class AESTest {
         final String encryptValue = AES.init().encrypt(input);
         final String decryptedValue = AES.<String>init().decrypt(encryptValue);
 
-        assertTrue(decryptedValue.equalsIgnoreCase(input));
+        assertEquals(decryptedValue, input);
     }
 
     @DisplayName("Should successfully encrypt String type values With Custom Key.")
