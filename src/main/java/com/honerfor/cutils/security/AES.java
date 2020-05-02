@@ -17,6 +17,8 @@
 package com.honerfor.cutils.security;
 
 import com.honerfor.cutils.Serialization;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.Validate;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -130,6 +132,7 @@ public class AES<T> {
      * @since 1.0
      */
     public String encrypt(@Valid final T itemToEncrypt) throws Exception {
+        Validate.isTrue(ObjectUtils.isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
 
         final Supplier<byte[]> ivSupplier = () -> {
             final SecureRandom secureRandom = new SecureRandom();
@@ -168,6 +171,8 @@ public class AES<T> {
      * @since 1.0
      */
     public T decrypt(@NotNull final String itemToDecrypt) throws Exception {
+        Validate.isTrue(ObjectUtils.isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
+
         final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
         final AlgorithmParameterSpec algorithmParameterSpec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
         this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, algorithmParameterSpec);
