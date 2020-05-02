@@ -100,7 +100,7 @@ final class AESTest {
     @ParameterizedTest(name = "{index} => value={0}")
     @MethodSource("illegalValuesResource")
     void throwIllegalArgumentExceptionOnDecryption(final String value) {
-        assertThrows(IllegalArgumentException.class, () -> AES.init().encrypt(value));
+        assertThrows(IllegalArgumentException.class, () -> AES.init().decrypt(value));
     }
 
     private static Stream<Arguments> illegalValuesResource() {
@@ -113,7 +113,7 @@ final class AESTest {
 
     @DisplayName("Should Throw AEADBadTagException when trying to decrypt with wrong Key.")
     @ParameterizedTest(name = "{index} => value={0}")
-    @MethodSource("illegalXValuesResource")
+    @MethodSource("illegalKeyValuesResource")
     void shouldThrowAEADBadTagExceptionOnDecryption(final String input, final String key) throws Exception {
         assertThrows(AEADBadTagException.class, () -> {
             final String encryptValue = AES.init(key).encrypt(input);
@@ -121,7 +121,7 @@ final class AESTest {
         });
     }
 
-    private static Stream<Arguments> illegalXValuesResource() {
+    private static Stream<Arguments> illegalKeyValuesResource() {
         return Stream.of(
                 Arguments.of("Should fail", "s0m3 K3y"),
                 Arguments.of("Should Also fail", "4n0th37 k3Y")
