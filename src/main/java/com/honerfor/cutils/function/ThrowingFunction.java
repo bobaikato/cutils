@@ -19,13 +19,11 @@ package com.honerfor.cutils.function;
 import java.util.function.Function;
 
 /**
- * <p>
  * When you find yourself in a situation where you need to use a method ( that throws an exception)
  * withing Lambda, this class is what you need to achieve your goal without Java complaining.
- * <p>
- * The class Represents a function that accepts one argument and produces a result.
- * whose functional method is {@link #apply(Object)}.
- * </p>
+ *
+ * <p>The class Represents a function that accepts one argument and produces a result. whose
+ * functional method is {@link #apply(Object)}.
  *
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
@@ -35,33 +33,35 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface ThrowingFunction<T, R> {
 
-    /**
-     * <p>Applies this function to the given argument.</p>
-     *
-     * @param t the function argument if Type T
-     * @return the function result
-     * @throws Exception any exception thrown when applying function
-     */
-    R apply(T t) throws Exception;
+  /**
+   * Applies this function to the given argument.
+   *
+   * @param t the function argument if Type T
+   * @return the function result
+   * @throws Exception any exception thrown when applying function
+   */
+  R apply(T t) throws Exception;
 
-    @SuppressWarnings("unchecked")
-    static <T extends Exception, R> R sneakyThrow(Exception ex) throws T {
-        throw (T) ex;
-    }
+  @SuppressWarnings("unchecked")
+  static <T extends Exception, R> R sneakyThrow(Exception ex) throws T {
+    throw (T) ex;
+  }
 
-    /**
-     * @param function Variable of {@link ThrowingFunction}
-     * @param <T>      the type of the input to the function
-     * @param <R>      the type of the result of the function
-     * @return A {@link Function}
-     */
-    static <T, R> Function<T, R> unchecked(ThrowingFunction<T, R> function) {
-        return argument -> {
-            try {
-                return function.apply(argument);
-            } catch (Exception ex) {
-                return sneakyThrow(ex);
-            }
-        };
-    }
+  /**
+   * <p>Uncheck method which will take operation that will throw Exception.</p>
+   *
+   * @param function Variable of {@link ThrowingFunction}
+   * @param <T>      the type of the input to the function
+   * @param <R>      the type of the result of the function
+   * @return A {@link Function}
+   */
+  static <T, R> Function<T, R> unchecked(ThrowingFunction<T, R> function) {
+    return argument -> {
+      try {
+        return function.apply(argument);
+      } catch (Exception ex) {
+        return sneakyThrow(ex);
+      }
+    };
+  }
 }

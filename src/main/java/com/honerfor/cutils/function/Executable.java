@@ -17,10 +17,8 @@
 package com.honerfor.cutils.function;
 
 /**
- * <p>
- * Represent operations that need the {@link Runnable} like behavior.
- * Use the {@link Executable} for operation that may throw and {@link Exception}
- * </p>
+ * Represent operations that need the {@link Runnable} like behavior. Use the {@link Executable} for
+ * operation that may throw and {@link Exception}
  *
  * @author B0BAI
  * @see Runnable
@@ -29,10 +27,10 @@ package com.honerfor.cutils.function;
 @FunctionalInterface
 public interface Executable {
 
-    /**
-     * <p>Execute the operation that may likely throw and Exception.</p>
-     *
-     * @throws Exception that is thrown when operation executes.
-     */
-    void execute() throws Exception;
+  /**
+   * Execute the operation that may likely throw and Exception.
+   *
+   * @throws Exception that is thrown when operation executes.
+   */
+  void execute() throws Exception;
 }

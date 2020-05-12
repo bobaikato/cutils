@@ -20,11 +20,11 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * This is similar to Java {@link Consumer} but the disparity of exceptions throws. {@link Accepter} can be used in place of
- * Java {@link Consumer} for operations that will throw an {@link Exception}.
- * <p>
- * {@link Accepter} can only accepts a single input argument and returns no result.
- * Unlike most other functional interfaces, {@code Accepter} is expected to operate via side effects.
+ * This is similar to Java {@link Consumer} but the disparity of exceptions throws. {@link Accepter}
+ * can be used in place of Java {@link Consumer} for operations that will throw an {@link
+ * Exception}. {@link Accepter} can only accepts a single input argument and returns no result.
+ * Unlike most other functional interfaces, {@code Accepter} is expected to operate via side
+ * effects.
  *
  * @param <T> the type of the input to the operation.
  * @author B0BAI
@@ -35,38 +35,38 @@ import java.util.function.Consumer;
 @FunctionalInterface
 public interface Accepter<T> {
 
-    /**
-     * Performs this operation on the given argument.
-     *
-     * @param t the input argument.
-     */
-    void accept(T t) throws Exception;
+  @SuppressWarnings("unchecked")
+  static <T extends Exception> void sneakyThrow(Exception ex) throws T {
+    throw (T) ex;
+  }
 
-    @SuppressWarnings("unchecked")
-    static <T extends Exception> void sneakyThrow(Exception ex) throws T {
-        throw (T) ex;
-    }
+  /**
+   * Returns a composed {@code Accepter} that performs, in sequence, this operation followed by the
+   * {@code after} operation. If performing either operation throws an exception, it is relayed to
+   * the caller of the composed operation. If performing this operation throws an exception, the
+   * {@code after} operation will not be performed.
+   *
+   * @param after the operation to perform after this operation
+   * @return a composed {@code Consumer} that performs in sequence this operation followed by the
+   * {@code after} operation.
+   */
+  default Accepter<T> andThen(Accepter<? super T> after) {
+    Objects.requireNonNull(after);
+    return (T t) -> {
+      try {
+        this.accept(t);
+      } catch (Exception ex) {
+        Accepter.sneakyThrow(ex);
+      }
+      after.accept(t);
+    };
+  }
 
-    /**
-     * Returns a composed {@code Accepter} that performs, in sequence, this
-     * operation followed by the {@code after} operation. If performing either
-     * operation throws an exception, it is relayed to the caller of the
-     * composed operation.  If performing this operation throws an exception,
-     * the {@code after} operation will not be performed.
-     *
-     * @param after the operation to perform after this operation
-     * @return a composed {@code Consumer} that performs in sequence this
-     * operation followed by the {@code after} operation.
-     */
-    default Accepter<T> andThen(Accepter<? super T> after) {
-        Objects.requireNonNull(after);
-        return (T t) -> {
-            try {
-                this.accept(t);
-            } catch (Exception ex) {
-                Accepter.sneakyThrow(ex);
-            }
-            after.accept(t);
-        };
-    }
+  /**
+   * Performs this operation on the given argument.
+   *
+   * @param t the input argument.
+   * @throws Exception throws accepter exception
+   */
+  void accept(T t) throws Exception;
 }

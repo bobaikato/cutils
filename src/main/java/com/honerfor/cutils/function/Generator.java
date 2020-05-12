@@ -17,10 +17,10 @@
 package com.honerfor.cutils.function;
 
 /**
- * Represent operations that will return unique/generated values every time {@link Generator#generate()} is called.
- * <p>
- * Please note that the onus is on you to provide the implementation that will return the unique values.
- * Else {@link Generator} Function will have the same behavior as the {@link Dealer} and {@link Runnable}.
+ * Represent operations that will return unique/generated values every time {@link
+ * Generator#generate()} is called. Please note that the onus is on you to provide the
+ * implementation that will return the unique values.Else {@link Generator} Function will have the
+ * same behavior as the {@link Dealer} and {@link Runnable}.
  *
  * @param <T> type of value.
  * @author B0BAI
@@ -31,11 +31,11 @@ package com.honerfor.cutils.function;
 @FunctionalInterface
 public interface Generator<T> {
 
-    /**
-     * <p>Generates values</p>
-     *
-     * @return return generate values of T type.
-     * @since 2.o
-     */
-    T generate();
+  /**
+   * Generates values.
+   *
+   * @return return generate values of T type.
+   * @since 2.o
+   */
+  T generate();
 }
