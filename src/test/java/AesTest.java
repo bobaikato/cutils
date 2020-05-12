@@ -54,27 +54,8 @@ final class AesTest {
       throws Exception {
     final AES<PersonExample> aes = AES.init(key);
     final String encryptedPersonExample = aes.encrypt(input);
+    System.out.println(encryptedPersonExample);
     final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
-
-    assertEquals(decryptedPersonExample.age, input.age);
-    assertEquals(decryptedPersonExample.name, input.name);
-  }
-
-  @DisplayName("Should successfully Encrypt and Decrypt Custom Object with default Encryption Key")
-  @ParameterizedTest(name = "{index} => value={0}")
-  @MethodSource("customObjectResource")
-  void encryptionAndDecryptionCustomObjectWithDefaultKey(final PersonExample input)
-      throws Exception {
-    final String encryptedPersonExample = AES.init().encrypt(input);
-    final PersonExample decryptedPersonExample =
-        AES.<PersonExample>init().decrypt(encryptedPersonExample);
-
-    System.out.println(
-        AES.init()
-            .decrypt(
-                "9tnqzPvwyi0kPhRCq9HDz9Y5Q0ZesoW/0QpXDX64s3hLzmfn3OGrQbse4ux0tP8p"
-                    + "lqvGACUA7DYdBAzEy3sWrKRv5p8P23AXW6u7u3jxH0Y7PxPRd8JM7VW5oDjuc3Ci90rrgP4rYlS"
-                    + "/DMPMq6gRDNdIm/o1135t3Wl2LxRSuQZ9+dzfvHUJEihd1fw="));
 
     assertEquals(decryptedPersonExample.age, input.age);
     assertEquals(decryptedPersonExample.name, input.name);
