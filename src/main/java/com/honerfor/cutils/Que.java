@@ -41,7 +41,7 @@ public final class Que<T> {
    *
    * @since 1.0
    */
-  private static Que instance;
+  private static Que<?> instance;
   /**
    * This hold this holds the final value an operation.
    *
@@ -133,8 +133,7 @@ public final class Que<T> {
    * @since 1.0
    */
   public Que<T> run(final Consumer<T> consumer) {
-    consumer.accept(this.value);
-    return this;
+    return this.consumer(consumer);
   }
 
   /**
@@ -148,11 +147,11 @@ public final class Que<T> {
     if (Objects.isNull(instance)) {
       synchronized (Que.class) {
         if (Objects.isNull(instance)) {
-          instance = new Que<T>();
+          instance = new Que<>();
         }
       }
     }
-    return instance;
+    return (Que<T>) instance;
   }
 
   /**
@@ -177,8 +176,7 @@ public final class Que<T> {
    * @since 1.0
    */
   public Que<T> execute(final Accepter<T> accepter) throws Exception {
-    accepter.accept(this.value);
-    return this;
+    return this.accepter(accepter);
   }
 
   /**
@@ -229,6 +227,11 @@ public final class Que<T> {
     return Que.createReference(dealer.deal());
   }
 
+  private Que<T> consumer(final Consumer<T> consumer) {
+    consumer.accept(this.value);
+    return this;
+  }
+
   /**
    * This method will consume a {@link Consumer} type variable.
    *
@@ -237,8 +240,7 @@ public final class Que<T> {
    * @since 1.0
    */
   public Que<T> andConsume(final Consumer<T> consumer) {
-    consumer.accept(this.value);
-    return this;
+    return this.consumer(consumer);
   }
 
   /**
@@ -250,6 +252,10 @@ public final class Que<T> {
    * @since 1.0
    */
   public Que<T> andAccept(final Accepter<T> accepter) throws Exception {
+    return this.accepter(accepter);
+  }
+
+  public Que<T> accepter(final Accepter<T> accepter) throws Exception {
     accepter.accept(this.value);
     return this;
   }
