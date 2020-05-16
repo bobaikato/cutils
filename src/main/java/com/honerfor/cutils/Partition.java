@@ -21,6 +21,7 @@ import static java.lang.String.format;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -73,31 +74,44 @@ public class Partition<T> extends AbstractList<List<T>> {
    * @return current instance of {@link Partition}
    */
   public Partition<T> into(int sublistSize) {
-    return Que.<Partition<T>>run(() -> {
-      Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.");
-    }).andRun(() -> this.sublistSize = sublistSize)
-        .andSupply(() -> this)
-        .get();
+    Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.");
+    this.sublistSize = sublistSize;
+    return this;
   }
 
   @Override
   public List<T> get(int index) {
     final int start = index * sublistSize;
     final int end = Math.min(start + sublistSize, list.size());
-
-    return Que.<List<T>>run(
-        () -> {
-          if (start > end) {
-            throw new IndexOutOfBoundsException(
-                format("Index %d is out of the list range <0,%d>", index, this.size() - 1));
-          }
-        })
-        .andSupply(() -> new ArrayList<>(list.subList(start, end)))
-        .get();
+    if (start > end) {
+      throw new IndexOutOfBoundsException(
+        format("Index %d is out of the list range <0,%d>", index, this.size() - 1));
+    }
+    return new ArrayList<>(list.subList(start, end));
   }
 
   @Override
   public int size() {
     return (int) Math.ceil((double) list.size() / (double) sublistSize);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Partition)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    final Partition<?> partition = (Partition<?>) o;
+    return sublistSize == partition.sublistSize && list.equals(partition.list);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), list, sublistSize);
   }
 }

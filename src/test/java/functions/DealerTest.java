@@ -40,11 +40,11 @@ final class DealerTest {
     assertNotNull(dealer.deal());
 
     if (dealer.deal() instanceof Integer) {
-      assertEquals(dealer.deal(), 122);
+      assertEquals(122, dealer.deal());
     }
 
     if (dealer.deal() instanceof String) {
-      assertEquals(dealer.deal(), "flash");
+      assertEquals("flash", dealer.deal());
     }
   }
 

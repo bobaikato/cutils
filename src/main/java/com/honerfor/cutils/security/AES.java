@@ -19,6 +19,7 @@ package com.honerfor.cutils.security;
 import com.honerfor.cutils.Serialization;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,12 +31,14 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -172,16 +175,17 @@ public class AES<T> {
    *     other exception thrown.
    * @since 1.0
    */
-  public T decrypt(@NotNull final String itemToDecrypt) throws Exception {
+  public T decrypt(@NotNull final String itemToDecrypt)
+      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+          IllegalBlockSizeException {
+
     Validate.isTrue(
-        ObjectUtils.isNotEmpty(itemToDecrypt),
-        "Item to decrypt cannot be null.",
-        itemToDecrypt
-    );
+        ObjectUtils.isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
 
     final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
     final AlgorithmParameterSpec algorithmParameterSpec =
         new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
+
     this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, algorithmParameterSpec);
 
     if (Objects.nonNull(this.additionalAuthenticationData)) {
@@ -191,6 +195,6 @@ public class AES<T> {
     final byte[] plainText =
         this.cipher.doFinal(cipherMessage, GCM_IV_LENGTH, cipherMessage.length - GCM_IV_LENGTH);
 
-    return Serialization.deserialize(plainText);
+    return SerializationUtils.deserialize(plainText);
   }
 }
