@@ -16,15 +16,12 @@
 
 package functions;
 
-import static java.lang.System.nanoTime;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.honerfor.cutils.function.LazyFunction;
+import com.honerfor.cutils.Que;
 import com.honerfor.cutils.function.ThrowingFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,56 +29,25 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public final class ThrowingFunctionTest {
 
-  static final int MOCK_LATENCY = 2000;
-
-  @DisplayName("Expect Idler to memoize values for Suppliers.")
-  @ParameterizedTest(name = "{index} =>  value={1}")
-  @MethodSource("idlerSupplierOperations")
-  void verifyIdlerMemoizedSupplierValues(
-      final Function<Integer, Integer> fn, final int input, final int sec) {
-
-    final long startTime = nanoTime();
-
-    final int result = fn.apply(input);
-
-    final long endTime = nanoTime();
-    final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
-
-    Assertions.assertEquals(MOCK_LATENCY + input, result); // result check
-    Assertions.assertEquals(sec, executionTime); // check execution time
+  @DisplayName("Should take checked exception operationa and throw the exception when thrown")
+  @ParameterizedTest(name = "{index} => input={1}")
+  @MethodSource("throwingFunctionOperations")
+  void illegalArgumentExceptionForPartition(
+      final Function<String, Integer> fn, final String input) {
+    assertThrows(Exception.class, () -> fn.apply(input));
   }
 
-  private static Stream<Arguments> idlerSupplierOperations() {
-
-    final Function<Integer, Integer> function =
-        LazyFunction.of(
-            ThrowingFunction.unchecked(
-                value -> {
-                  final int time = MOCK_LATENCY;
-                  try {
-                    Thread.sleep(time); // mock operation with high latency
-                  } catch (InterruptedException e) {
-                  }
-                  return time + value;
-                }));
+  private static Stream<Arguments> throwingFunctionOperations() {
+    final Function<String, Integer> convertStringToInteger =
+      ThrowingFunction.unchecked(
+        string -> {
+          // checked Exception operation
+          return Que.as(() -> Integer.parseInt(string)).get();
+        });
 
     return Stream.of(
-        Arguments.of(function, 23, 2),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 24, 2),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 25, 2),
-        Arguments.of(function, 24, 0),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 25, 0),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 26, 2),
-        Arguments.of(function, 24, 0),
-        Arguments.of(function, 23, 0),
-        Arguments.of(function, 26, 0),
-        Arguments.of(function, 24, 0));
+      Arguments.of(convertStringToInteger, ""),
+      Arguments.of(convertStringToInteger, "12E4"),
+      Arguments.of(convertStringToInteger, "O"));
   }
 }

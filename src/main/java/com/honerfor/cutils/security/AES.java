@@ -42,6 +42,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
  * This is an implementation of Advanced Encryption Standard, to can encrypt and decrypt Objects of
@@ -145,8 +146,6 @@ public class AES<T> {
    */
   public String encrypt(@Valid final T itemToEncrypt) throws Exception {
     isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
-
-    Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
     final Supplier<byte[]> ivSupplier =
         () -> {
           final SecureRandom secureRandom = new SecureRandom();
