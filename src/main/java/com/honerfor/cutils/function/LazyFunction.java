@@ -74,7 +74,7 @@ public class LazyFunction<T, R> implements Function<T, R>, Serializable {
       return this.store.get(t);
     }
     final R value = this.function.apply(t);
-    this.store.put(t, value);
+    this.store.putIfAbsent(t, value);
     return value;
   }
 
