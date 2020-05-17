@@ -51,7 +51,7 @@ public interface Accepter<T> {
    * {@code after} operation.
    */
   default Accepter<T> andThen(Accepter<? super T> after) {
-    Objects.requireNonNull(after);
+    Objects.requireNonNull(after, after.getClass().getSimpleName() + " cannot be null");
     return (T t) -> {
       try {
         this.accept(t);
