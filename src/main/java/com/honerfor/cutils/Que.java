@@ -128,6 +128,7 @@ public final class Que<T> implements Serializable {
    * @return instance of {@link Que}
    */
   public static <T> Que<T> as(final Dealer<T> dealer) throws Exception {
+    Objects.requireNonNull(dealer, "dealer cannot be null");
     return Que.createReference(dealer.deal());
   }
 
@@ -140,6 +141,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public static <T> Que<T> run(final Runnable runnable) {
+    Objects.requireNonNull(runnable, "runnable cannot be null");
     runnable.run();
     return Que.getInstance();
   }
@@ -229,6 +231,7 @@ public final class Que<T> implements Serializable {
   }
 
   private Que<T> consumer(final Consumer<T> consumer) {
+    Objects.requireNonNull(consumer, "consumer cannot be null");
     consumer.accept(this.value);
     return this;
   }
@@ -257,6 +260,7 @@ public final class Que<T> implements Serializable {
   }
 
   public Que<T> accepter(final Accepter<T> accepter) throws Exception {
+    Objects.requireNonNull(accepter, "accepter cannot be null");
     accepter.accept(this.value);
     return this;
   }
@@ -270,6 +274,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public Que<T> andCall(final Callable<T> callable) throws Exception {
+    Objects.requireNonNull(callable, "callable cannot be null");
     return Que.createReference(callable.call());
   }
 
