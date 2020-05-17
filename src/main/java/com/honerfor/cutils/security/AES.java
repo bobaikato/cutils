@@ -17,7 +17,6 @@
 package com.honerfor.cutils.security;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.apache.commons.lang3.Validate.isTrue;
 
 import com.honerfor.cutils.Serialization;
 import java.io.IOException;
@@ -143,8 +142,9 @@ public class AES<T> {
    *     a block cipher is incorrect, i.e., does not match the block size of the cipher.
    * @throws IOException Signals that an I/O exception of some sort has occurred.
    */
-  public String encrypt(@Valid final T itemToEncrypt) throws Exception {
-    isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
+  public String encrypt(@Valid final T itemToEncrypt)
+      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+          IllegalBlockSizeException, IOException {
 
     Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
     final Supplier<byte[]> ivSupplier =
@@ -193,7 +193,7 @@ public class AES<T> {
       throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
           IllegalBlockSizeException {
 
-    isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
+    Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
 
     final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
     final AlgorithmParameterSpec spec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
