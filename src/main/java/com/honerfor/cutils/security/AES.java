@@ -18,7 +18,6 @@ package com.honerfor.cutils.security;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
-
 import com.honerfor.cutils.Serialization;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -144,8 +143,10 @@ public class AES<T> {
    *     a block cipher is incorrect, i.e., does not match the block size of the cipher.
    * @throws IOException Signals that an I/O exception of some sort has occurred.
    */
-  public String encrypt(@Valid final T itemToEncrypt) throws Exception {
-    isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
+  public String encrypt(@Valid final T itemToEncrypt)
+      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+          IllegalBlockSizeException, IOException {
+    Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
     final Supplier<byte[]> ivSupplier =
         () -> {
           final SecureRandom secureRandom = new SecureRandom();
