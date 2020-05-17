@@ -56,7 +56,7 @@ public interface TriConsumer<X, Y, Z> {
    * @throws NullPointerException if {@code after} is null
    */
   default TriConsumer<X, Y, Z> andThen(TriConsumer<? super X, ? super Y, ? super Z> after) {
-    Objects.requireNonNull(after);
+    Objects.requireNonNull(after, after.getClass().getSimpleName() + " cannot be null");
 
     return (a, b, c) -> {
       accept(a, b, c);

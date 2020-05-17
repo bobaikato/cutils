@@ -16,12 +16,11 @@
 
 package com.honerfor.cutils;
 
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Objects;
 import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Assists with the serialization process and performs additional functionality based on
@@ -51,19 +50,13 @@ public class Serialization extends SerializationUtils {
    * @throws java.io.IOException if the serialization fails
    * @since 1.0
    */
-  public static byte[] serialize(Object object) throws Exception {
-    return Que.<byte[]>run(
-            () -> Validate.isTrue(isNotEmpty(object), "Object to serialize cannot be null."))
-        .andCall(
-            () -> {
-              final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
-              final ObjectOutputStream os = new ObjectOutputStream(outputStream);
-              return Que.<byte[]>execute(() -> os.writeObject(object))
-                  .andExecute(os::flush)
-                  .andExecute(os::close)
-                  .andSupply(outputStream::toByteArray)
-                  .get();
-            })
-        .get();
+  public static byte[] serialize(Object object) throws IOException {
+    Objects.requireNonNull(object, "Object to serialize cannot be null.");
+    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
+    final ObjectOutputStream os = new ObjectOutputStream(outputStream);
+    os.writeObject(object);
+    os.flush();
+    os.close();
+    return outputStream.toByteArray();
   }
 }

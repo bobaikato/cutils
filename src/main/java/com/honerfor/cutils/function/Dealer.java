@@ -38,10 +38,12 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface Dealer<T> {
 
+
   /**
    * Gets a result.
    *
    * @return a result
+   * @throws Exception operation exception thrown
    */
   T deal() throws Exception;
 }
