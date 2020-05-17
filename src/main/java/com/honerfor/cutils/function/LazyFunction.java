@@ -37,7 +37,13 @@ import java.util.function.Function;
  */
 public class LazyFunction<T, R> implements Function<T, R>, Serializable {
   private static final long serialVersionUID = 398334400292617685L;
+
   private final transient Function<T, R> function;
+
+  /**
+   * Store the current result of function by the the argument provided.
+   * @since 5.0
+   */
   private final transient Map<T, R> store = new ConcurrentHashMap<>();
 
   /**
