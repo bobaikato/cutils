@@ -85,7 +85,7 @@ public class Partition<T> extends AbstractList<List<T>> {
     final int end = Math.min(start + sublistSize, list.size());
     if (start > end) {
       throw new IndexOutOfBoundsException(
-        format("Index %d is out of the list range <0,%d>", index, this.size() - 1));
+          format("Index %d is out of the list range <0,%d>", index, this.size() - 1));
     }
     return new ArrayList<>(list.subList(start, end));
   }
@@ -100,14 +100,14 @@ public class Partition<T> extends AbstractList<List<T>> {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Partition)) {
-      return false;
+    if (o instanceof Partition) {
+      if (!super.equals(o)) {
+        return false;
+      }
+      final Partition<?> partition = (Partition<?>) o;
+      return sublistSize == partition.sublistSize && list.equals(partition.list);
     }
-    if (!super.equals(o)) {
-      return false;
-    }
-    final Partition<?> partition = (Partition<?>) o;
-    return sublistSize == partition.sublistSize && list.equals(partition.list);
+    return false;
   }
 
   @Override
