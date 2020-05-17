@@ -16,8 +16,9 @@
 
 package com.honerfor.cutils;
 
-import org.apache.commons.lang3.Validate;
+import static org.apache.commons.lang3.Validate.isTrue;
 
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Objects;
@@ -26,22 +27,17 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 /**
- * <p>
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
  * Session, ID etc. To generate random strings you can use the default the constructor that suit
  * your purpose or the default option which will generate string of 64 characters.
  *
+ * <p>Example/Usage: <code>
  * </p>
- *
- * <p>
- * Example/Usage:
- * <code>
- * <p>
  * StringIncubator gen = new StringIncubator(12);
  * StringIncubator session = new StringIncubator();
  * <p>
  * StringIncubator gen = new StringIncubator(12, ThreadLocalRandom.current());
- * <p>
+ * </p>
  * String symbol = StringIncubator.DIGITS + "ACEFGHJKLMNPQRUVWXYabcdefhijkprstuvwx";
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
@@ -50,122 +46,122 @@ import java.util.stream.IntStream;
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 2.0
  */
-public class StringIncubator {
+public class StringIncubator implements Serializable {
 
-    private Random random;
+  private static final long serialVersionUID = 3793946601043438484L;
 
-    private char[] symbols;
+  private final Random random;
 
-    private char[] buffer;
+  private final char[] symbols;
 
-    /**
-     * <p>Upper-case Alphabets</p>
-     *
-     * @since 2.0
-     */
-    public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private final char[] buffer;
 
-    /**
-     * <p>Lower-case Alphabets</p>
-     *
-     * @since 2.0
-     */
-    public static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
+  /**
+   * Upper-case Alphabets.
+   *
+   * @since 2.0
+   */
+  public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    /**
-     * <p>Digits variable</p>
-     *
-     * @since 2.0
-     */
-    public static final String DIGITS = "0123456789";
+  /**
+   * Lower-case Alphabets.
+   *
+   * @since 2.0
+   */
+  public static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
 
-    /**
-     * <p>Alpha-numeric variable</p>
-     *
-     * @since 2.0
-     */
-    private static final String ALPHANUM = UPPER + LOWER + DIGITS;
+  /**
+   * Digits variable.
+   *
+   * @since 2.0
+   */
+  public static final String DIGITS = "0123456789";
 
-    /**
-     * <p>
-     * Constructor which take the require hatch length, instance of {@link Random} and
-     * {@link String} from which to hatch the random values.
-     * </P>
-     *
-     * @param length  of hatched string/value
-     * @param random  any instance of {@link Random} as required
-     * @param symbols String to generate the hatched values
-     * @since 2.0
-     */
-    public StringIncubator(int length, Random random, String symbols) {
-        Que.run(() -> Validate.isTrue(length > 1, "String length cannot be less than 1", length))
-                .andRun(() -> Validate.isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length()))
-                .andRun(() -> {
-                    this.random = Objects.requireNonNull(random);
-                    this.symbols = (symbols).toCharArray();
-                    this.buffer = new char[length];
-                });
-    }
+  /**
+   * Alpha-numeric variable.
+   *
+   * @since 2.0
+   */
+  private static final String ALPHANUM = UPPER + LOWER + DIGITS;
 
-    /**
-     * <p>Constructor to hatch an alphanumeric string generator.</p>
-     *
-     * @param length of hatched string/value
-     * @param random any instance of {@link Random} as required
-     * @since 2.0
-     */
-    public StringIncubator(int length, Random random) {
-        this(length, random, ALPHANUM);
-    }
+  /**
+   * Constructor which take the require hatch length, instance of {@link Random} and {@link String}
+   * from which to hatch the random values.
+   *
+   * @param length of hatched string/value
+   * @param random any instance of {@link Random} as required
+   * @param symbols String to generate the hatched values
+   * @since 2.0
+   */
+  public StringIncubator(int length, Random random, String symbols) {
+    isTrue(length > 1, "String length cannot be less than 1", length);
+    isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length());
 
-    /**
-     * <p>Constructor to hatch an alphanumeric string generator.</p>
-     *
-     * @param length of hatched string/value
-     * @param random any instance of {@link ThreadLocalRandom} as required
-     * @since 2.0
-     */
-    public StringIncubator(int length, ThreadLocalRandom random) {
-        this(length, random, ALPHANUM);
-    }
+    this.random = Objects.requireNonNull(random);
+    this.symbols = (symbols).toCharArray();
+    this.buffer = new char[length];
+  }
 
-    /**
-     * <p>Create an alphanumeric strings from a secure generator.</p>
-     *
-     * @param length of hatched string/value
-     * @since 2.0
-     */
-    public StringIncubator(int length) {
-        this(length, new SecureRandom());
-    }
+  /**
+   * Constructor to hatch an alphanumeric string generator.
+   *
+   * @param length of hatched string/value
+   * @param random any instance of {@link Random} as required
+   * @since 2.0
+   */
+  public StringIncubator(int length, Random random) {
+    this(length, random, ALPHANUM);
+  }
 
-    /**
-     * <p>Create an alphanumeric strings from a secure generator.</p>
-     *
-     * @param symbols String to generate the hatched values
-     * @param length  of hatched string/value
-     * @since 3.0
-     */
-    public StringIncubator(int length, String symbols) {
-        this(length, new SecureRandom(), symbols);
-    }
+  /**
+   * Constructor to hatch an alphanumeric string generator.
+   *
+   * @param length of hatched string/value
+   * @param random any instance of {@link ThreadLocalRandom} as required
+   * @since 2.0
+   */
+  public StringIncubator(int length, ThreadLocalRandom random) {
+    this(length, random, ALPHANUM);
+  }
 
-    /**
-     * <p>Create session identifiers, default length of 64</p>
-     *
-     * @since 2.0
-     */
-    public StringIncubator() {
-        this(64);
-    }
+  /**
+   * Create an alphanumeric strings from a secure generator.
+   *
+   * @param length of hatched string/value
+   * @since 2.0
+   */
+  public StringIncubator(int length) {
+    this(length, new SecureRandom());
+  }
 
-    /**
-     * <p>Generate and returns random string.</p>
-     *
-     * @since 2.0
-     */
-    public String hatch() {
-        IntStream.range(0, buffer.length).forEachOrdered(idx -> buffer[idx] = symbols[random.nextInt(symbols.length)]);
-        return String.valueOf(buffer);
-    }
+  /**
+   * Create an alphanumeric strings from a secure generator.
+   *
+   * @param symbols String to generate the hatched values
+   * @param length of hatched string/value
+   * @since 3.0
+   */
+  public StringIncubator(int length, String symbols) {
+    this(length, new SecureRandom(), symbols);
+  }
+
+  /**
+   * Create session identifiers, default length of 64.
+   *
+   * @since 2.0
+   */
+  public StringIncubator() {
+    this(64);
+  }
+
+  /**
+   * Generate and returns random string.
+   *
+   * @since 2.0
+   */
+  public String hatch() {
+    IntStream.range(0, buffer.length)
+        .forEachOrdered(idx -> buffer[idx] = symbols[random.nextInt(symbols.length)]);
+    return String.valueOf(buffer);
+  }
 }

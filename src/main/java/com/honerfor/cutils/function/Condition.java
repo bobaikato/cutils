@@ -17,10 +17,8 @@
 package com.honerfor.cutils.function;
 
 /**
- * <p>
- * Represents an operation that returns a condition/boolean.
- * whose functional method is {@link #isMet()}.
- * </p>
+ * Represents an operation that returns a condition/boolean. whose functional method is {@link
+ * #isMet()}.
  *
  * @author B0BAI
  * @since 1.0
@@ -28,22 +26,21 @@ package com.honerfor.cutils.function;
 @FunctionalInterface
 public interface Condition {
 
-    /**
-     * <p>Check the condition</p>
-     *
-     * @return the final condition of boolean
-     * @since 1.0
-     */
-    boolean isMet();
+  /**
+   * <p>Check the condition.</p>
+   *
+   * @return the final condition of boolean
+   * @since 1.0
+   */
+  boolean isMet();
 
-    /**
-     * <p>
-     * Negates the condition. True is condition isn't met and False when condition is met.</p>
-     *
-     * @return the final negation of the actual condition of boolean.
-     * @since 3.0
-     */
-    default boolean isNotMet() {
-        return !this.isMet();
-    }
+  /**
+   * Negates the condition. True is condition isn't met and False when condition is met.
+   *
+   * @return the final negation of the actual condition of boolean.
+   * @since 3.0
+   */
+  default boolean isNotMet() {
+    return !this.isMet();
+  }
 }

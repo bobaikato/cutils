@@ -17,41 +17,38 @@
 package functions;
 
 import com.honerfor.cutils.function.Executable;
-import lombok.SneakyThrows;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
-
 final class ExecutableTest {
 
-    @DisplayName("Expect Dealer throws an Exception.")
-    @ParameterizedTest(name = "{index} => value={0}")
-    @MethodSource("executableFunctions")
-    void verifyExecutableThrowsAnException(Executable executable) {
-        Assertions.assertThrows(Exception.class, executable::execute);
-    }
+  @DisplayName("Expect Dealer throws an Exception.")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("executableFunctions")
+  void verifyExecutableThrowsAnException(Executable executable) {
+    Assertions.assertThrows(Exception.class, executable::execute);
+  }
 
-    private static Stream<Arguments> executableFunctions() {
-        final Executable firstExec = () -> {
-            throw new ClassCastException();
+  private static Stream<Arguments> executableFunctions() {
+    final Executable firstExec =
+        () -> {
+          throw new ClassCastException();
         };
 
-        final Executable secondExec = () -> {
-            throw new IllegalAccessException();
+    final Executable secondExec =
+        () -> {
+          throw new IllegalAccessException();
         };
 
-        final Executable thirdExec = () -> {
-            throw new NullPointerException();
+    final Executable thirdExec =
+        () -> {
+          throw new NullPointerException();
         };
 
-        return Stream.of(
-                Arguments.of(firstExec),
-                Arguments.of(secondExec),
-                Arguments.of(thirdExec)
-        );
-    }
+    return Stream.of(Arguments.of(firstExec), Arguments.of(secondExec), Arguments.of(thirdExec));
+  }
 }

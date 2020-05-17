@@ -16,17 +16,13 @@
 
 package com.honerfor.cutils.security;
 
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static org.apache.commons.lang3.Validate.isTrue;
 import com.honerfor.cutils.Serialization;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,12 +32,20 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.function.Supplier;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
- * <p>
- * This is an implementation of Advanced Encryption Standard,
- * to can encrypt and decrypt Objects of any type.
- * </p>
+ * This is an implementation of Advanced Encryption Standard, to can encrypt and decrypt Objects of
+ * any type.
  *
  * @param <T> Type of value
  * @author B0BAI
@@ -49,135 +53,182 @@ import java.util.function.Supplier;
  */
 public class AES<T> {
 
-    /**
-     * <p>Instance of {@link Cipher}</p>
-     *
-     * @since 1.0
-     */
-    private final Cipher cipher;
+  /**
+   * Instance of {@link Cipher}.
+   *
+   * @since 1.0
+   */
+  private final Cipher cipher;
 
-    /**
-     * <p>Instance of {@link SecretKeySpec}</p>
-     *
-     * @since 1.0
-     */
-    private final SecretKeySpec secretKey;
+  /**
+   * Instance of {@link SecretKeySpec}.
+   *
+   * @since 1.0
+   */
+  private final SecretKeySpec secretKey;
 
-    /**
-     * GCM Length
-     */
-    private final static int GCM_IV_LENGTH = 12;
+  /** GCM Length. */
+  private static final int GCM_IV_LENGTH = 12;
 
-    /**
-     * Additional Authentication Data for GCM
-     *
-     * @since 4.0
-     */
-    private final byte[] additionalAuthenticationData;
+  /**
+   * Additional Authentication Data for GCM.
+   *
+   * @since 4.0
+   */
+  private final byte[] aad;
 
-    /**
-     * @param encryptionKey meta data you want to verify secret message
-     * @throws NoSuchPaddingException   when a bad/Wrong encryption key is supplied.
-     * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not available in the environment.
-     * @since 1.0
-     */
-    private AES(final String encryptionKey) throws NoSuchPaddingException, NoSuchAlgorithmException {
-        this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        byte[] key = this.additionalAuthenticationData = encryptionKey.getBytes(StandardCharsets.UTF_8);
-        final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-        key = Arrays.copyOf(messageDigest.digest(key), 16);
-        this.secretKey = new SecretKeySpec(key, "AES");
-    }
+  /**
+   * Default Constructor.
+   *
+   * @param encryptionKey meta data you want to verify secret message
+   * @throws NoSuchPaddingException when a bad/Wrong encryption key is supplied.
+   * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not
+   *     available in the environment.
+   * @since 1.0
+   */
+  private AES(final String encryptionKey) throws NoSuchPaddingException, NoSuchAlgorithmException {
+    this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
+    byte[] key = this.aad = encryptionKey.getBytes(StandardCharsets.UTF_8);
+    final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+    key = Arrays.copyOf(messageDigest.digest(key), 16);
+    this.secretKey = new SecretKeySpec(key, "AES");
+  }
 
-    /**
-     * <p>This initiates encryption </p>
-     *
-     * @param <T> Type of value
-     * @return Instance of {@link AES}
-     * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic algorithm is
-     *                                  requested but is not available in the environment.
-     * @throws NoSuchPaddingException   This exception is thrown when a particular padding mechanism is
-     *                                  requested but is not available in the environment.
-     * @since 1.0
-     */
-    public static <T> AES<T> init() throws NoSuchAlgorithmException, NoSuchPaddingException {
-        final String encryptionKey = "This is clearly a default Key: {OYrkhC'I(=fW&yNtP2peBndT5Hz&}. Set yours with: `AES.init(<Your_Key_here>)`";
-        return AES.init(encryptionKey);
-    }
+  /**
+   * This initiates encryption.
+   *
+   * @param <T> Type of value
+   * @return Instance of {@link AES}
+   * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
+   *     algorithm is requested but is not available in the environment.
+   * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
+   *     requested but is not available in the environment.
+   * @since 1.0
+   */
+  public static <T> AES<T> init() throws NoSuchAlgorithmException, NoSuchPaddingException {
+    final String key = "Set yours with: `AES.init('fW&yNtP2peBndT5Hz&')`";
+    return AES.init(key);
+  }
 
-    /**
-     * <p>This initiates encryption</p>
-     *
-     * @param encryptionKey user encryption Key
-     * @param <T>           Type of value
-     * @return Instance of {@link AES}
-     * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic algorithm is
-     *                                  requested but is not available in the environment.
-     * @throws NoSuchPaddingException   This exception is thrown when a particular padding mechanism is
-     *                                  requested but is not available in the environment.
-     * @since 1.0
-     */
-    public static <T> AES<T> init(final String encryptionKey) throws NoSuchAlgorithmException, NoSuchPaddingException {
-        return new AES<>(encryptionKey);
-    }
+  /**
+   * This initiates encryption.
+   *
+   * @param encryptionKey user encryption Key
+   * @param <T> Type of value
+   * @return Instance of {@link AES}
+   * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
+   *     algorithm is requested but is not available in the environment.
+   * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
+   *     requested but is not available in the environment.
+   * @since 1.0
+   */
+  public static <T> AES<T> init(final String encryptionKey)
+      throws NoSuchAlgorithmException, NoSuchPaddingException {
+    Objects.requireNonNull(encryptionKey, "encryption Key cannot be null");
+    return new AES<>(encryptionKey);
+  }
 
-    /**
-     * <p>This encrypt item of T type</p>
-     *
-     * @param itemToEncrypt item to encrypt.
-     * @return encrypted string of {@code itemToEncrypt} of T type. Not {@literal null}
-     * @throws Exception instance of any exception thrown
-     * @since 1.0
-     */
-    public String encrypt(@Valid final T itemToEncrypt) throws Exception {
-
-        final Supplier<byte[]> ivSupplier = () -> {
-            final SecureRandom secureRandom = new SecureRandom();
-            final byte[] iv = new byte[GCM_IV_LENGTH]; //NEVER REUSE THIS IV WITH SAME KEY
-            do {
-                secureRandom.nextBytes(iv);
-            } while (iv[0] == 0);
-            return iv;
+  /**
+   * This encrypt item of T type.
+   *
+   * @param itemToEncrypt item to encrypt.
+   * @return encrypted string of {@code itemToEncrypt} of T type. Not {@literal null}
+   * @throws InvalidAlgorithmParameterException This is the exception for invalid or inappropriate
+   *     algorithm parameters.
+   * @throws InvalidKeyException This is the exception for invalid Keys (invalid encoding, wrong *
+   *     length, uninitialized, etc).
+   * @throws BadPaddingException This exception is thrown when a particular padding mechanism is
+   *     expected for the input data but the data is not padded properly.
+   * @throws IllegalBlockSizeException This exception is thrown when the length of data provided to
+   *     a block cipher is incorrect, i.e., does not match the block size of the cipher.
+   * @throws IOException Signals that an I/O exception of some sort has occurred.
+   */
+  public String encrypt(@Valid final T itemToEncrypt)
+      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+          IllegalBlockSizeException, IOException {
+    Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
+    final Supplier<byte[]> ivSupplier =
+        () -> {
+          final SecureRandom secureRandom = new SecureRandom();
+          final byte[] iv = new byte[GCM_IV_LENGTH]; // NEVER REUSE THIS IV WITH SAME KEY
+          do {
+            secureRandom.nextBytes(iv);
+          } while (iv[0] == 0);
+          return iv;
         };
 
-        final byte[] iv = ivSupplier.get();
+    final byte[] iv = ivSupplier.get();
 
-        final GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv); //128 bit auth tag length
-        this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey, parameterSpec);
+    final GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
+    this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey, parameterSpec);
 
-        if (Objects.nonNull(this.additionalAuthenticationData)) {
-            this.cipher.updateAAD(this.additionalAuthenticationData);
-        }
-
-        final byte[] serializeData = Serialization.serialize(itemToEncrypt);
-        byte[] cipherText = this.cipher.doFinal(serializeData);
-
-        final ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + cipherText.length);
-        byteBuffer.put(iv);
-        byteBuffer.put(cipherText);
-
-        return Base64.getEncoder().encodeToString(byteBuffer.array());
+    if (Objects.nonNull(this.aad)) {
+      this.cipher.updateAAD(this.aad);
     }
 
-    /**
-     * <p>This method will decrypt the {@code itemToDecrypt}</p>
-     *
-     * @param itemToDecrypt encrypted string to be decrypted. not {@literal null}
-     * @return decrypted Object.
-     * @throws Exception instance of {@link InvalidKeyException}, {@link BadPaddingException} or any other exception thrown.
-     * @since 1.0
-     */
-    public T decrypt(@NotNull final String itemToDecrypt) throws Exception {
-        final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
-        final AlgorithmParameterSpec algorithmParameterSpec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
-        this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, algorithmParameterSpec);
+    final byte[] serializeData = Serialization.serialize(itemToEncrypt);
+    byte[] cipherText = this.cipher.doFinal(serializeData);
 
-        if (Objects.nonNull(this.additionalAuthenticationData)) {
-            this.cipher.updateAAD(this.additionalAuthenticationData);
-        }
+    final ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + cipherText.length);
+    byteBuffer.put(iv);
+    byteBuffer.put(cipherText);
 
-        final byte[] plainText = this.cipher.doFinal(cipherMessage, GCM_IV_LENGTH, cipherMessage.length - GCM_IV_LENGTH);
+    return Base64.getEncoder().encodeToString(byteBuffer.array());
+  }
 
-        return Serialization.deserialize(plainText);
+  /**
+   * This method will decrypt the {@code itemToDecrypt}.
+   *
+   * @param itemToDecrypt encrypted string to be decrypted. not {@literal null}
+   * @return decrypted Object.
+   * @throws InvalidAlgorithmParameterException exception for invalid or inappropriate algorithm
+   *     parameters.
+   * @throws InvalidKeyException exception for invalid Keys
+   * @throws BadPaddingException This exception is thrown when a particular padding mechanism is *
+   *     expected for the input data but the data is not padded properly.
+   * @throws IllegalBlockSizeException This exception is thrown when the length of data provided to
+   *     a block * cipher is incorrect, i.e., does not match the block size of the cipher.
+   */
+  public T decrypt(@NotNull final String itemToDecrypt)
+      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+          IllegalBlockSizeException {
+
+    isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
+
+    final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
+    final AlgorithmParameterSpec spec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
+
+    this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, spec);
+
+    if (Objects.nonNull(this.aad)) {
+      this.cipher.updateAAD(this.aad);
     }
+
+    final byte[] plainText =
+        this.cipher.doFinal(cipherMessage, GCM_IV_LENGTH, cipherMessage.length - GCM_IV_LENGTH);
+
+    return SerializationUtils.deserialize(plainText);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o instanceof AES) {
+      final AES<?> aes = (AES<?>) o;
+      if (cipher.equals(aes.cipher) && secretKey.equals(aes.secretKey)) {
+        return Arrays.equals(aad, aes.aad);
+      }
+      return false;
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(cipher, secretKey);
+    result = 31 * result + Arrays.hashCode(aad);
+    return result;
+  }
 }

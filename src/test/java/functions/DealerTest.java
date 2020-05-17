@@ -16,7 +16,12 @@
 
 package functions;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.honerfor.cutils.function.Dealer;
+import java.io.File;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -24,65 +29,56 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.File;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 final class DealerTest {
 
-    @SneakyThrows
-    @DisplayName("Expect Dealer to return variable of same Type that was Initialized.")
-    @ParameterizedTest(name = "{index} => value={0}")
-    @MethodSource("firstDealerFunctions")
-    void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) {
+  @SneakyThrows
+  @DisplayName("Expect Dealer to return variable of same Type that was Initialized.")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("firstDealerFunctions")
+  void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) {
 
-        assertNotNull(dealer.deal());
+    assertNotNull(dealer.deal());
 
-        if (dealer.deal() instanceof Integer) {
-            assertEquals(dealer.deal(), 122);
-        }
-
-        if (dealer.deal() instanceof String) {
-            assertEquals(dealer.deal(), "flash");
-        }
+    if (dealer.deal() instanceof Integer) {
+      assertEquals(122, dealer.deal());
     }
 
-    private static Stream<Arguments> firstDealerFunctions() {
-        final Dealer<String> firstDealer = () -> "flash";
-        final Dealer<Integer> secondDealer = () -> 122;
-
-        return Stream.of(
-                Arguments.of(firstDealer),
-                Arguments.of(secondDealer)
-        );
+    if (dealer.deal() instanceof String) {
+      assertEquals("flash", dealer.deal());
     }
+  }
 
-    @DisplayName("Expect Dealer throws an Exception.")
-    @ParameterizedTest(name = "{index} => value={0}")
-    @MethodSource("secondDealerFunctions")
-    void verifyDealerThrowsAnException(Dealer<?> dealer) {
-        Assertions.assertThrows(Exception.class, dealer::deal);
-    }
+  private static Stream<Arguments> firstDealerFunctions() {
+    final Dealer<String> firstDealer = () -> "flash";
+    final Dealer<Integer> secondDealer = () -> 122;
 
-    private static Stream<Arguments> secondDealerFunctions() {
-        final Dealer<Class<?>> firstDealer = () -> {
-            throw new ClassCastException();
+    return Stream.of(Arguments.of(firstDealer), Arguments.of(secondDealer));
+  }
+
+  @DisplayName("Expect Dealer throws an Exception.")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("secondDealerFunctions")
+  void verifyDealerThrowsAnException(Dealer<?> dealer) {
+    Assertions.assertThrows(Exception.class, dealer::deal);
+  }
+
+  private static Stream<Arguments> secondDealerFunctions() {
+    final Dealer<Class<?>> firstDealer =
+        () -> {
+          throw new ClassCastException();
         };
 
-        final Dealer<File> secondDealer = () -> {
-            throw new IllegalAccessException();
+    final Dealer<File> secondDealer =
+        () -> {
+          throw new IllegalAccessException();
         };
 
-        final Dealer<String> thirdDealer = () -> {
-            throw new NullPointerException();
+    final Dealer<String> thirdDealer =
+        () -> {
+          throw new NullPointerException();
         };
 
-        return Stream.of(
-                Arguments.of(firstDealer),
-                Arguments.of(secondDealer),
-                Arguments.of(thirdDealer)
-        );
-    }
+    return Stream.of(
+        Arguments.of(firstDealer), Arguments.of(secondDealer), Arguments.of(thirdDealer));
+  }
 }
