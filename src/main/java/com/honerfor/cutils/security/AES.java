@@ -17,7 +17,7 @@
 package com.honerfor.cutils.security;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-
+import static org.apache.commons.lang3.Validate.isTrue;
 import com.honerfor.cutils.Serialization;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -75,7 +75,7 @@ public class AES<T> {
    *
    * @since 4.0
    */
-  private final byte[] additionalAuthenticationData;
+  private final byte[] aad;
 
   /**
    * Default Constructor.
@@ -88,7 +88,7 @@ public class AES<T> {
    */
   private AES(final String encryptionKey) throws NoSuchPaddingException, NoSuchAlgorithmException {
     this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
-    byte[] key = this.additionalAuthenticationData = encryptionKey.getBytes(StandardCharsets.UTF_8);
+    byte[] key = this.aad = encryptionKey.getBytes(StandardCharsets.UTF_8);
     final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
     key = Arrays.copyOf(messageDigest.digest(key), 16);
     this.secretKey = new SecretKeySpec(key, "AES");
@@ -146,7 +146,6 @@ public class AES<T> {
   public String encrypt(@Valid final T itemToEncrypt)
       throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
           IllegalBlockSizeException, IOException {
-
     Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
     final Supplier<byte[]> ivSupplier =
         () -> {
@@ -163,8 +162,8 @@ public class AES<T> {
     final GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
     this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey, parameterSpec);
 
-    if (Objects.nonNull(this.additionalAuthenticationData)) {
-      this.cipher.updateAAD(this.additionalAuthenticationData);
+    if (Objects.nonNull(this.aad)) {
+      this.cipher.updateAAD(this.aad);
     }
 
     final byte[] serializeData = Serialization.serialize(itemToEncrypt);
@@ -194,21 +193,42 @@ public class AES<T> {
       throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
           IllegalBlockSizeException {
 
-    Validate.isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
+    isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
 
     final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
-    final AlgorithmParameterSpec algorithmParameterSpec =
-        new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
+    final AlgorithmParameterSpec spec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
 
-    this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, algorithmParameterSpec);
+    this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, spec);
 
-    if (Objects.nonNull(this.additionalAuthenticationData)) {
-      this.cipher.updateAAD(this.additionalAuthenticationData);
+    if (Objects.nonNull(this.aad)) {
+      this.cipher.updateAAD(this.aad);
     }
 
     final byte[] plainText =
         this.cipher.doFinal(cipherMessage, GCM_IV_LENGTH, cipherMessage.length - GCM_IV_LENGTH);
 
     return SerializationUtils.deserialize(plainText);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o instanceof AES) {
+      final AES<?> aes = (AES<?>) o;
+      if (cipher.equals(aes.cipher) && secretKey.equals(aes.secretKey)) {
+        return Arrays.equals(aad, aes.aad);
+      }
+      return false;
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(cipher, secretKey);
+    result = 31 * result + Arrays.hashCode(aad);
+    return result;
   }
 }
