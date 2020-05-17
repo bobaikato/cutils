@@ -20,6 +20,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
 
 import com.honerfor.cutils.Serialization;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -123,6 +124,7 @@ public class AES<T> {
    */
   public static <T> AES<T> init(final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
+    Objects.requireNonNull(encryptionKey, "encryption Key cannot be null");
     return new AES<>(encryptionKey);
   }
 
@@ -131,12 +133,20 @@ public class AES<T> {
    *
    * @param itemToEncrypt item to encrypt.
    * @return encrypted string of {@code itemToEncrypt} of T type. Not {@literal null}
-   * @throws Exception instance of any exception thrown
-   * @since 1.0
+   * @throws InvalidAlgorithmParameterException This is the exception for invalid or inappropriate
+   *     algorithm parameters.
+   * @throws InvalidKeyException This is the exception for invalid Keys (invalid encoding, wrong *
+   *     length, uninitialized, etc).
+   * @throws BadPaddingException This exception is thrown when a particular padding mechanism is
+   *     expected for the input data but the data is not padded properly.
+   * @throws IllegalBlockSizeException This exception is thrown when the length of data provided to
+   *     a block cipher is incorrect, i.e., does not match the block size of the cipher.
+   * @throws IOException Signals that an I/O exception of some sort has occurred.
    */
   public String encrypt(@Valid final T itemToEncrypt) throws Exception {
     isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
 
+    Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
     final Supplier<byte[]> ivSupplier =
         () -> {
           final SecureRandom secureRandom = new SecureRandom();
@@ -171,9 +181,13 @@ public class AES<T> {
    *
    * @param itemToDecrypt encrypted string to be decrypted. not {@literal null}
    * @return decrypted Object.
-   * @throws Exception instance of {@link InvalidKeyException}, {@link BadPaddingException} or any
-   *     other exception thrown.
-   * @since 1.0
+   * @throws InvalidAlgorithmParameterException exception for invalid or inappropriate algorithm
+   *     parameters.
+   * @throws InvalidKeyException exception for invalid Keys
+   * @throws BadPaddingException This exception is thrown when a particular padding mechanism is *
+   *     expected for the input data but the data is not padded properly.
+   * @throws IllegalBlockSizeException This exception is thrown when the length of data provided to
+   *     a block * cipher is incorrect, i.e., does not match the block size of the cipher.
    */
   public T decrypt(@NotNull final String itemToDecrypt)
       throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,

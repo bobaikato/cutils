@@ -16,6 +16,7 @@
 
 package com.honerfor.cutils.function;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -56,6 +57,7 @@ public interface ThrowingFunction<T, R> {
    * @return A {@link Function}
    */
   static <T, R> Function<T, R> unchecked(ThrowingFunction<T, R> function) {
+    Objects.requireNonNull(function, function.getClass().getSimpleName() + " cannot be null");
     return argument -> {
       try {
         return function.apply(argument);

@@ -16,13 +16,15 @@
 
 package com.honerfor.cutils;
 
+import static org.apache.commons.lang3.Validate.isTrue;
+
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
-import org.apache.commons.lang3.Validate;
 
 /**
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
@@ -44,13 +46,15 @@ import org.apache.commons.lang3.Validate;
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 2.0
  */
-public class StringIncubator {
+public class StringIncubator implements Serializable {
 
-  private Random random;
+  private static final long serialVersionUID = 3793946601043438484L;
 
-  private char[] symbols;
+  private final Random random;
 
-  private char[] buffer;
+  private final char[] symbols;
+
+  private final char[] buffer;
 
   /**
    * Upper-case Alphabets.
@@ -90,17 +94,12 @@ public class StringIncubator {
    * @since 2.0
    */
   public StringIncubator(int length, Random random, String symbols) {
-    Que.run(() -> Validate.isTrue(length > 1, "String length cannot be less than 1", length))
-        .andRun(
-            () ->
-                Validate.isTrue(
-                    symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length()))
-        .andRun(
-            () -> {
-              this.random = Objects.requireNonNull(random);
-              this.symbols = (symbols).toCharArray();
-              this.buffer = new char[length];
-            });
+    isTrue(length > 1, "String length cannot be less than 1", length);
+    isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length());
+
+    this.random = Objects.requireNonNull(random);
+    this.symbols = (symbols).toCharArray();
+    this.buffer = new char[length];
   }
 
   /**

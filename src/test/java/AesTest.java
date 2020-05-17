@@ -104,8 +104,7 @@ final class AesTest {
   @DisplayName("Should Throw AEADBadTagException when trying to decrypt with wrong Key.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("illegalKeyValuesResource")
-  void shouldThrowAeadBadTagExceptionOnDecryption(final String input, final String key)
-      throws Exception {
+  void shouldThrowAeadBadTagExceptionOnDecryption(final String input, final String key) {
     assertThrows(
         AEADBadTagException.class,
         () -> {

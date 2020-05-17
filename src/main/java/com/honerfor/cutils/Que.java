@@ -19,6 +19,7 @@ package com.honerfor.cutils;
 import com.honerfor.cutils.function.Accepter;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -34,8 +35,8 @@ import java.util.function.Supplier;
  * @author B0BAI
  * @since 1.0
  */
-public final class Que<T> {
-
+public final class Que<T> implements Serializable {
+  private static final long serialVersionUID = 2637789154313032412L;
   /**
    * This will hold instance of {@link Que} which will be used to enforce singleton.
    *
@@ -47,7 +48,7 @@ public final class Que<T> {
    *
    * @since 1.0
    */
-  private final T value;
+  private final transient T value;
 
   /** Constructs an empty instance. */
   private Que() {
@@ -61,6 +62,24 @@ public final class Que<T> {
    */
   private Que(final T value) {
     this.value = value;
+  }
+
+  /**
+   * The method should be used to get {@link Que} instance.
+   *
+   * @param <T> Type of value
+   * @return existing or newly created instance of {@link Que}
+   */
+  @SuppressWarnings("unchecked")
+  private static <T> Que<T> getInstance() {
+    if (Objects.isNull(instance)) {
+      synchronized (Que.class) {
+        if (Objects.isNull(instance)) {
+          instance = new Que<>();
+        }
+      }
+    }
+    return (Que<T>) instance;
   }
 
   /**
@@ -134,24 +153,6 @@ public final class Que<T> {
    */
   public Que<T> run(final Consumer<T> consumer) {
     return this.consumer(consumer);
-  }
-
-  /**
-   * The method should be used to get {@link Que} instance.
-   *
-   * @param <T> Type of value
-   * @return existing or newly created instance of {@link Que}
-   */
-  @SuppressWarnings("unchecked")
-  private static <T> Que<T> getInstance() {
-    if (Objects.isNull(instance)) {
-      synchronized (Que.class) {
-        if (Objects.isNull(instance)) {
-          instance = new Que<>();
-        }
-      }
-    }
-    return (Que<T>) instance;
   }
 
   /**

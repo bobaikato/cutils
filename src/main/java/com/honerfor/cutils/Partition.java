@@ -64,6 +64,7 @@ public class Partition<T> extends AbstractList<List<T>> {
    * @return instance of {@link Partition}
    */
   public static <T> Partition<T> of(List<T> list) {
+    Objects.requireNonNull(list, "List cannot be null");
     return new Partition<>(list);
   }
 
