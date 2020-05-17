@@ -19,7 +19,7 @@ public final class IdlerTest {
   static final int MOCK_LATENCY = 2000;
 
   @DisplayName("Expect Idler to memoize values for Dealers.")
-  @ParameterizedTest(name = "{index} =>  value={1}")
+  @ParameterizedTest(name = "{index} =>  seconds={1}")
   @MethodSource("idlerDealerOperations")
   void verifyIdlerMemoizedDealerValues(final Dealer<Integer> dealer, final long sec)
       throws Exception {
@@ -57,7 +57,7 @@ public final class IdlerTest {
   }
 
   @DisplayName("Expect Idler to memoize values for Suppliers.")
-  @ParameterizedTest(name = "{index} =>  value={1}")
+  @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerSupplierOperations")
   void verifyIdlerMemoizedSupplierValues(final Supplier<Integer> supplier, final long sec) {
     final long startTime = nanoTime();
