@@ -22,7 +22,7 @@
 
     <groupId>com.honerfor</groupId>
     <artifactId>cutils</artifactId>
-    <version>5.0.2</version>
+    <version>5.0.2-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
