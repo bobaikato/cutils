@@ -1,4 +1,11 @@
 /*
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
+ *
  * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +39,7 @@ public final class ThrowingFunctionTest {
   @DisplayName("Should take checked exception operationa and throw the exception when thrown")
   @ParameterizedTest(name = "{index} => input={1}")
   @MethodSource("throwingFunctionOperations")
-  void illegalArgumentExceptionForPartition(
+  void throwingFunctionOperations(
       final Function<String, Integer> fn, final String input) {
     assertThrows(Exception.class, () -> fn.apply(input));
   }
