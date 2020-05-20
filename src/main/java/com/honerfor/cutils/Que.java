@@ -113,7 +113,6 @@ public final class Que<T> implements Serializable {
     return Que.createReference(supplier.get());
   }
 
-
   /**
    * This method is a helper method used to create {@link Que} reference of a {@code value}.
    *
@@ -318,5 +317,23 @@ public final class Que<T> implements Serializable {
    */
   public Optional<T> optional() {
     return Optional.ofNullable(this.value);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o instanceof Que) {
+      final Que<?> que = (Que<?>) o;
+      return this.value.equals(que.value);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.value);
   }
 }
