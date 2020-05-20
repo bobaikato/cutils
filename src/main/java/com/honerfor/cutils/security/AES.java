@@ -25,8 +25,10 @@ package com.honerfor.cutils.security;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
+
 import com.honerfor.cutils.Serialization;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -58,14 +60,15 @@ import org.apache.commons.lang3.Validate;
  * @author B0BAI
  * @since 1.0
  */
-public class AES<T> {
+public class AES<T> implements Serializable {
+  private static final long serialVersionUID = 977987773346721438L;
 
   /**
    * Instance of {@link Cipher}.
    *
    * @since 1.0
    */
-  private final Cipher cipher;
+  private final transient Cipher cipher;
 
   /**
    * Instance of {@link SecretKeySpec}.
