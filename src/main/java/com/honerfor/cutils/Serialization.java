@@ -1,5 +1,12 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
+ *
+ * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +57,7 @@ public class Serialization extends SerializationUtils {
    * @throws java.io.IOException if the serialization fails
    * @since 1.0
    */
-  public static byte[] serialize(Object object) throws IOException {
+  public static byte[] serialize(final Object object) throws IOException {
     Objects.requireNonNull(object, "Object to serialize cannot be null.");
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
     final ObjectOutputStream os = new ObjectOutputStream(outputStream);

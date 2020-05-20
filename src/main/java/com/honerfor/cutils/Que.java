@@ -1,5 +1,12 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
+ *
+ * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,6 +174,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public static <T> Que<T> execute(final Executable executable) throws Exception {
+    Objects.requireNonNull(executable, "executable cannot be null");
     executable.execute();
     return Que.getInstance();
   }
@@ -190,6 +198,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public Que<T> andRun(final Runnable runnable) {
+    Objects.requireNonNull(runnable, "runnable cannot be null");
     runnable.run();
     return this;
   }
@@ -203,6 +212,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public Que<T> andExecute(final Executable executable) throws Exception {
+    Objects.requireNonNull(executable, "executable cannot be null");
     executable.execute();
     return this;
   }
@@ -215,6 +225,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public Que<T> andSupply(Supplier<T> supplier) {
+    Objects.requireNonNull(supplier, "supplier cannot be null");
     return Que.createReference(supplier.get());
   }
 
@@ -227,6 +238,7 @@ public final class Que<T> implements Serializable {
    * @since 2.0
    */
   public Que<T> andDeal(final Dealer<T> dealer) throws Exception {
+    Objects.requireNonNull(dealer, "dealer cannot be null");
     return Que.createReference(dealer.deal());
   }
 
@@ -285,7 +297,7 @@ public final class Que<T> implements Serializable {
    * @since 1.0
    */
   public T get() {
-    return value;
+    return this.value;
   }
 
   /**

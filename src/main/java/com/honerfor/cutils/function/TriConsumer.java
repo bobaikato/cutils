@@ -1,11 +1,18 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
+ *
+ * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,7 +49,7 @@ public interface TriConsumer<X, Y, Z> {
    * @param y the second input argument
    * @param z the third input argument
    */
-  void accept(X x, Y y, Z z);
+  void accept(final X x, final Y y, final Z z);
 
   /**
    * Returns a composed {@code TriConsumer} that performs, in sequence, this operation followed by
@@ -52,10 +59,10 @@ public interface TriConsumer<X, Y, Z> {
    *
    * @param after the operation to perform after this operation
    * @return a composed {@code TriConsumer} that performs in sequence this operation followed by the
-   * {@code after} operation
+   *     {@code after} operation
    * @throws NullPointerException if {@code after} is null
    */
-  default TriConsumer<X, Y, Z> andThen(TriConsumer<? super X, ? super Y, ? super Z> after) {
+  default TriConsumer<X, Y, Z> andThen(final TriConsumer<? super X, ? super Y, ? super Z> after) {
     Objects.requireNonNull(after, after.getClass().getSimpleName() + " cannot be null");
 
     return (a, b, c) -> {
