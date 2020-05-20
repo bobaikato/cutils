@@ -57,7 +57,7 @@ public class Serialization extends SerializationUtils {
    * @throws java.io.IOException if the serialization fails
    * @since 1.0
    */
-  public static byte[] serialize(Object object) throws IOException {
+  public static byte[] serialize(final Object object) throws IOException {
     Objects.requireNonNull(object, "Object to serialize cannot be null.");
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
     final ObjectOutputStream os = new ObjectOutputStream(outputStream);

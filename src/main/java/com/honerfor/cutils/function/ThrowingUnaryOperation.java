@@ -67,7 +67,7 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
    * @throws T arg type exception
    */
   @SuppressWarnings("unchecked")
-  static <T extends Exception, R> R sneakyThrow(Exception ex) throws T {
+  static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
     throw (T) ex;
   }
 
@@ -78,7 +78,7 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
    * @param <T> the type of the input to the function
    * @return A {@link Function}
    */
-  static <T> UnaryOperator<T> unchecked(ThrowingUnaryOperation<T> operator) {
+  static <T> UnaryOperator<T> unchecked(final ThrowingUnaryOperation<T> operator) {
     Objects.requireNonNull(operator, "operator cannot be null");
     return argument -> {
       try {

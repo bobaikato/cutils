@@ -34,7 +34,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class ThrowingUnaryOperationTest {
+public class ThrowingUnaryOperatorTest {
 
   @DisplayName("Should take checked exception operation and throw the exception when thrown")
   @ParameterizedTest(name = "{index} => input={1}")

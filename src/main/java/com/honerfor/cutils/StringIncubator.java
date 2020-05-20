@@ -100,12 +100,13 @@ public class StringIncubator implements Serializable {
    * @param symbols String to generate the hatched values
    * @since 2.0
    */
-  public StringIncubator(int length, Random random, String symbols) {
+  public StringIncubator(final int length, final Random random, final String symbols) {
+    this.symbols = Objects.requireNonNull(symbols, "symbols cannot be null").toCharArray();
+
     isTrue(length > 1, "String length cannot be less than 1", length);
     isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length());
 
     this.random = Objects.requireNonNull(random);
-    this.symbols = (symbols).toCharArray();
     this.buffer = new char[length];
   }
 
@@ -116,7 +117,7 @@ public class StringIncubator implements Serializable {
    * @param random any instance of {@link Random} as required
    * @since 2.0
    */
-  public StringIncubator(int length, Random random) {
+  public StringIncubator(final int length, final Random random) {
     this(length, random, ALPHANUM);
   }
 
@@ -127,7 +128,7 @@ public class StringIncubator implements Serializable {
    * @param random any instance of {@link ThreadLocalRandom} as required
    * @since 2.0
    */
-  public StringIncubator(int length, ThreadLocalRandom random) {
+  public StringIncubator(final int length, final ThreadLocalRandom random) {
     this(length, random, ALPHANUM);
   }
 
@@ -137,7 +138,7 @@ public class StringIncubator implements Serializable {
    * @param length of hatched string/value
    * @since 2.0
    */
-  public StringIncubator(int length) {
+  public StringIncubator(final int length) {
     this(length, new SecureRandom());
   }
 
@@ -148,7 +149,7 @@ public class StringIncubator implements Serializable {
    * @param length of hatched string/value
    * @since 3.0
    */
-  public StringIncubator(int length, String symbols) {
+  public StringIncubator(final int length, final String symbols) {
     this(length, new SecureRandom(), symbols);
   }
 

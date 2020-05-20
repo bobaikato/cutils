@@ -50,20 +50,29 @@ public interface ThrowingFunction<T, R> {
    */
   R apply(T t) throws Exception;
 
+  /**
+   * Sneak exception on function execution.
+   *
+   * @param ex exception throw on operation
+   * @param <T> arg type
+   * @param <R> return type
+   * @return an exception
+   * @throws T arg type exception
+   */
   @SuppressWarnings("unchecked")
-  static <T extends Exception, R> R sneakyThrow(Exception ex) throws T {
+  static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
     throw (T) ex;
   }
 
   /**
-   * <p>Uncheck method which will take operation that will throw Exception.</p>
+   * Uncheck method which will take operation that will throw Exception.
    *
    * @param function Variable of {@link ThrowingFunction}
-   * @param <T>      the type of the input to the function
-   * @param <R>      the type of the result of the function
+   * @param <T> the type of the input to the function
+   * @param <R> the type of the result of the function
    * @return A {@link Function}
    */
-  static <T, R> Function<T, R> unchecked(ThrowingFunction<T, R> function) {
+  static <T, R> Function<T, R> unchecked(final ThrowingFunction<T, R> function) {
     Objects.requireNonNull(function, function.getClass().getSimpleName() + " cannot be null");
     return argument -> {
       try {

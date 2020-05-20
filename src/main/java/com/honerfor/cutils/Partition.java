@@ -59,7 +59,7 @@ public class Partition<T> extends AbstractList<List<T>> {
    *
    * @param list List to be partitioned.
    */
-  private Partition(List<T> list) {
+  private Partition(final List<T> list) {
     this.list = new ArrayList<>(list);
   }
 
@@ -70,7 +70,7 @@ public class Partition<T> extends AbstractList<List<T>> {
    * @param <T> List type
    * @return instance of {@link Partition}
    */
-  public static <T> Partition<T> of(List<T> list) {
+  public static <T> Partition<T> of(final List<T> list) {
     Objects.requireNonNull(list, "List cannot be null");
     return new Partition<>(list);
   }
@@ -81,14 +81,14 @@ public class Partition<T> extends AbstractList<List<T>> {
    * @param sublistSize The sub-list/Partition size.
    * @return current instance of {@link Partition}
    */
-  public Partition<T> into(int sublistSize) {
+  public Partition<T> into(final int sublistSize) {
     Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.");
     this.sublistSize = sublistSize;
     return this;
   }
 
   @Override
-  public List<T> get(int index) {
+  public List<T> get(final int index) {
     final int start = index * sublistSize;
     final int end = Math.min(start + sublistSize, list.size());
     if (start > end) {

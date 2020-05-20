@@ -43,7 +43,7 @@ import java.util.function.UnaryOperator;
  * @since 5.0
  */
 public class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializable {
-  private static final long serialVersionUID = 398334400292617685L;
+  private static final long serialVersionUID = 9181168161835004440L;
 
   private final transient Function<T, T> state;
 
@@ -77,5 +77,23 @@ public class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializable {
   @Override
   public T apply(final T t) {
     return this.state.apply(t);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o instanceof LazyUnaryOperator) {
+      final LazyUnaryOperator<?> that = (LazyUnaryOperator<?>) o;
+      return state.equals(that.state);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(state);
   }
 }
