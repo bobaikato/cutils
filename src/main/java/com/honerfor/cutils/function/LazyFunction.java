@@ -1,4 +1,11 @@
 /*
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
+ *
  * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,6 +49,7 @@ public class LazyFunction<T, R> implements Function<T, R>, Serializable {
 
   /**
    * Store the current result of function by the the argument provided.
+   *
    * @since 5.0
    */
   private final transient Map<T, R> store = new ConcurrentHashMap<>();

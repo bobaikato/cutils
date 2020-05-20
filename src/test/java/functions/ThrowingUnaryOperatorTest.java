@@ -25,36 +25,33 @@ package functions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.honerfor.cutils.Que;
-import com.honerfor.cutils.function.ThrowingFunction;
+import com.honerfor.cutils.function.ThrowingUnaryOperation;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public final class ThrowingFunctionTest {
+public class ThrowingUnaryOperatorTest {
 
-  @DisplayName("Should take checked exception operationa and throw the exception when thrown")
+  @DisplayName("Should take checked exception operation and throw the exception when thrown")
   @ParameterizedTest(name = "{index} => input={1}")
-  @MethodSource("throwingFunctionOperations")
-  void throwingFunctionOperations(
-      final Function<String, Integer> fn, final String input) {
+  @MethodSource("throwingUnaryOperations")
+  void throwingUnaryOperations(final Function<String, Integer> fn, final String input) {
     assertThrows(Exception.class, () -> fn.apply(input));
   }
 
-  private static Stream<Arguments> throwingFunctionOperations() {
-    final Function<String, Integer> convertStringToInteger =
-      ThrowingFunction.unchecked(
-        string -> {
-          // checked Exception operation
-          return Que.as(() -> Integer.parseInt(string)).get();
-        });
+  private static Stream<Arguments> throwingUnaryOperations() {
+    final UnaryOperator<String> someTask =
+        ThrowingUnaryOperation.unchecked(
+            string -> {
+              Thread.sleep(Integer.parseInt(string));
+              return string;
+            });
 
     return Stream.of(
-      Arguments.of(convertStringToInteger, ""),
-      Arguments.of(convertStringToInteger, "12E4"),
-      Arguments.of(convertStringToInteger, "O"));
+        Arguments.of(someTask, ""), Arguments.of(someTask, "12E4"), Arguments.of(someTask, "O"));
   }
 }

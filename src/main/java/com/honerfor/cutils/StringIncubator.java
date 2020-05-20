@@ -1,5 +1,12 @@
 /*
- * Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
+ *
+ * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,12 +100,13 @@ public class StringIncubator implements Serializable {
    * @param symbols String to generate the hatched values
    * @since 2.0
    */
-  public StringIncubator(int length, Random random, String symbols) {
+  public StringIncubator(final int length, final Random random, final String symbols) {
+    this.symbols = Objects.requireNonNull(symbols, "symbols cannot be null").toCharArray();
+
     isTrue(length > 1, "String length cannot be less than 1", length);
     isTrue(symbols.length() > 2, "Symbols length cannot be less that 2", symbols.length());
 
     this.random = Objects.requireNonNull(random);
-    this.symbols = (symbols).toCharArray();
     this.buffer = new char[length];
   }
 
@@ -109,7 +117,7 @@ public class StringIncubator implements Serializable {
    * @param random any instance of {@link Random} as required
    * @since 2.0
    */
-  public StringIncubator(int length, Random random) {
+  public StringIncubator(final int length, final Random random) {
     this(length, random, ALPHANUM);
   }
 
@@ -120,7 +128,7 @@ public class StringIncubator implements Serializable {
    * @param random any instance of {@link ThreadLocalRandom} as required
    * @since 2.0
    */
-  public StringIncubator(int length, ThreadLocalRandom random) {
+  public StringIncubator(final int length, final ThreadLocalRandom random) {
     this(length, random, ALPHANUM);
   }
 
@@ -130,7 +138,7 @@ public class StringIncubator implements Serializable {
    * @param length of hatched string/value
    * @since 2.0
    */
-  public StringIncubator(int length) {
+  public StringIncubator(final int length) {
     this(length, new SecureRandom());
   }
 
@@ -141,7 +149,7 @@ public class StringIncubator implements Serializable {
    * @param length of hatched string/value
    * @since 3.0
    */
-  public StringIncubator(int length, String symbols) {
+  public StringIncubator(final int length, final String symbols) {
     this(length, new SecureRandom(), symbols);
   }
 

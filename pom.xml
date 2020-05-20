@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2018 — 2019 Honerfor, Inc. All Rights Reserved.
+  ~ _________  ____ ______________.___.____       _________
+  ~ \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+  ~ /    \  \/|    |   / |    |   |   |    |     \_____  \
+  ~ \     \___|    |  /  |    |   |   |    |___  /        \
+  ~  \______  /______/   |____|   |___|_______ \/_______  /
+  ~         \/                                \/        \/
+  ~
+  ~ Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -22,7 +29,7 @@
 
     <groupId>com.honerfor</groupId>
     <artifactId>cutils</artifactId>
-    <version>5.0.2</version>
+    <version>5.1.0-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
