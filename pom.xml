@@ -29,7 +29,7 @@
 
     <groupId>com.honerfor</groupId>
     <artifactId>cutils</artifactId>
-    <version>5.1.0</version>
+    <version>5.1.1</version>
     <build>
         <plugins>
             <plugin>
