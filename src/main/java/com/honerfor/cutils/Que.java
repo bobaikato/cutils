@@ -270,7 +270,7 @@ public final class Que<T> implements Serializable {
     return this.accepter(accepter);
   }
 
-  public Que<T> accepter(final Accepter<T> accepter) throws Exception {
+  private Que<T> accepter(final Accepter<T> accepter) throws Exception {
     Objects.requireNonNull(accepter, "accepter cannot be null");
     accepter.accept(this.value);
     return this;
