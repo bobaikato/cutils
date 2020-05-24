@@ -61,7 +61,6 @@ final class AesTest {
       throws Exception {
     final AES<PersonExample> aes = AES.init(key);
     final String encryptedPersonExample = aes.encrypt(input);
-    System.out.println(encryptedPersonExample);
     final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
 
     assertEquals(decryptedPersonExample.age, input.age);
