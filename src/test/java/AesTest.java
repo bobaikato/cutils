@@ -38,20 +38,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("Test AES Encryption and Decryption operation.")
 final class AesTest {
 
+  @Getter
+  @Setter
   @ToString
+  @EqualsAndHashCode
   private static class PersonExample implements Serializable {
     private static final long serialVersionUID = -4359123926347587815L;
 
     private int age;
     private String name;
-
-    void setAge(int age) {
-      this.age = age;
-    }
-
-    void setName(String name) {
-      this.name = name;
-    }
   }
 
   @DisplayName("Should successfully Encrypt and Decrypt Custom Object with Custom Encryption Key")
