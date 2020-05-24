@@ -55,7 +55,7 @@ public class LazyFunction<T, R> implements Function<T, R>, Serializable {
   private final transient Map<T, R> store = new ConcurrentHashMap<>();
 
   /**
-   * Sealed
+   * Sealed.
    *
    * @param function argument, instance of {@link Function}
    */
