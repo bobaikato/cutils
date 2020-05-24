@@ -21,14 +21,26 @@
  * limitations under the License.
  */
 
+import static com.honerfor.cutils.security.AES.Algorithm;
+import static com.honerfor.cutils.security.AES.Algorithm.MD2;
+import static com.honerfor.cutils.security.AES.Algorithm.MD5;
+import static com.honerfor.cutils.security.AES.Algorithm.SHA1;
+import static com.honerfor.cutils.security.AES.Algorithm.SHA224;
+import static com.honerfor.cutils.security.AES.Algorithm.SHA256;
+import static com.honerfor.cutils.security.AES.Algorithm.SHA384;
+import static com.honerfor.cutils.security.AES.Algorithm.SHA512;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.of;
 
 import com.honerfor.cutils.security.AES;
 import java.io.Serializable;
 import java.util.stream.Stream;
 import javax.crypto.AEADBadTagException;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -82,6 +94,29 @@ final class AesTest {
     return Stream.of(
         Arguments.of(personExampleI, "P37s0n3x4mpl3-Cust0m-k3y"),
         Arguments.of(personExampleII, "n3w P37s0n3x4mpl3-Cust0m-k3y"));
+  }
+
+  @DisplayName("Should successfully Encrypt and Decrypt Object with all Algorithm type")
+  @ParameterizedTest(name = "{index} => input={0}")
+  @MethodSource("algorithmTypes")
+  void encryptionAndDecryptionWithSpecifiedAlgorithmType(final Algorithm algorithm)
+      throws Exception {
+
+    final AES<PersonExample> aes = AES.init(algorithm);
+
+    final PersonExample personExample = new PersonExample();
+    personExample.setAge(36);
+    personExample.setName("Alex Jones");
+
+    final String encryptedPersonExample = aes.encrypt(personExample);
+    final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
+
+    assertEquals(decryptedPersonExample.age, personExample.age);
+    assertEquals(decryptedPersonExample.name, personExample.name);
+  }
+
+  private static Stream<Arguments> algorithmTypes() {
+    return Stream.of(of(MD2), of(MD5), of(SHA1), of(SHA224), of(SHA256), of(SHA384), of(SHA512));
   }
 
   @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
