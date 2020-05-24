@@ -23,10 +23,18 @@
 
 package com.honerfor.cutils.security;
 
+import static com.honerfor.cutils.security.AES.Algorithm.SHA256;
+import static java.security.MessageDigest.getInstance;
+import static java.util.Objects.hash;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
+
 import com.honerfor.cutils.Serialization;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -37,7 +45,6 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.function.Supplier;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -58,14 +65,56 @@ import org.apache.commons.lang3.Validate;
  * @author B0BAI
  * @since 1.0
  */
-public class AES<T> {
+public class AES<T> implements Serializable {
+  private static final long serialVersionUID = 977987773346721438L;
+
+  /**
+   * This holds valid {@link MessageDigest} algorithm types.
+   *
+   * @since 5.0
+   */
+  public enum Algorithm {
+    /** MD2 algorithm type. */
+    MD2("MD2"),
+
+    /** MD5 algorithm type. */
+    MD5("MD5"),
+
+    /** SHA-1 algorithm type. */
+    SHA1("SHA-1"),
+
+    /** SHA-224 algorithm type. */
+    SHA224("SHA-224"),
+
+    /** SHA-256 algorithm type. */
+    SHA256("SHA-256"),
+
+    /** SHA-384 algorithm type. */
+    SHA384("SHA-384"),
+
+    /** SHA-512 algorithm type. */
+    SHA512("SHA-512");
+
+    private final String type;
+
+    Algorithm(final String type) {
+      this.type = type;
+    }
+  }
+
+  /**
+   * Default encryption Key.
+   *
+   * @since 5.0
+   */
+  private static final String DEFAULT_KEY = "Set yours with: `AES.init('fW&yNtP2peBndT5Hz&')`";
 
   /**
    * Instance of {@link Cipher}.
    *
    * @since 1.0
    */
-  private final Cipher cipher;
+  private final transient Cipher cipher;
 
   /**
    * Instance of {@link SecretKeySpec}.
@@ -93,16 +142,17 @@ public class AES<T> {
    *     available in the environment.
    * @since 1.0
    */
-  private AES(final String encryptionKey) throws NoSuchPaddingException, NoSuchAlgorithmException {
+  private AES(final AES.Algorithm algorithm, final String encryptionKey)
+      throws NoSuchPaddingException, NoSuchAlgorithmException {
     this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
     byte[] key = this.aad = encryptionKey.getBytes(StandardCharsets.UTF_8);
-    final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+    final MessageDigest messageDigest = getInstance(algorithm.type);
     key = Arrays.copyOf(messageDigest.digest(key), 16);
     this.secretKey = new SecretKeySpec(key, "AES");
   }
 
   /**
-   * This initiates encryption.
+   * This initiates encryption with default algorithm type and encryption key.
    *
    * @param <T> Type of value
    * @return Instance of {@link AES}
@@ -113,12 +163,11 @@ public class AES<T> {
    * @since 1.0
    */
   public static <T> AES<T> init() throws NoSuchAlgorithmException, NoSuchPaddingException {
-    final String key = "Set yours with: `AES.init('fW&yNtP2peBndT5Hz&')`";
-    return AES.init(key);
+    return AES.init(AES.DEFAULT_KEY);
   }
 
   /**
-   * This initiates encryption.
+   * This initiates encryption with the default:{@code SHA-256}.
    *
    * @param encryptionKey user encryption Key
    * @param <T> Type of value
@@ -131,8 +180,46 @@ public class AES<T> {
    */
   public static <T> AES<T> init(final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
-    Objects.requireNonNull(encryptionKey, "encryption Key cannot be null");
-    return new AES<>(encryptionKey);
+    requireNonNull(encryptionKey, "encryption Key cannot be null");
+    return new AES<>(SHA256, encryptionKey);
+  }
+
+  /**
+   * This initiates encryption with the specified algorithm type and encryption key.
+   *
+   * @param encryptionKey user encryption Key
+   * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
+   *     null}.
+   * @param <T> Type of value
+   * @return Instance of {@link AES}
+   * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
+   *     algorithm is requested but is not available in the environment.
+   * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
+   *     requested but is not available in the environment.
+   * @since 5.0
+   */
+  public static <T> AES<T> init(final AES.Algorithm algorithm, final String encryptionKey)
+      throws NoSuchAlgorithmException, NoSuchPaddingException {
+    requireNonNull(encryptionKey, "encryption Key cannot be null");
+    return new AES<>(isNull(algorithm) ? SHA256 : algorithm, encryptionKey);
+  }
+
+  /**
+   * This initiates encryption with the specified algorithm type.
+   *
+   * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
+   *     null}.
+   * @param <T> Type of value
+   * @return Instance of {@link AES}
+   * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
+   *     algorithm is requested but is not available in the environment.
+   * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
+   *     requested but is not available in the environment.
+   * @since 5.0
+   */
+  public static <T> AES<T> init(final AES.Algorithm algorithm)
+      throws NoSuchAlgorithmException, NoSuchPaddingException {
+    return AES.init(algorithm, AES.DEFAULT_KEY);
   }
 
   /**
@@ -169,7 +256,7 @@ public class AES<T> {
     final GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
     this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey, parameterSpec);
 
-    if (Objects.nonNull(this.aad)) {
+    if (nonNull(this.aad)) {
       this.cipher.updateAAD(this.aad);
     }
 
@@ -207,7 +294,7 @@ public class AES<T> {
 
     this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, spec);
 
-    if (Objects.nonNull(this.aad)) {
+    if (nonNull(this.aad)) {
       this.cipher.updateAAD(this.aad);
     }
 
@@ -234,7 +321,7 @@ public class AES<T> {
 
   @Override
   public int hashCode() {
-    int result = Objects.hash(cipher, secretKey);
+    int result = hash(cipher, secretKey);
     result = 31 * result + Arrays.hashCode(aad);
     return result;
   }

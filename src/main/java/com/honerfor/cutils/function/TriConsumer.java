@@ -66,7 +66,7 @@ public interface TriConsumer<X, Y, Z> {
     Objects.requireNonNull(after, after.getClass().getSimpleName() + " cannot be null");
 
     return (a, b, c) -> {
-      accept(a, b, c);
+      this.accept(a, b, c);
       after.accept(a, b, c);
     };
   }
