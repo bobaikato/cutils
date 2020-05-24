@@ -34,7 +34,7 @@ package com.honerfor.cutils.function;
 public interface Condition {
 
   /**
-   * <p>Check the condition.</p>
+   * Check the condition.
    *
    * @return the final condition of boolean
    * @since 1.0
