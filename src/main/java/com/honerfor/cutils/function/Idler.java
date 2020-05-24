@@ -41,11 +41,11 @@ import java.util.function.Supplier;
 public class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   private static final long serialVersionUID = -909341387550414732L;
 
-  private transient Supplier<T> supplier = null;
+  private transient Supplier<T> supplier;
 
-  private transient Dealer<T> dealer = null;
+  private transient Dealer<T> dealer;
 
-  private transient T value = null;
+  private transient T value;
 
   /**
    * Sealed constructor takes the supplier.

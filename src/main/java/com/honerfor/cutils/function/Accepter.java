@@ -42,11 +42,6 @@ import java.util.function.Consumer;
 @FunctionalInterface
 public interface Accepter<T> {
 
-  @SuppressWarnings("unchecked")
-  static <T extends Exception> void sneakyThrow(Exception ex) throws T {
-    throw (T) ex;
-  }
-
   /**
    * Returns a composed {@code Accepter} that performs, in sequence, this operation followed by the
    * {@code after} operation. If performing either operation throws an exception, it is relayed to
@@ -57,9 +52,9 @@ public interface Accepter<T> {
    * @return a composed {@code Consumer} that performs in sequence this operation followed by the
    * {@code after} operation.
    */
-  default Accepter<T> andThen(Accepter<? super T> after) {
+  default Accepter<T> andThen(final Accepter<? super T> after) {
     Objects.requireNonNull(after, after.getClass().getSimpleName() + " cannot be null");
-    return (T t) -> {
+    return (final T t) -> {
       try {
         this.accept(t);
       } catch (Exception ex) {
@@ -67,6 +62,11 @@ public interface Accepter<T> {
       }
       after.accept(t);
     };
+  }
+
+  @SuppressWarnings("unchecked")
+  static <T extends Exception> void sneakyThrow(final Exception ex) throws T {
+    throw (T) ex;
   }
 
   /**
