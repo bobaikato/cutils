@@ -96,6 +96,25 @@ final class AesTest {
         Arguments.of(personExampleII, "n3w P37s0n3x4mpl3-Cust0m-k3y"));
   }
 
+  @DisplayName("Should successfully Encrypt and Decrypt Object with all Algorithm type and Key")
+  @ParameterizedTest(name = "{index} => input={0}")
+  @MethodSource("algorithmTypes")
+  void encryptionAndDecryptionWithSpecifiedAlgorithmTypeAndCustomKey(final Algorithm algorithm)
+      throws Exception {
+
+    final AES<PersonExample> aes = AES.init(algorithm, "Encrypt and Decrypt Key");
+
+    final PersonExample personExample = new PersonExample();
+    personExample.setAge(40);
+    personExample.setName("Patrick Bet-David");
+
+    final String encryptedPersonExample = aes.encrypt(personExample);
+    final PersonExample decryptedPersonExample = aes.decrypt(encryptedPersonExample);
+
+    assertEquals(decryptedPersonExample.age, personExample.age);
+    assertEquals(decryptedPersonExample.name, personExample.name);
+  }
+
   @DisplayName("Should successfully Encrypt and Decrypt Object with all Algorithm type")
   @ParameterizedTest(name = "{index} => input={0}")
   @MethodSource("algorithmTypes")
