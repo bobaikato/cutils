@@ -142,7 +142,7 @@ public class AES<T> implements Serializable {
    *     available in the environment.
    * @since 1.0
    */
-  private AES(final String encryptionKey, final AES.Algorithm algorithm)
+  private AES(final AES.Algorithm algorithm, final String encryptionKey)
       throws NoSuchPaddingException, NoSuchAlgorithmException {
     this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
     byte[] key = this.aad = encryptionKey.getBytes(StandardCharsets.UTF_8);
@@ -181,7 +181,7 @@ public class AES<T> implements Serializable {
   public static <T> AES<T> init(final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     requireNonNull(encryptionKey, "encryption Key cannot be null");
-    return new AES<>(encryptionKey, SHA256);
+    return new AES<>(SHA256, encryptionKey);
   }
 
   /**
@@ -198,10 +198,10 @@ public class AES<T> implements Serializable {
    *     requested but is not available in the environment.
    * @since 5.0
    */
-  public static <T> AES<T> init(final String encryptionKey, final AES.Algorithm algorithm)
+  public static <T> AES<T> init(final AES.Algorithm algorithm, final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     requireNonNull(encryptionKey, "encryption Key cannot be null");
-    return new AES<>(encryptionKey, isNull(algorithm) ? SHA256 : algorithm);
+    return new AES<>(isNull(algorithm) ? SHA256 : algorithm, encryptionKey);
   }
 
   /**
@@ -219,7 +219,7 @@ public class AES<T> implements Serializable {
    */
   public static <T> AES<T> init(final AES.Algorithm algorithm)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
-    return AES.init(AES.DEFAULT_KEY, algorithm);
+    return AES.init(algorithm, AES.DEFAULT_KEY);
   }
 
   /**
