@@ -1,6 +1,7 @@
-version: 2.1 # use CircleCI 2.0
+version: 2 # use CircleCI 2.0
 jobs:
   build:
+
     working_directory: ~/cutils
 
     docker: # run the steps with Docker
@@ -18,23 +19,9 @@ jobs:
             - ~/.m2
           key: cutils-{{ checksum "pom.xml" }}
 
-      - run:
-          name: Packaging # run the actual tests
-          command: mvn package -B
+      - run: mvn package -B # run the actual tests
 
       - store_test_results:
           path: target/surefire-reports
 
-      - run:
-          name: Integration Test
-          command: mvn integration-test
-
-      - run:
-          name: Analyze on SonarCloud
-          command: mvn verify sonar:sonar
-
-workflows:
-  main:
-    jobs:
-      - build:
-          context: SonarCloud
+      - run: mvn integration-test
