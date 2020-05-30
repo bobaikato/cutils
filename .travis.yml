@@ -10,6 +10,7 @@ install: mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.j
 
 ## Build and release to maven central
 script:
+  - mvn clean && mvn -B verify && mvn -DskipTests clean dependency:list install
   - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
   - mvn cobertura:cobertura
 
@@ -21,9 +22,6 @@ before_deploy:
   - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
   - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 
-build: mvn clean && mvn -B verify  && mvn -DskipTests clean dependency:list install
-
-
 
 ## Create release in GitHub
 deploy:
@@ -31,7 +29,7 @@ deploy:
   api_key:
     secure: Z/sNaWQe0qDQ8ZclswkW4A5DsDyGTRf4cvcZf1BLU6zB+lPDBB6sBXkjWjSakf//nh4cC8P6LklABXuQNTNKK1OXA5p/Ljli2t1XIlFPJhjnBMokmyHW/ogEUnK3af6a23SJAdSuuByr1Dlyt9NVIzhGsa3GlZ7jWBs+7fXuT+dpsJ7t/7wjrKnLB4nwBsXNVDsQl4e+4IZBMnB+FrmOKeX7aya6lXc084Yw7lSz8wskBUJ+3A6oUoqZ4I0GiHS8sqqqv+dj98RdqDep4VYsuJASUO/cQO0FoQkyzSTVKfZTwZhQA5nvZSND/haISPO49SGLlhMRsjiqLtr/2lPsXt/ppKfyn7Y+Zld6hd0hfC+xF2ZQaEjmo0UTPWqLY3DggmK7PWzcHdSTSug7zSxh0BqCuCqGBhJvInb1emOOVafjMvjtI7x+kljOg7DtpkUaRoBKzXRZHoe6LP4mXBifWkOuiVjTyCd8CT2cDdrwITHwnd2RgpcgG8+2lECDii6XBTvdvqyZU1rqfo5wJyhzEiKZukCr+nx4zRlxQYF+WXt0u6iaJKn5S/8zjKDRO4xDQpMswWH18RHy2PkCu3B0i63t5Xhr+Jz28jRAoGWvY2uXsjgZvbfStMuyk3WqxSmw4U+FI/y59XPgpd4IXD6Jwh5mYQpwO4x7yXoCj9NsdUc=
   file: target/cutils-$project_version.jar
-  skip_cleanup: true
+  cleanup: true
   on:
     repo: Honerfor/cutils
     tags: true
