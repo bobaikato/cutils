@@ -4,6 +4,9 @@
 [![Javadocs](https://javadoc.io/badge/com.honerfor/cutils.svg?color=brown)](https://javadoc.io/doc/com.honerfor/cutils)
 [![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=master)](https://travis-ci.org/Honerfor/cutils)
 [![CircleCI](https://img.shields.io/circleci/build/gh/Honerfor/cutils?color=%23088A08&label=test)](https://circleci.com/gh/Honerfor/cutils)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/alerts/)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/context:java)
+
 
 A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/com.honerfor/cutils). If you have any questions related to usage, simple open an issue.
 
