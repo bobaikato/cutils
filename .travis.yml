@@ -12,7 +12,6 @@ install: mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.j
 script:
   - mvn clean && mvn -B verify && mvn -DskipTests clean dependency:list install
   - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
-  - mvn cobertura:cobertura
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
