@@ -9,7 +9,10 @@ before_install:
 install: mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 ## Build and release to maven central
-script: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
+script:
+  - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
 ## Get the project version
 before_deploy:
@@ -39,3 +42,10 @@ cache:
 ## Send a slack notification
 notifications:
   slack: honerfor:GlY8a63CdYvtgJUPQoOUSmqs
+
+addons:
+  sonarcloud:
+    organization: "honerfor"
+    token:
+      secure: Q1Rw8kcn75RXpipgQZ8ZHxWcoi6bs8iJ9uFjFMnWsRJhewVhyS1NuHAJJRmIX98+W/KGFvE6OtG33rqcPdZjZ1/hgjgm3AQ98Gts3+P7doA/+Pfhohdu8Lq5EyrZZqasv+ItG68NeLO/CCLjPtAfFlZgwXWip/nK2BryJQdI4JUlCL8e7VXtEBtlN+/LHGXZIqQWpm68WBybzAJCRNXMBegdT2GJh5RSGx8DG49BvY4JXimAWqTpAvLWfkkQ+Z92xO9/K+4VpbI8lcN4SvX3TWSgpBOWQU2EWrJPrH6z1mrO2/L+FCXxqzQwFD7bxbkm6WuxraOCB0XVQhCb5GVnaUiyDMtWhPY0cNvDquW8wHHREumrtsaqa/ErUaser/bndnKK9bubK8ZoAxsu0nsMTHVyaQ8XUBRlqqc8GYNVCz0ScDPkMGfkl4E6zV0wIY3VoTD+RgV+jhNkPGUi/JhCAKVfFuFVunOa/PXloI5SBrzfdTN4l7cnXilZOmAt4VOzDLhWJ4HkstNmCAtZw9rtDldzlFRW8itofWfceQs6Rpz4sPtjBYOMyTVcPLtubOBtAsUOA8odTws+XoaHiQMxvy0flj/cwTLykmz+zZcfhkXhuVJzwWqIu2zrYTQlp+7Aomi3NEKvk43u4TfLYSEuw0o37p5WjJPSkGA8vTr1m/0=
+
