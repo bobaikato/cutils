@@ -191,7 +191,7 @@ public final class IdlerTest {
     final Dealer<?> dealer = Idler.deal(() -> "Dealar");
 
     assertNotEquals(supplier, dealer);
-    assertNotEquals(supplier, new String());
+    assertNotEquals(supplier, "supplier");
     assertNotEquals(dealer, "");
 
     assertNotEquals(supplier.hashCode(), dealer.hashCode());
