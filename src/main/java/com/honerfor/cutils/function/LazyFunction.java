@@ -42,7 +42,7 @@ import java.util.function.Function;
  * @see Function
  * @since 5.0
  */
-public class LazyFunction<T, R> implements Function<T, R>, Serializable {
+public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   private static final long serialVersionUID = 398334400292617685L;
 
   private final transient Function<T, R> function;
