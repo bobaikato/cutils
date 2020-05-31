@@ -2,6 +2,7 @@
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=master)](https://travis-ci.org/Honerfor/cutils)
 [![CircleCI](https://img.shields.io/circleci/build/gh/Honerfor/cutils?color=%23088A08&label=test)](https://circleci.com/gh/Honerfor/cutils)
+[![Coverage Status](https://coveralls.io/repos/github/Honerfor/cutils/badge.svg?branch=master)](https://coveralls.io/github/Honerfor/cutils?branch=master)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/alerts/)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/context:java)
 [![Maven Central](https://img.shields.io/maven-central/v/com.honerfor/cutils)](https://search.maven.org/artifact/com.honerfor/cutils)
