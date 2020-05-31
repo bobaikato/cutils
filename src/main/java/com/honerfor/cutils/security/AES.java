@@ -65,7 +65,7 @@ import org.apache.commons.lang3.Validate;
  * @author B0BAI
  * @since 1.0
  */
-public class AES<T> implements Serializable {
+public final class AES<T> implements Serializable {
   private static final long serialVersionUID = 977987773346721438L;
 
   /**
