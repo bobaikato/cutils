@@ -23,9 +23,13 @@
 
 package com.honerfor.cutils.function;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
+
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.function.Supplier;
+import org.javatuples.Pair;
 
 /**
  * The {@link Idler}r is intended to be <b>memorized and idempotent</b>. This can be very useful for
@@ -38,14 +42,21 @@ import java.util.function.Supplier;
  * @see Dealer
  * @since 5.0
  */
-public class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
+public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   private static final long serialVersionUID = -909341387550414732L;
 
   private transient Supplier<T> supplier;
 
   private transient Dealer<T> dealer;
 
-  private transient T value;
+  /**
+   * Object to hold information.
+   *
+   * <p>0: Supplier
+   *
+   * <p>1: Dealer
+   */
+  private transient Pair<T, T> triplet = Pair.with(null, null);
 
   /**
    * Sealed constructor takes the supplier.
@@ -65,6 +76,21 @@ public class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     this.dealer = dealer;
   }
 
+  private Idler(final Dealer<T> dealer, Supplier<T> supplier) {
+    this.dealer = dealer;
+    this.supplier = supplier;
+  }
+
+  public static <T> Idler<T> of(final Dealer<T> dealer, final Supplier<T> supplier) {
+    return Idler.of(supplier, dealer);
+  }
+
+  public static <T> Idler<T> of(final Supplier<T> supplier, final Dealer<T> dealer) {
+    requireNonNull(dealer, "dealer cannot be null");
+    requireNonNull(supplier, "supplier cannot be null");
+    return new Idler<>(dealer, supplier);
+  }
+
   /**
    * Supply take an instance of {@link Supplier} as parameter..
    *
@@ -73,21 +99,8 @@ public class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    * @return the supplier, an instance of {@link Supplier}
    */
   public static <T> Supplier<T> supply(final Supplier<T> supplier) {
-    Objects.requireNonNull(supplier, "supplier cannot be null");
+    requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(supplier);
-  }
-
-  /**
-   * Gets a result.
-   *
-   * @return a result
-   */
-  @Override
-  public T get() {
-    if (Objects.nonNull(this.supplier) && Objects.isNull(this.value)) {
-      this.value = this.supplier.get();
-    }
-    return this.value;
   }
 
   /**
@@ -98,21 +111,44 @@ public class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    * @return the supplier, an instance of {@link Dealer}
    */
   public static <T> Dealer<T> deal(final Dealer<T> dealer) {
-    Objects.requireNonNull(dealer, "dealer cannot be null");
+    requireNonNull(dealer, "dealer cannot be null");
     return new Idler<>(dealer);
   }
 
   /**
-   * Gets a result.
+   * Gets a result for dealer operation.
    *
-   * @return a result
+   * @return a dealer result
+   * @see Dealer#deal
    */
   @Override
   public T deal() throws Exception {
-    if (Objects.nonNull(this.dealer) && Objects.isNull(this.value)) {
-      this.value = this.dealer.deal();
+    if (nonNull(this.dealer) && isNull(this.triplet.getValue1())) {
+      this.triplet = this.triplet.setAt1(this.dealer.deal());
     }
-    return this.value;
+    return this.triplet.getValue1();
+  }
+
+  /**
+   * Gets a result for supplier operation.
+   *
+   * @return a supplier result
+   * @see Supplier#get
+   */
+  @Override
+  public T get() {
+    if (nonNull(this.supplier) && isNull(this.triplet.getValue0())) {
+      this.triplet = this.triplet.setAt0(this.supplier.get());
+    }
+    return this.triplet.getValue0();
+  }
+
+  @Override
+  public int hashCode() {
+    int result = supplier != null ? supplier.hashCode() : 0;
+    result = 31 * result + (dealer != null ? dealer.hashCode() : 0);
+    result = 31 * result + triplet.hashCode();
+    return result;
   }
 
   @Override
@@ -122,16 +158,16 @@ public class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     }
     if (o instanceof Idler) {
       final Idler<?> idler = (Idler<?>) o;
-      if (supplier.equals(idler.supplier) && dealer.equals(idler.dealer)) {
-        return value.equals(idler.value);
+
+      if (supplier != null ? !supplier.equals(idler.supplier) : idler.supplier != null) {
+        return false;
       }
+      if (dealer != null ? !dealer.equals(idler.dealer) : idler.dealer != null) {
+        return false;
+      }
+      return triplet.equals(idler.triplet);
+    } else {
       return false;
     }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(supplier, dealer, value);
   }
 }
