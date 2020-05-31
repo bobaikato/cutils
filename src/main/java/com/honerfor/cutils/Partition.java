@@ -38,7 +38,7 @@ import org.apache.commons.lang3.Validate;
  * @author B0BAI
  * @since v1.0
  */
-public class Partition<T> extends AbstractList<List<T>> {
+public final class Partition<T> extends AbstractList<List<T>> {
 
   /**
    * Variable to hold List.
