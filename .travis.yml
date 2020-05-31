@@ -35,3 +35,6 @@ cache:
 ## Send a slack notification
 notifications:
   slack: honerfor:GlY8a63CdYvtgJUPQoOUSmqs
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
