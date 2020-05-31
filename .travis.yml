@@ -37,4 +37,4 @@ notifications:
   slack: honerfor:GlY8a63CdYvtgJUPQoOUSmqs
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - mvn clean test jacoco:report coveralls:report
