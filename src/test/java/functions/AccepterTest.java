@@ -25,22 +25,16 @@ package functions;
 
 import com.honerfor.cutils.function.Accepter;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 final class AccepterTest {
-
-  @DisplayName("Expect that Accepter Should throw exception")
-  @ParameterizedTest(name = "{index} => value={0}")
-  @MethodSource("accepterFunctions")
-  void verifyAccepterThrowsException(Accepter<?> condition) {
-    Assertions.assertThrows(
-        Exception.class, () -> condition.andThen(System.out::println).accept(null));
-  }
 
   private static Stream<Arguments> accepterFunctions() {
 
@@ -55,11 +49,32 @@ final class AccepterTest {
         };
 
     final Accepter<String> thirdAccepter =
-        value -> {
-          throw new NullPointerException();
-        };
+      value -> {
+        throw new NullPointerException();
+      };
 
     return Stream.of(
-        Arguments.of(firstAccepter), Arguments.of(secondAccepter), Arguments.of(thirdAccepter));
+      Arguments.of(firstAccepter), Arguments.of(secondAccepter), Arguments.of(thirdAccepter));
+  }
+
+  @DisplayName("Expect that Accepter Should throw exception")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("accepterFunctions")
+  void verifyAccepterThrowsException(Accepter<?> accepter) {
+    Assertions.assertThrows(
+      Exception.class, () -> accepter.andThen(System.out::println).accept(null));
+  }
+
+  @Test
+  void verifyAccepterOperation() throws Exception {
+    final AtomicBoolean flag = new AtomicBoolean(false);
+
+    Accepter<Boolean> accepter = newValue -> flag.set(true);
+    Accepter<Boolean> acpt = accepter.andThen(flag::set);
+    Assertions.assertFalse(flag.get());
+
+    acpt.accept(false);
+
+    Assertions.assertFalse(flag.get());
   }
 }

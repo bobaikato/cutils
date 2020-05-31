@@ -24,34 +24,40 @@
 package functions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.of;
 
 import com.honerfor.cutils.function.ThrowingUnaryOperation;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class ThrowingUnaryOperatorTest {
 
+  private static Stream<Arguments> throwingUnaryOperations() {
+    final UnaryOperator<String> someTask =
+      ThrowingUnaryOperation.unchecked(
+        string -> {
+          Thread.sleep(Integer.parseInt(string));
+          return string;
+        });
+
+    return Stream.of(of(someTask, ""), of(someTask, "12E4"), of(someTask, "O"));
+  }
+
   @DisplayName("Should take checked exception operation and throw the exception when thrown")
   @ParameterizedTest(name = "{index} => input={1}")
   @MethodSource("throwingUnaryOperations")
-  void throwingUnaryOperations(final Function<String, Integer> fn, final String input) {
-    assertThrows(Exception.class, () -> fn.apply(input));
+  void throwingUnaryOperations(final UnaryOperator<String> operator, final String input) {
+    assertThrows(Exception.class, () -> operator.apply(input));
   }
 
-  private static Stream<Arguments> throwingUnaryOperations() {
-    final UnaryOperator<String> someTask =
-        ThrowingUnaryOperation.unchecked(
-            string -> {
-              Thread.sleep(Integer.parseInt(string));
-              return string;
-            });
-
-    return Stream.of(
-        Arguments.of(someTask, ""), Arguments.of(someTask, "12E4"), Arguments.of(someTask, "O"));
+  @Test
+  public void testThrowingUnaryOperationsIdentity() {
+    Assertions.assertEquals(3, ThrowingUnaryOperation.identity().apply(3));
   }
 }
