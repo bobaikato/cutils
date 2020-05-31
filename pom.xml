@@ -68,7 +68,7 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>.</outputDirectory>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
