@@ -1,4 +1,5 @@
-## Honerfor Common Utilities (Cutils)                                             [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
+## Honerfor Common Utilities (Cutils)                                             
+[![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=master)](https://travis-ci.org/Honerfor/cutils)
 [![CircleCI](https://img.shields.io/circleci/build/gh/Honerfor/cutils?color=%23088A08&label=test)](https://circleci.com/gh/Honerfor/cutils)
 [![Coverage Status](https://coveralls.io/repos/github/Honerfor/cutils/badge.svg?branch=master)](https://coveralls.io/github/Honerfor/cutils?branch=master)
