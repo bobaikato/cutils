@@ -24,6 +24,7 @@
 package functions;
 
 import static java.lang.System.nanoTime;
+import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,29 +43,30 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public final class IdlerTest {
 
-  static final int MOCK_LATENCY = 2000;
+  static final int TWO_SEC = 2000;
 
-  static final Supplier<Integer> SUPPLIER =
-    () -> {
-      final int time = MOCK_LATENCY;
-      try {
-        Thread.sleep(time); // mock operation with high latency
-      } catch (InterruptedException e) {
-      }
-      return time;
-    };
-
-  static final Dealer<Integer> DEALER =
-    () -> {
-      final int time = MOCK_LATENCY;
-      Thread.sleep(time); // mock operation with high latency
-      return time;
-    };
+  static final int ONE_SEC = 1000;
 
   private static Stream<Arguments> idlerOperations() {
 
-    final Dealer<Integer> dealer = Idler.deal(DEALER);
-    final Supplier<Integer> supplier = Idler.supply(SUPPLIER);
+    final Dealer<Integer> dealer =
+      Idler.deal(
+        () -> {
+          final int time = TWO_SEC;
+          sleep(time); // mock operation with high latency
+          return time;
+        });
+
+    final Supplier<Integer> supplier =
+      Idler.supply(
+        () -> {
+          final int time = TWO_SEC;
+          try {
+            sleep(time); // mock operation with high latency
+          } catch (InterruptedException e) {
+          }
+          return time;
+        });
 
     return Stream.of(
       of(dealer, 2, supplier),
@@ -79,22 +81,25 @@ public final class IdlerTest {
   }
 
   private static Stream<Arguments> idlerOperationsForBothSupplierAndDealer() {
-    final Idler<Integer> idler = Idler.of(SUPPLIER, DEALER);
-    return Stream.of(
-      of(idler, 4),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0));
-  }
+    final Idler<Integer> idler =
+      Idler.of(
+        () -> {
+          final int time = 1000;
+          try {
+            sleep(time); // mock operation with high latency
+          } catch (InterruptedException e) {
+            // something when wrong
+          }
+          return time;
+        },
+        () -> {
+          final int time = 1000;
+          sleep(time); // mock operation with high latency
+          return time;
+        });
 
-  private static Stream<Arguments> idlerOperationsForBothDealerAndSupplier() {
-    final Idler<Integer> idler = Idler.of(DEALER, SUPPLIER);
     return Stream.of(
-      of(idler, 4),
+      of(idler, 2),
       of(idler, 0),
       of(idler, 0),
       of(idler, 0),
@@ -115,7 +120,7 @@ public final class IdlerTest {
     final long endTime = nanoTime();
     final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
 
-    assertEquals(MOCK_LATENCY, result); // result check
+    assertEquals(TWO_SEC, result); // result check
     assertEquals(sec, executionTime); // check execution time
   }
 
@@ -131,7 +136,7 @@ public final class IdlerTest {
     final long endTime = nanoTime();
     final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
 
-    assertEquals(MOCK_LATENCY, result); // result check
+    assertEquals(TWO_SEC, result); // result check
     assertEquals(sec, executionTime); // check execution time
   }
 
@@ -148,26 +153,8 @@ public final class IdlerTest {
     final long endTime = nanoTime();
     final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
 
-    assertEquals(MOCK_LATENCY, supplierResult); // supplier result check
-    assertEquals(MOCK_LATENCY, dealerResult); // dealer result check
-    assertEquals(sec, executionTime); // check execution time
-  }
-
-  @DisplayName("Expect Idler to memoize values both Dealer and Supplier.")
-  @ParameterizedTest(name = "{index} =>  second={1}")
-  @MethodSource("idlerOperationsForBothDealerAndSupplier")
-  void verifyIdlerMemoizedDealerAndSupplierValues(Idler<Integer> idler, final long sec)
-    throws Exception {
-    final long startTime = nanoTime();
-
-    final int supplierResult = idler.get();
-    final int dealerResult = idler.deal();
-
-    final long endTime = nanoTime();
-    final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
-
-    assertEquals(MOCK_LATENCY, supplierResult); // supplier result check
-    assertEquals(MOCK_LATENCY, dealerResult); // dealer result check
+    assertEquals(ONE_SEC, supplierResult); // supplier result check
+    assertEquals(ONE_SEC, dealerResult); // dealer result check
     assertEquals(sec, executionTime); // check execution time
   }
 
