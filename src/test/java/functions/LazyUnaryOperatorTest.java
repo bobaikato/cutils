@@ -26,6 +26,7 @@ package functions;
 import static java.lang.System.nanoTime;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.honerfor.cutils.function.LazyUnaryOperator;
 import com.honerfor.cutils.function.ThrowingUnaryOperation;
@@ -33,6 +34,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -83,10 +85,27 @@ public class LazyUnaryOperatorTest {
       Arguments.of(function, "23", 0),
       Arguments.of(function, "25", 0),
       Arguments.of(function, "23", 0),
-      Arguments.of(function, "26", 2),
       Arguments.of(function, "24", 0),
       Arguments.of(function, "23", 0),
-      Arguments.of(function, "26", 0),
       Arguments.of(function, "24", 0));
+  }
+
+  @Test
+  public void equalsAndHashCodeContractToBeValid() {
+    final UnaryOperator<String> o1 = LazyUnaryOperator.of(value -> value.replace("o", "0"));
+    final UnaryOperator<String> o2 = o1;
+
+    Assertions.assertEquals(o1, o2);
+    Assertions.assertEquals(o1.hashCode(), o2.hashCode());
+  }
+
+  @Test
+  public void equalsAndHashCodeContractToBeInvalid() {
+    final UnaryOperator<String> o1 = LazyUnaryOperator.of(value -> value.replace("o", "0"));
+    final UnaryOperator<String> o2 = LazyUnaryOperator.of(value -> value.replace("o", "0"));
+
+    assertNotEquals(o1, o2);
+    assertNotEquals(o1, "");
+    assertNotEquals(o1.hashCode(), o2.hashCode());
   }
 }

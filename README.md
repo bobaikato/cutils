@@ -1,28 +1,32 @@
-## Honerfor Common Utilities (Cutils)
+## Honerfor Common Utilities (Cutils)                                             
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
-[![Maven Central](https://img.shields.io/maven-central/v/com.honerfor/cutils)](https://search.maven.org/artifact/com.honerfor/cutils)
-[![Javadocs](https://javadoc.io/badge/com.honerfor/cutils.svg?color=brown)](https://javadoc.io/doc/com.honerfor/cutils)
 [![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=master)](https://travis-ci.org/Honerfor/cutils)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/context:java)
 [![CircleCI](https://img.shields.io/circleci/build/gh/Honerfor/cutils?color=%23088A08&label=test)](https://circleci.com/gh/Honerfor/cutils)
+[![Coverage Status](https://coveralls.io/repos/github/Honerfor/cutils/badge.svg?branch=master)](https://coveralls.io/github/Honerfor/cutils?branch=master)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/alerts/)
 
 A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/com.honerfor/cutils). If you have any questions related to usage, simple open an issue.
 
 ## Where can I get the latest release? 
-- Apache Maven
+[![Maven Central](https://img.shields.io/maven-central/v/com.honerfor/cutils)](https://search.maven.org/artifact/com.honerfor/cutils)
+[![Javadocs](https://javadoc.io/badge/com.honerfor/cutils.svg?color=brown)](https://javadoc.io/doc/com.honerfor/cutils)
+
+
 ```xml
 <dependency>
   <groupId>com.honerfor</groupId>
   <artifactId>cutils</artifactId>
-  <version>5.1.1</version>
+  <version>5.1.2</version>
 </dependency> 
 ```
 - Gradle Groovy
 ```
-implementation 'com.honerfor:cutils:5.1.1'
+implementation 'com.honerfor:cutils:5.1.2'
 ```
 - Gradle Kotlin
 ```
-compile("com.honerfor:cutils:5.1.1")
+compile("com.honerfor:cutils:5.1.2")
 ```
 - [More, and others](https://search.maven.org/artifact/com.honerfor/cutils)
 
