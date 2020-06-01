@@ -28,6 +28,7 @@ import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.function.Supplier;
 import org.javatuples.Pair;
 
@@ -76,15 +77,25 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     this.dealer = dealer;
   }
 
+  /**
+   * Sealed constructor.
+   *
+   * @param dealer instance of {@link Dealer}
+   * @param supplier instance of {@link Supplier}
+   */
   private Idler(final Dealer<T> dealer, Supplier<T> supplier) {
     this.dealer = dealer;
     this.supplier = supplier;
   }
 
-  public static <T> Idler<T> of(final Dealer<T> dealer, final Supplier<T> supplier) {
-    return Idler.of(supplier, dealer);
-  }
-
+  /**
+   * use this method to initialize two idle operation of {@link Supplier} and {@link Dealer} types.
+   *
+   * @param supplier instance of {@link Supplier}
+   * @param dealer instance of {@link Dealer}
+   * @param <T> instance type
+   * @return an {@link Idler} instance.
+   */
   public static <T> Idler<T> of(final Supplier<T> supplier, final Dealer<T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     requireNonNull(supplier, "supplier cannot be null");
@@ -159,10 +170,10 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     if (o instanceof Idler) {
       final Idler<?> idler = (Idler<?>) o;
 
-      if (supplier != null ? !supplier.equals(idler.supplier) : idler.supplier != null) {
+      if (!Objects.equals(supplier, idler.supplier)) {
         return false;
       }
-      if (dealer != null ? !dealer.equals(idler.dealer) : idler.dealer != null) {
+      if (!Objects.equals(dealer, idler.dealer)) {
         return false;
       }
       return triplet.equals(idler.triplet);
