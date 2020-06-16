@@ -1,4 +1,4 @@
-## Honerfor Common Utilities (Cutils)                                             
+## Cutils                                            
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=development)](https://travis-ci.org/Honerfor/cutils)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/context:java)
