@@ -57,7 +57,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    *
    * <p>1: Dealer
    */
-  private transient Pair<T, T> triplet = Pair.with(null, null);
+  private transient Pair<T, T> pair = Pair.with(null, null);
 
   /**
    * Sealed constructor takes the supplier.
@@ -134,10 +134,10 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    */
   @Override
   public T deal() throws Exception {
-    if (nonNull(this.dealer) && isNull(this.triplet.getValue1())) {
-      this.triplet = this.triplet.setAt1(this.dealer.deal());
+    if (nonNull(this.dealer) && isNull(this.pair.getValue1())) {
+      this.pair = this.pair.setAt1(this.dealer.deal());
     }
-    return this.triplet.getValue1();
+    return this.pair.getValue1();
   }
 
   /**
@@ -148,17 +148,17 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    */
   @Override
   public T get() {
-    if (nonNull(this.supplier) && isNull(this.triplet.getValue0())) {
-      this.triplet = this.triplet.setAt0(this.supplier.get());
+    if (nonNull(this.supplier) && isNull(this.pair.getValue0())) {
+      this.pair = this.pair.setAt0(this.supplier.get());
     }
-    return this.triplet.getValue0();
+    return this.pair.getValue0();
   }
 
   @Override
   public int hashCode() {
     int result = supplier != null ? supplier.hashCode() : 0;
     result = 31 * result + (dealer != null ? dealer.hashCode() : 0);
-    result = 31 * result + triplet.hashCode();
+    result = 31 * result + pair.hashCode();
     return result;
   }
 
@@ -176,7 +176,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
       if (!Objects.equals(dealer, idler.dealer)) {
         return false;
       }
-      return triplet.equals(idler.triplet);
+      return pair.equals(idler.pair);
     } else {
       return false;
     }
