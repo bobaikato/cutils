@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
@@ -80,22 +81,25 @@ public final class QueTest {
           })
         .optional();
 
+    assertTrue(optional.isPresent());
     assertNotNull(optional);
-    assertTrue(optional instanceof Optional, "Should be of Optional Type");
+    assertTrue(true, "Should be of Optional Type");
   }
 
   @Test
-  public void testQueShouldReturnAnCompletableFutureValueType() {
+  public void testQueShouldReturnAnCompletableFutureValueType() throws ExecutionException, InterruptedException {
     final CompletableFuture<ArrayList<String>> result =
-      Que.<ArrayList<String>>of(new ArrayList<>())
-        .andConsume(
-          al -> {
-            al.add("Donald");
-            al.add("Trump");
-          })
-        .completableFuture();
+        Que.<ArrayList<String>>of(new ArrayList<>())
+            .andConsume(
+                al -> {
+                  al.add("Donald");
+                  al.add("Trump");
+                })
+            .completableFuture();
 
     assertNotNull(result);
+    assertEquals("Donald", result.get().get(0));
+    assertEquals(2, result.get().size());
     assertTrue(result instanceof CompletableFuture, "Should be of CompletableFuture Type");
   }
 
