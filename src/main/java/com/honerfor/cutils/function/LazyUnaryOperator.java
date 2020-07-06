@@ -45,7 +45,7 @@ import java.util.function.UnaryOperator;
 public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializable {
   private static final long serialVersionUID = 9181168161835004440L;
 
-  private final transient Function<T, T> state;
+  private final transient Function<? super T, ? extends T> state;
 
   /**
    * Sealed.
