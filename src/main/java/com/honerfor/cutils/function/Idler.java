@@ -46,9 +46,9 @@ import org.javatuples.Pair;
 public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   private static final long serialVersionUID = -909341387550414732L;
 
-  private transient Supplier<T> supplier;
+  private transient Supplier<? extends T> supplier;
 
-  private transient Dealer<T> dealer;
+  private transient Dealer<? extends T> dealer;
 
   /**
    * Object to hold information.
@@ -57,14 +57,14 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    *
    * <p>1: Dealer
    */
-  private transient Pair<T, T> pair = Pair.with(null, null);
+  private transient Pair<? extends T, ? extends T> pair = Pair.with(null, null);
 
   /**
    * Sealed constructor takes the supplier.
    *
    * @param supplier instance of {@link Supplier}
    */
-  private Idler(final Supplier<T> supplier) {
+  private Idler(final Supplier<? extends T> supplier) {
     this.supplier = supplier;
   }
 
@@ -73,7 +73,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    *
    * @param dealer instance of {@link Dealer}
    */
-  private Idler(final Dealer<T> dealer) {
+  private Idler(final Dealer<? extends T> dealer) {
     this.dealer = dealer;
   }
 
@@ -83,7 +83,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    * @param dealer instance of {@link Dealer}
    * @param supplier instance of {@link Supplier}
    */
-  private Idler(final Dealer<T> dealer, Supplier<T> supplier) {
+  private Idler(final Dealer<? extends T> dealer, Supplier<? extends T> supplier) {
     this.dealer = dealer;
     this.supplier = supplier;
   }
@@ -96,7 +96,8 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    * @param <T> instance type
    * @return an {@link Idler} instance.
    */
-  public static <T> Idler<T> of(final Supplier<T> supplier, final Dealer<T> dealer) {
+  public static <T> Idler<T> of(
+      final Supplier<? extends T> supplier, final Dealer<? extends T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(dealer, supplier);
@@ -109,7 +110,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    * @param supplier the supplier, an instance of {@link Supplier}
    * @return the supplier, an instance of {@link Supplier}
    */
-  public static <T> Supplier<T> supply(final Supplier<T> supplier) {
+  public static <T> Supplier<T> supply(final Supplier<? extends T> supplier) {
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(supplier);
   }
@@ -121,7 +122,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    * @param dealer the supplier, an instance of {@link Dealer}
    * @return the supplier, an instance of {@link Dealer}
    */
-  public static <T> Dealer<T> deal(final Dealer<T> dealer) {
+  public static <T> Dealer<T> deal(final Dealer<? extends T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     return new Idler<>(dealer);
   }
