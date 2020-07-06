@@ -45,7 +45,7 @@ import java.util.function.Function;
 public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   private static final long serialVersionUID = 398334400292617685L;
 
-  private final transient Function<T, R> function;
+  private final transient Function<? super T, ? extends R> function;
 
   /**
    * Store the current result of function by the the argument provided.
@@ -59,7 +59,7 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
    *
    * @param function argument, instance of {@link Function}
    */
-  private LazyFunction(final Function<T, R> function) {
+  private LazyFunction(final Function<? super T, ? extends R> function) {
     this.function = function;
   }
 
@@ -71,7 +71,7 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
    * @param function the function, of {@link Function} type
    * @return the function, an instance of {@link Function} type.
    */
-  public static <T, R> Function<T, R> of(final Function<T, R> function) {
+  public static <T, R> Function<T, R> of(final Function<? super T, ? extends R> function) {
     Objects.requireNonNull(function, "function cannot be null");
     return new LazyFunction<>(function);
   }
