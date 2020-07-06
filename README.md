@@ -5,6 +5,7 @@
 [![CircleCI](https://img.shields.io/circleci/build/gh/Honerfor/cutils?color=%23088A08&label=test)](https://circleci.com/gh/Honerfor/cutils)
 [![Coverage Status](https://coveralls.io/repos/github/Honerfor/cutils/badge.svg?branch=master)](https://coveralls.io/github/Honerfor/cutils?branch=master)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/alerts/)
+[![codebeat badge](https://codebeat.co/badges/da875096-0224-474a-82ba-41e39b146a89)](https://codebeat.co/projects/github-com-honerfor-cutils-development)
 
 A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/com.honerfor/cutils). If you have any questions related to usage, simple open an issue.
 
@@ -17,16 +18,16 @@ A package of utilities classes intended to enhance and simplify Java development
 <dependency>
   <groupId>com.honerfor</groupId>
   <artifactId>cutils</artifactId>
-  <version>5.1.2</version>
+  <version>{version}</version>
 </dependency> 
 ```
 - Gradle Groovy
 ```
-implementation 'com.honerfor:cutils:5.1.2'
+implementation 'com.honerfor:cutils:{version}'
 ```
 - Gradle Kotlin
 ```
-compile("com.honerfor:cutils:5.1.2")
+compile("com.honerfor:cutils:{version}")
 ```
 - [More, and others](https://search.maven.org/artifact/com.honerfor/cutils)
 

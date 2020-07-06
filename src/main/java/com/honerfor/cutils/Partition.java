@@ -38,14 +38,14 @@ import org.apache.commons.lang3.Validate;
  * @author B0BAI
  * @since v1.0
  */
-public final class Partition<T> extends AbstractList<List<T>> {
+public final class Partition<T> extends AbstractList<List<? super T>> {
 
   /**
    * Variable to hold List.
    *
    * @since v1.0
    */
-  private final List<T> list;
+  private final List<? extends T> list;
 
   /**
    * variable to hold the sublist size.
@@ -59,7 +59,7 @@ public final class Partition<T> extends AbstractList<List<T>> {
    *
    * @param list List to be partitioned.
    */
-  private Partition(final List<T> list) {
+  private Partition(final List<? extends T> list) {
     this.list = new ArrayList<>(list);
   }
 
@@ -70,7 +70,7 @@ public final class Partition<T> extends AbstractList<List<T>> {
    * @param <T> List type
    * @return instance of {@link Partition}
    */
-  public static <T> Partition<T> of(final List<T> list) {
+  public static <T> Partition<T> of(final List<? extends T> list) {
     Objects.requireNonNull(list, "List cannot be null");
     return new Partition<>(list);
   }
