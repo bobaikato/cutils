@@ -109,7 +109,7 @@ public final class Que<T> implements Serializable {
    * @param <T> Type of value
    * @return instance of {@link Que}
    */
-  public static <T> Que<T> of(final Supplier<T> supplier) {
+  public static <T> Que<T> of(final Supplier<? extends T> supplier) {
     return Que.createReference(supplier.get());
   }
 
@@ -159,7 +159,7 @@ public final class Que<T> implements Serializable {
    * @return existing instance of the {@link Que}
    * @since 1.0
    */
-  public Que<T> run(final Consumer<T> consumer) {
+  public Que<T> run(final Consumer<? super T> consumer) {
     return this.consumer(consumer);
   }
 
@@ -185,7 +185,7 @@ public final class Que<T> implements Serializable {
    * @return existing instance of the {@link Que}
    * @since 1.0
    */
-  public Que<T> execute(final Accepter<T> accepter) throws Exception {
+  public Que<T> execute(final Accepter<? super T> accepter) throws Exception {
     return this.accepter(accepter);
   }
 
@@ -241,7 +241,7 @@ public final class Que<T> implements Serializable {
     return Que.createReference(dealer.deal());
   }
 
-  private Que<T> consumer(final Consumer<T> consumer) {
+  private Que<T> consumer(final Consumer<? super T> consumer) {
     Objects.requireNonNull(consumer, "consumer cannot be null");
     consumer.accept(this.value);
     return this;
@@ -254,7 +254,7 @@ public final class Que<T> implements Serializable {
    * @return existing instance of {@link Que}
    * @since 1.0
    */
-  public Que<T> andConsume(final Consumer<T> consumer) {
+  public Que<T> andConsume(final Consumer<? super T> consumer) {
     return this.consumer(consumer);
   }
 
@@ -266,11 +266,11 @@ public final class Que<T> implements Serializable {
    * @return existing instance of {@link Que}
    * @since 1.0
    */
-  public Que<T> andAccept(final Accepter<T> accepter) throws Exception {
+  public Que<T> andAccept(final Accepter<? super T> accepter) throws Exception {
     return this.accepter(accepter);
   }
 
-  private Que<T> accepter(final Accepter<T> accepter) throws Exception {
+  private Que<T> accepter(final Accepter<? super T> accepter) throws Exception {
     Objects.requireNonNull(accepter, "accepter cannot be null");
     accepter.accept(this.value);
     return this;
