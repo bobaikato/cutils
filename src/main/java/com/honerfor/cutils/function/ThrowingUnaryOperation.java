@@ -41,7 +41,7 @@ import java.util.function.UnaryOperator;
  * @param <T> the type of the input to the function
  * @see ThrowingFunction
  * @see UnaryOperator
- * @author B0BAI
+ * @author B0BAI <https://github.com/b0bai>
  * @since 5.0
  */
 @FunctionalInterface

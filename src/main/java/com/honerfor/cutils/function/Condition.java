@@ -27,7 +27,7 @@ package com.honerfor.cutils.function;
  * Represents an operation that returns a condition/boolean. whose functional method is {@link
  * #isMet()}.
  *
- * @author B0BAI
+ * @author B0BAI <https://github.com/b0bai>
  * @since 1.0
  */
 @FunctionalInterface
