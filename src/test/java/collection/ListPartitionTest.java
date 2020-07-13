@@ -21,6 +21,8 @@
  * limitations under the License.
  */
 
+package collection;
+
 import static com.honerfor.cutils.collection.ListPartition.of;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import com.honerfor.cutils.Try;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Idler;
+import com.honerfor.cutils.value.Try;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

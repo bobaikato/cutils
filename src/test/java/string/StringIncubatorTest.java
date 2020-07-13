@@ -20,12 +20,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package string;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.honerfor.cutils.StringIncubator;
+import com.honerfor.cutils.string.StringIncubator;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
 
 @DisplayName("Test Random String Hatching.")
 final class StringIncubatorTest {
