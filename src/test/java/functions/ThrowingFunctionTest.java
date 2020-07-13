@@ -25,8 +25,8 @@ package functions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.honerfor.cutils.Que;
 import com.honerfor.cutils.function.ThrowingFunction;
+import com.honerfor.cutils.value.Que;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -34,27 +34,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public final class ThrowingFunctionTest {
+final class ThrowingFunctionTest {
 
   @DisplayName("Should take checked exception operationa and throw the exception when thrown")
   @ParameterizedTest(name = "{index} => input={1}")
   @MethodSource("throwingFunctionOperations")
-  void throwingFunctionOperations(
-      final Function<String, Integer> fn, final String input) {
+  void throwingFunctionOperations(final Function<String, Integer> fn, final String input) {
     assertThrows(Exception.class, () -> fn.apply(input));
   }
 
   private static Stream<Arguments> throwingFunctionOperations() {
     final Function<String, Integer> convertStringToInteger =
-      ThrowingFunction.unchecked(
-        string -> {
-          // checked Exception operation
-          return Que.as(() -> Integer.parseInt(string)).get();
-        });
+        ThrowingFunction.unchecked(
+            string -> {
+              // checked Exception operation
+              return Que.as(() -> Integer.parseInt(string)).get();
+            });
 
     return Stream.of(
-      Arguments.of(convertStringToInteger, ""),
-      Arguments.of(convertStringToInteger, "12E4"),
-      Arguments.of(convertStringToInteger, "O"));
+        Arguments.of(convertStringToInteger, ""),
+        Arguments.of(convertStringToInteger, "12E4"),
+        Arguments.of(convertStringToInteger, "O"));
   }
 }

@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils;
+package com.honerfor.cutils.value;
 
 import com.honerfor.cutils.function.Accepter;
 import com.honerfor.cutils.function.Dealer;

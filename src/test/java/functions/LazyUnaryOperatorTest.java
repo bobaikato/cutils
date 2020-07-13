@@ -39,7 +39,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class LazyUnaryOperatorTest {
+final class LazyUnaryOperatorTest {
 
   static final int MOCK_LATENCY = 2000;
 
@@ -47,7 +47,7 @@ public class LazyUnaryOperatorTest {
   @ParameterizedTest(name = "{index} =>  input={1}  second={2}")
   @MethodSource("lazyFunctionOperations")
   void verifyLazyUnaryOperatorValues(
-    final UnaryOperator<String> operator, final String input, int sec) {
+      final UnaryOperator<String> operator, final String input, int sec) {
 
     final long startTime = nanoTime();
 
@@ -63,35 +63,31 @@ public class LazyUnaryOperatorTest {
   private static Stream<Arguments> lazyFunctionOperations() {
 
     final UnaryOperator<String> function =
-      LazyUnaryOperator.of(
-        ThrowingUnaryOperation.unchecked(
-          value -> {
-            final int time = MOCK_LATENCY;
-            try {
-              Thread.sleep(time); // mock operation with high latency
-            } catch (InterruptedException e) {
-            }
-            return time + value;
-          }));
+        LazyUnaryOperator.of(
+            ThrowingUnaryOperation.unchecked(
+                value -> {
+                  Thread.sleep(MOCK_LATENCY); // mock operation with high latency
+                  return MOCK_LATENCY + value;
+                }));
 
     return Stream.of(
-      Arguments.of(function, "23", 2),
-      Arguments.of(function, "23", 0),
-      Arguments.of(function, "24", 2),
-      Arguments.of(function, "23", 0),
-      Arguments.of(function, "23", 0),
-      Arguments.of(function, "25", 2),
-      Arguments.of(function, "24", 0),
-      Arguments.of(function, "23", 0),
-      Arguments.of(function, "25", 0),
-      Arguments.of(function, "23", 0),
-      Arguments.of(function, "24", 0),
-      Arguments.of(function, "23", 0),
-      Arguments.of(function, "24", 0));
+        Arguments.of(function, "23", 2),
+        Arguments.of(function, "23", 0),
+        Arguments.of(function, "24", 2),
+        Arguments.of(function, "23", 0),
+        Arguments.of(function, "23", 0),
+        Arguments.of(function, "25", 2),
+        Arguments.of(function, "24", 0),
+        Arguments.of(function, "23", 0),
+        Arguments.of(function, "25", 0),
+        Arguments.of(function, "23", 0),
+        Arguments.of(function, "24", 0),
+        Arguments.of(function, "23", 0),
+        Arguments.of(function, "24", 0));
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeValid() {
+  void equalsAndHashCodeContractToBeValid() {
     final UnaryOperator<String> o1 = LazyUnaryOperator.of(value -> value.replace("o", "0"));
     final UnaryOperator<String> o2 = o1;
 
@@ -100,7 +96,7 @@ public class LazyUnaryOperatorTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeInvalid() {
+  void equalsAndHashCodeContractToBeInvalid() {
     final UnaryOperator<String> o1 = LazyUnaryOperator.of(value -> value.replace("o", "0"));
     final UnaryOperator<String> o2 = LazyUnaryOperator.of(value -> value.replace("o", "0"));
 

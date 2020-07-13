@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils;
+package com.honerfor.cutils.value;
 
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Executable;
@@ -366,7 +366,8 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     public F get() {
-      throw new UnsupportedOperationException("No result available, operation failed with an exception.");
+      throw new UnsupportedOperationException(
+          "No result available, operation failed with an exception.");
     }
 
     @Override
@@ -376,7 +377,8 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     public <M> Try<M> map(final Function<? super F, ? extends M> mapper) {
-      throw new UnsupportedOperationException("No result available, operation failed with an exception.");
+      throw new UnsupportedOperationException(
+          "No result available, operation failed with an exception.");
     }
 
     @Override
