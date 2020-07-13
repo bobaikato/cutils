@@ -84,8 +84,8 @@ final class AesTest {
         };
 
     return Stream.of(
-      of(personExampleI, "P37s0n3x4mpl3-Cust0m-k3y"),
-      of(personExampleII, "n3w P37s0n3x4mpl3-Cust0m-k3y"));
+        of(personExampleI, "P37s0n3x4mpl3-Cust0m-k3y"),
+        of(personExampleII, "n3w P37s0n3x4mpl3-Cust0m-k3y"));
   }
 
   private static Stream<Arguments> illegalValuesResource() {
@@ -203,7 +203,7 @@ final class AesTest {
   @ParameterizedTest(name = "{index} => input={0}, Key={0}")
   @MethodSource("stringEncryptionValues")
   void shouldEncryptStringTypeValuesWithCustomKey(final String input, final String key)
-    throws Exception {
+      throws Exception {
     final String encryptValue = AES.init(key).encrypt(input);
     final String decryptedValue = AES.<String>init(key).decrypt(encryptValue);
 
@@ -214,7 +214,7 @@ final class AesTest {
   @ParameterizedTest(name = "{index} => input={0}, Key={1}, Algorithm={2}")
   @MethodSource("stringEncryptionValues")
   void shouldEncryptStringTypeValuesWithCustomKeyAndAlgorithmType(
-    final String input, final String key, final Algorithm algorithm) throws Exception {
+      final String input, final String key, final Algorithm algorithm) throws Exception {
     final String encryptValue = AES.init(algorithm, key).encrypt(input);
     final String decryptedValue = AES.<String>init(algorithm, key).decrypt(encryptValue);
 
@@ -262,8 +262,8 @@ final class AesTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeValid()
-    throws NoSuchPaddingException, NoSuchAlgorithmException {
+  void equalsAndHashCodeContractToBeValid()
+      throws NoSuchPaddingException, NoSuchAlgorithmException {
     final AES<?> aes1 = AES.init("K3¥");
     final AES<?> aes2 = AES.init("K0¥");
 
@@ -275,8 +275,8 @@ final class AesTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeInvalid()
-    throws NoSuchPaddingException, NoSuchAlgorithmException {
+  void equalsAndHashCodeContractToBeInvalid()
+      throws NoSuchPaddingException, NoSuchAlgorithmException {
     final AES<?> aes1 = AES.init();
     final AES<?> aes2 = AES.init();
 

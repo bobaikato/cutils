@@ -33,10 +33,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Try Operation test.")
-public class TryTest {
+final class TryTest {
 
   @Test
-  public void testForSuccessTryOperationWithResult() {
+  void testForSuccessTryOperationWithResult() {
 
     final Try<Integer> convertStringToInteger = Try.of(() -> Integer.parseInt("0025"));
 
@@ -66,7 +66,7 @@ public class TryTest {
   }
 
   @Test
-  public void testForFailedTryOperation() {
+  void testForFailedTryOperation() {
 
     final Try<Integer> convertStringToInteger = Try.of(() -> Integer.parseInt("0o25"));
 
@@ -107,7 +107,7 @@ public class TryTest {
   }
 
   @Test
-  public void testForSuccessTryOperationWithoutResult() {
+  void testForSuccessTryOperationWithoutResult() {
 
     final Try<?> pause = Try.of(() -> sleep(1));
 
@@ -132,7 +132,7 @@ public class TryTest {
   }
 
   @Test
-  public void testEqualsAndHashCodeContractsForSuccessTryState() {
+  void testEqualsAndHashCodeContractsForSuccessTryState() {
 
     final Try<?> t1 = Try.of(() -> {});
 
@@ -154,7 +154,7 @@ public class TryTest {
   }
 
   @Test
-  public void testEqualsAndHashCodeContractsForFailedTryState() {
+  void testEqualsAndHashCodeContractsForFailedTryState() {
     final Try<?> t1 =
         Try.of(
             () -> {
@@ -179,7 +179,7 @@ public class TryTest {
   }
 
   @Test
-  public void supplementaryTryTest() {
+  void supplementaryTryTest() {
     final Try<?> successTryWithoutResult =
         Try.of(
             () -> {

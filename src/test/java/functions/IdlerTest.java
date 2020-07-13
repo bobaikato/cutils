@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
+import com.honerfor.cutils.Try;
 import com.honerfor.cutils.function.Dealer;
 import com.honerfor.cutils.function.Idler;
 import java.util.function.Supplier;
@@ -40,26 +41,25 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public final class IdlerTest {
+final class IdlerTest {
 
   static final int MOCK_LATENCY = 2000;
 
   static final Supplier<Integer> SUPPLIER =
-    () -> {
-      final int time = MOCK_LATENCY;
-      try {
-        Thread.sleep(time); // mock operation with high latency
-      } catch (InterruptedException e) {
-      }
-      return time;
-    };
+      () ->
+          Try.of(
+                  () -> {
+                    Thread.sleep(MOCK_LATENCY); // mock operation with high latency
+                    return MOCK_LATENCY;
+                  })
+              .get();
 
   static final Dealer<Integer> DEALER =
-    () -> {
-      final int time = MOCK_LATENCY;
-      Thread.sleep(time); // mock operation with high latency
-      return time;
-    };
+      () -> {
+        final int time = MOCK_LATENCY;
+        Thread.sleep(time); // mock operation with high latency
+        return time;
+      };
 
   private static Stream<Arguments> idlerOperations() {
 
@@ -67,48 +67,48 @@ public final class IdlerTest {
     final Supplier<Integer> supplier = Idler.supply(SUPPLIER);
 
     return Stream.of(
-      of(dealer, 2, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier),
-      of(dealer, 0, supplier));
+        of(dealer, 2, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier),
+        of(dealer, 0, supplier));
   }
 
   private static Stream<Arguments> idlerOperationsForBothSupplierAndDealer() {
     final Idler<Integer> idler = Idler.of(SUPPLIER, DEALER);
     return Stream.of(
-      of(idler, 4),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0));
+        of(idler, 4),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0));
   }
 
   private static Stream<Arguments> idlerOperationsForBothDealerAndSupplier() {
     final Idler<Integer> idler = Idler.of(DEALER, SUPPLIER);
     return Stream.of(
-      of(idler, 4),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0),
-      of(idler, 0));
+        of(idler, 4),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0),
+        of(idler, 0));
   }
 
   @DisplayName("Expect Idler to memoize values for Dealers.")
   @ParameterizedTest(name = "{index} =>  seconds={1}")
   @MethodSource("idlerOperations")
   void verifyIdlerMemoizedDealerValues(final Dealer<Integer> dealer, final long sec)
-    throws Exception {
+      throws Exception {
     final long startTime = nanoTime();
     final int result = dealer.deal();
 
@@ -123,7 +123,7 @@ public final class IdlerTest {
   @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerOperations")
   void verifyIdlerMemoizedSupplierValues(
-    final Dealer<Integer> dealer, final long sec, final Supplier<Integer> supplier) {
+      final Dealer<Integer> dealer, final long sec, final Supplier<Integer> supplier) {
     final long startTime = nanoTime();
 
     final int result = supplier.get();
@@ -139,7 +139,7 @@ public final class IdlerTest {
   @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerOperationsForBothSupplierAndDealer")
   void verifyIdlerMemoizedSupplierAndDealerValues(Idler<Integer> idler, final long sec)
-    throws Exception {
+      throws Exception {
     final long startTime = nanoTime();
 
     final int supplierResult = idler.get();
@@ -157,7 +157,7 @@ public final class IdlerTest {
   @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerOperationsForBothDealerAndSupplier")
   void verifyIdlerMemoizedDealerAndSupplierValues(Idler<Integer> idler, final long sec)
-    throws Exception {
+      throws Exception {
     final long startTime = nanoTime();
 
     final int supplierResult = idler.get();

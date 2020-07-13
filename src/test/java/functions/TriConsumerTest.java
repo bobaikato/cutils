@@ -32,16 +32,13 @@ import org.junit.jupiter.api.Test;
 final class TriConsumerTest {
 
   @Test
-  void verifyAccepterOperations() throws Exception {
+  void verifyAccepterOperations() {
     final AtomicReference<String> reference = new AtomicReference<>();
 
     final TriConsumer<String, String, String> triConsumer = (x, y, z) -> reference.set(x + y + y);
 
     final TriConsumer<String, String, String> tc =
-        triConsumer.andThen(
-            (x, y, z) -> {
-              reference.set(x + z + y);
-            });
+        triConsumer.andThen((x, y, z) -> reference.set(x + z + y));
 
     tc.accept("A", "B", "C");
 

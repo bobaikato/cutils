@@ -39,7 +39,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public final class LazyFunctionTest {
+final class LazyFunctionTest {
 
   static final int MOCK_LATENCY = 2000;
 
@@ -49,21 +49,17 @@ public final class LazyFunctionTest {
         LazyFunction.of(
             ThrowingFunction.unchecked(
                 value -> {
-                  final int time = MOCK_LATENCY;
-                  try {
-                    Thread.sleep(time); // mock operation with high latency
-                  } catch (InterruptedException e) {
-                  }
-                  return time + value;
+                  Thread.sleep(MOCK_LATENCY); // mock operation with high latency
+                  return MOCK_LATENCY + value;
                 }));
 
     return Stream.of(
-      Arguments.of(function, 23, 2),
-      Arguments.of(function, 23, 0),
-      Arguments.of(function, 25, 2),
-      Arguments.of(function, 23, 0),
-      Arguments.of(function, 25, 0),
-      Arguments.of(function, 23, 0));
+        Arguments.of(function, 23, 2),
+        Arguments.of(function, 23, 0),
+        Arguments.of(function, 25, 2),
+        Arguments.of(function, 23, 0),
+        Arguments.of(function, 25, 0),
+        Arguments.of(function, 23, 0));
   }
 
   @DisplayName("Expect Lazy Function to memoize values for Functions of same argument.")

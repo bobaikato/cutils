@@ -36,15 +36,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class ThrowingUnaryOperatorTest {
+final class ThrowingUnaryOperatorTest {
 
   private static Stream<Arguments> throwingUnaryOperations() {
     final UnaryOperator<String> someTask =
-      ThrowingUnaryOperation.unchecked(
-        string -> {
-          Thread.sleep(Integer.parseInt(string));
-          return string;
-        });
+        ThrowingUnaryOperation.unchecked(
+            string -> {
+              Thread.sleep(Integer.parseInt(string));
+              return string;
+            });
 
     return Stream.of(of(someTask, ""), of(someTask, "12E4"), of(someTask, "O"));
   }
@@ -57,7 +57,7 @@ public class ThrowingUnaryOperatorTest {
   }
 
   @Test
-  public void testThrowingUnaryOperationsIdentity() {
+  void testThrowingUnaryOperationsIdentity() {
     Assertions.assertEquals(3, ThrowingUnaryOperation.identity().apply(3));
   }
 }
