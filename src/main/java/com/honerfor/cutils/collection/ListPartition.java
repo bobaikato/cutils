@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils;
+package com.honerfor.cutils.collection;
 
 import static java.lang.String.format;
 
@@ -38,7 +38,7 @@ import org.apache.commons.lang3.Validate;
  * @author B0BAI <https://github.com/b0bai>
  * @since v1.0
  */
-public final class Partition<T> extends AbstractList<List<? super T>> {
+public final class ListPartition<T> extends AbstractList<List<? super T>> {
 
   /**
    * Variable to hold List.
@@ -59,7 +59,7 @@ public final class Partition<T> extends AbstractList<List<? super T>> {
    *
    * @param list List to be partitioned.
    */
-  private Partition(final List<? extends T> list) {
+  private ListPartition(final List<? extends T> list) {
     this.list = new ArrayList<>(list);
   }
 
@@ -68,20 +68,20 @@ public final class Partition<T> extends AbstractList<List<? super T>> {
    *
    * @param list List to be partitioned.
    * @param <T> List type
-   * @return instance of {@link Partition}
+   * @return instance of {@link ListPartition}
    */
-  public static <T> Partition<T> of(final List<? extends T> list) {
+  public static <T> ListPartition<T> of(final List<? extends T> list) {
     Objects.requireNonNull(list, "List cannot be null");
-    return new Partition<>(list);
+    return new ListPartition<>(list);
   }
 
   /**
    * Method used to get partition size.
    *
-   * @param sublistSize The sub-list/Partition size.
-   * @return current instance of {@link Partition}
+   * @param sublistSize The sub-list/ListPartition size.
+   * @return current instance of {@link ListPartition}
    */
-  public Partition<T> into(final int sublistSize) {
+  public ListPartition<T> into(final int sublistSize) {
     Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.");
     this.sublistSize = sublistSize;
     return this;
@@ -108,12 +108,12 @@ public final class Partition<T> extends AbstractList<List<? super T>> {
     if (this == o) {
       return true;
     }
-    if (o instanceof Partition) {
+    if (o instanceof ListPartition) {
       if (!super.equals(o)) {
         return false;
       }
-      final Partition<?> partition = (Partition<?>) o;
-      return sublistSize == partition.sublistSize && list.equals(partition.list);
+      final ListPartition<?> listPartition = (ListPartition<?>) o;
+      return sublistSize == listPartition.sublistSize && list.equals(listPartition.list);
     }
     return false;
   }

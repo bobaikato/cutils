@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils;
+package com.honerfor.cutils.string;
 
 import static org.apache.commons.lang3.Validate.isTrue;
 
@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 
 /**
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
- * Session, ID etc. To generate random strings you can use the default the constructor that suit
+ * Session, ID etc. To generate random string you can use the default the constructor that suit
  * your purpose or the default option which will generate string of 64 characters.
  *
  * <p>Example/Usage: <code>
@@ -133,7 +133,7 @@ public class StringIncubator implements Serializable {
   }
 
   /**
-   * Create an alphanumeric strings from a secure generator.
+   * Create an alphanumeric string from a secure generator.
    *
    * @param length of hatched string/value
    * @since 2.0
@@ -143,7 +143,7 @@ public class StringIncubator implements Serializable {
   }
 
   /**
-   * Create an alphanumeric strings from a secure generator.
+   * Create an alphanumeric string from a secure generator.
    *
    * @param symbols String to generate the hatched values
    * @param length of hatched string/value
