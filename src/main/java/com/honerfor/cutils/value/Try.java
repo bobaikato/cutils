@@ -378,7 +378,7 @@ public abstract class Try<T> implements Serializable {
     @Override
     public <M> Try<M> map(final Function<? super F, ? extends M> mapper) {
       throw new UnsupportedOperationException(
-          "No result available, operation failed with an exception.");
+          "No result available to map, operation failed with an exception.");
     }
 
     @Override
