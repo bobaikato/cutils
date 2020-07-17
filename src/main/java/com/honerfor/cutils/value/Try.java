@@ -248,9 +248,9 @@ public abstract class Try<T> implements Serializable {
   public abstract boolean isSuccess();
 
   /**
-   * To mostly check the state of a successful try operation if or not it returns a result.
+   * Use to check the state of a successful try operation if or not it has a result.
    *
-   * @return a {@link Boolean} depending on the state: {@code true} if try was operation successful
+   * @return a {@link Boolean} depending on the state: {@code true} if try operation was successful
    *     and has a result or {@code false} if operation fails or successful but without a result.
    */
   public abstract boolean isResult();
