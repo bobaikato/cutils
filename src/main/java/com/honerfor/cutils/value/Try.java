@@ -114,7 +114,7 @@ public abstract class Try<T> implements Serializable {
    * @see Success#get()
    * @since v5
    */
-  public void ifSuccess(final Consumer<? super T> resultConsumer) {
+  public void onSuccess(final Consumer<? super T> resultConsumer) {
     if (this.isSuccess()) {
       resultConsumer.accept(this.get());
     }
@@ -128,7 +128,7 @@ public abstract class Try<T> implements Serializable {
    * @see Failure#getCause()
    * @since v5
    */
-  public void ifFailure(final Consumer<? super Throwable> exceptionConsumer) {
+  public void onFailure(final Consumer<? super Throwable> exceptionConsumer) {
     if (this.isFailure()) {
       exceptionConsumer.accept(this.getCause());
     }
@@ -147,7 +147,7 @@ public abstract class Try<T> implements Serializable {
    * @param action block to be executed if try operation fails.
    * @since v5
    */
-  public void ifSuccessOrElse(final Consumer<? super T> resultConsumer, final Runnable action) {
+  public void onSuccessOrElse(final Consumer<? super T> resultConsumer, final Runnable action) {
     if (this.isSuccess()) {
       resultConsumer.accept(this.get());
     } else {
@@ -164,7 +164,7 @@ public abstract class Try<T> implements Serializable {
    * @param action block to be executed if try operation fails.
    * @since v5
    */
-  public void ifFailureOrElse(
+  public void onFailureOrElse(
       final Consumer<? super Throwable> exceptionConsumer, final Runnable action) {
     if (this.isFailure()) {
       exceptionConsumer.accept(this.getCause());
