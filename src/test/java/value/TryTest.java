@@ -111,7 +111,7 @@ final class TryTest {
   @Test
   void testForSuccessTryOperationWithoutResult() {
 
-    final Try<?> pause = Try.of(() -> sleep(1));
+    final Try<?> pause = Try.of(() -> sleep(0));
 
     assertTrue(pause.isSuccess());
 
@@ -191,24 +191,24 @@ final class TryTest {
     final Exception ex =
         assertThrows(
             IllegalStateException.class,
-            () -> successTryWithoutResult.ifSuccess(System.out::println));
+            () -> successTryWithoutResult.onSuccess(System.out::println));
 
     assertEquals("Operation has no result available.", ex.getMessage());
 
     final Try<?> successTryWithResult = Try.of(() -> Integer.parseInt("25"));
 
-    successTryWithResult.ifSuccess(
+    successTryWithResult.onSuccess(
         result -> {
           assertEquals(25, result);
         });
 
-    successTryWithResult.ifSuccessOrElse(
+    successTryWithResult.onSuccessOrElse(
         result -> {
           assertEquals(25, result);
         },
         () -> {});
 
-    successTryWithResult.ifSuccessOrElse(
+    successTryWithResult.onSuccessOrElse(
         result -> {
           assertEquals(25, result);
         },
@@ -220,12 +220,12 @@ final class TryTest {
               Integer.parseInt("2F");
             });
 
-    failTry.ifFailure(
+    failTry.onFailure(
         e -> {
           assertTrue(e.getMessage().contains("For input string: \"2F\""));
         });
 
-    failTry.ifFailureOrElse(
+    failTry.onFailureOrElse(
         exception -> {
           assertTrue(exception.getMessage().contains("For input string: \"2F\""));
         },
