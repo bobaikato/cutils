@@ -156,6 +156,30 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
+   * Perform further operation on successful try {@code result}, if the try fails the second
+   * argument block is executed.
+   *
+   * <p>NOTE: This method will throw an {@link IllegalStateException} if the try operation executed
+   * doesn't return a result. Use {@link Success#isSuccess} instead to check the state of the try
+   * operation.
+   *
+   * @param resultConsumer block of operation of {@link Consumer} type to be executed with try
+   *     result.
+   * @param exceptionConsumer block of operation of {@link Consumer} type to be executed when the
+   *     try operation succeeds.
+   * @since v5
+   */
+  public void onSuccessOrElse(
+      final Consumer<? super T> resultConsumer,
+      final Consumer<? super Throwable> exceptionConsumer) {
+    if (this.isSuccess()) {
+      resultConsumer.accept(this.get());
+    } else {
+      exceptionConsumer.accept(this.getCause());
+    }
+  }
+
+  /**
    * Perform further operation on a failed try Exception, if the try succeeds, the second argument
    * block is executed.
    *
@@ -170,6 +194,26 @@ public abstract class Try<T> implements Serializable {
       exceptionConsumer.accept(this.getCause());
     } else {
       action.run();
+    }
+  }
+
+  /**
+   * Perform further operation on a failed try Exception, if the try succeeds, the second argument
+   * block is executed.
+   *
+   * @param exceptionConsumer block of operation of {@link Consumer} type to be executed when the
+   *     try operation succeeds.
+   * @param resultConsumer block of operation of {@link Consumer} type to be executed with try
+   *     result.
+   * @since v5
+   */
+  public void onFailureOrElse(
+      final Consumer<? super Throwable> exceptionConsumer,
+      final Consumer<? super T> resultConsumer) {
+    if (this.isFailure()) {
+      exceptionConsumer.accept(this.getCause());
+    } else {
+      resultConsumer.accept(this.get());
     }
   }
 

@@ -214,6 +214,14 @@ final class TryTest {
         },
         () -> {});
 
+    successTryWithResult.onSuccessOrElse(
+        result -> {
+          assertEquals(25, result);
+        },
+        e -> {
+          // Failed with exception available
+        });
+
     final Try<?> failTry =
         Try.of(
             () -> {
@@ -231,6 +239,14 @@ final class TryTest {
         },
         () -> {
           // success story
+        });
+
+    failTry.onFailureOrElse(
+        exception -> {
+          assertTrue(exception.getMessage().contains("For input string: \"2F\""));
+        },
+        result -> {
+          // success story with result available
         });
   }
 }

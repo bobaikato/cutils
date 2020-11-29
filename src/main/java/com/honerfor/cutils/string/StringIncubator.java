@@ -35,8 +35,8 @@ import java.util.stream.IntStream;
 
 /**
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
- * Session, ID etc. To generate random string you can use the default the constructor that suit
- * your purpose or the default option which will generate string of 64 characters.
+ * Session, ID etc. To generate random string you can use the default the constructor that suit your
+ * purpose or the default option which will generate string of 64 characters.
  *
  * <p>Example/Usage: <code>
  * </p>
@@ -68,14 +68,14 @@ public class StringIncubator implements Serializable {
    *
    * @since 2.0
    */
-  public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private static String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   /**
    * Lower-case Alphabets.
    *
    * @since 2.0
    */
-  public static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
+  private static String lower = getUpper().toLowerCase(Locale.ROOT);
 
   /**
    * Digits variable.
@@ -89,7 +89,7 @@ public class StringIncubator implements Serializable {
    *
    * @since 2.0
    */
-  private static final String ALPHANUM = UPPER + LOWER + DIGITS;
+  private static final String ALPHANUM = getUpper() + getLower() + DIGITS;
 
   /**
    * Constructor which take the require hatch length, instance of {@link Random} and {@link String}
@@ -160,6 +160,42 @@ public class StringIncubator implements Serializable {
    */
   public StringIncubator() {
     this(64);
+  }
+
+  /**
+   * Upper-case Alphabets.
+   *
+   * @since 2.0
+   */
+  public static String getUpper() {
+    return upper;
+  }
+
+  /**
+   * Use this set the Upper case characters.
+   *
+   * @param uppercaseValue the upper case values.
+   */
+  public static void setUpper(String uppercaseValue) {
+    StringIncubator.upper = uppercaseValue.toUpperCase();
+  }
+
+  /**
+   * Lower-case Alphabets.
+   *
+   * @since 2.0
+   */
+  public static String getLower() {
+    return lower;
+  }
+
+  /**
+   * Use this method to set Lower-case characters.
+   *
+   * @param lowercaseValue the lower case values.
+   */
+  public static void setLower(final String lowercaseValue) {
+    StringIncubator.lower = lowercaseValue.toLowerCase();
   }
 
   /**
