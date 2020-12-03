@@ -62,7 +62,7 @@ import org.apache.commons.lang3.Validate;
  * any type.
  *
  * @param <T> Type of value
- * @author B0BAI <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/09905x0>
  * @since 1.0
  */
 public final class AES<T> implements Serializable {
