@@ -35,7 +35,7 @@ import org.apache.commons.lang3.Validate;
  * This class provide a means to partition List into List of sublist.
  *
  * @author Szymon Stepniak
- * @author B0BAI <https://github.com/b0bai>
+ * @author B0BAI <https://github.com/09905x0>
  * @since v1.0
  */
 public final class ListPartition<T> extends AbstractList<List<? super T>> {

@@ -49,7 +49,7 @@ import java.util.stream.IntStream;
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
  *
- * @author B0BAI <https://github.com/b0bai>
+ * @author B0BAI <https://github.com/09905x0>
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 2.0
  */

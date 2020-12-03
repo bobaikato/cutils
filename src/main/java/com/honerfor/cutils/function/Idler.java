@@ -38,7 +38,7 @@ import org.javatuples.Pair;
  * and the result and served whenever needed and hence improving the performance.
  *
  * @param <T> the type value
- * @author B0BAI <https://github.com/b0bai>
+ * @author B0BAI <https://github.com/09905x0>
  * @see Supplier
  * @see Dealer
  * @since 5.0
@@ -86,7 +86,8 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     return Idler.of(supplier, dealer);
   }
 
-  public static <T> Idler<T> of(final Supplier<? extends T> supplier, final Dealer<? extends T> dealer) {
+  public static <T> Idler<T> of(
+      final Supplier<? extends T> supplier, final Dealer<? extends T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(dealer, supplier);
@@ -124,10 +125,10 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    */
   @Override
   public T deal() throws Exception {
-    if (nonNull(this.dealer) && isNull(this.triplet.getValue1())) {
-      this.triplet = this.triplet.setAt1(this.dealer.deal());
+    if (nonNull(this.dealer) && isNull(this.pair.getValue1())) {
+      this.pair = this.pair.setAt1(this.dealer.deal());
     }
-    return this.triplet.getValue1();
+    return this.pair.getValue1();
   }
 
   /**
@@ -138,17 +139,17 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    */
   @Override
   public T get() {
-    if (nonNull(this.supplier) && isNull(this.triplet.getValue0())) {
-      this.triplet = this.triplet.setAt0(this.supplier.get());
+    if (nonNull(this.supplier) && isNull(this.pair.getValue0())) {
+      this.pair = this.pair.setAt0(this.supplier.get());
     }
-    return this.triplet.getValue0();
+    return this.pair.getValue0();
   }
 
   @Override
   public int hashCode() {
     int result = supplier != null ? supplier.hashCode() : 0;
     result = 31 * result + (dealer != null ? dealer.hashCode() : 0);
-    result = 31 * result + triplet.hashCode();
+    result = 31 * result + pair.hashCode();
     return result;
   }
 
@@ -164,7 +165,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
         if (!Objects.equals(dealer, idler.dealer)) {
           return false;
         }
-        return triplet.equals(idler.triplet);
+        return pair.equals(idler.pair);
       } else {
         return false;
       }
