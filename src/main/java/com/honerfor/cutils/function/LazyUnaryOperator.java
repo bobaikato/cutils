@@ -37,7 +37,7 @@ import java.util.function.UnaryOperator;
  * unique parameters and the result and served whenever needed.
  *
  * @param <T> the result type
- * @author B0BAI <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/09905x0>
  * @see Function
  * @see LazyFunction
  * @since 5.0

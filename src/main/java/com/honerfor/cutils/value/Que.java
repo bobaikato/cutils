@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
  *
  * @param <T> type.
- * @author B0BAI <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/09905x0>
  * @since 1.0
  */
 public final class Que<T> implements Serializable {

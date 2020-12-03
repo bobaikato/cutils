@@ -27,7 +27,7 @@ package com.honerfor.cutils.function;
  * Represent operations that need the {@link Runnable} like behavior. Use the {@link Executable} for
  * operation that may throw and {@link Exception}
  *
- * @author B0BAI <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/09905x0>
  * @see Runnable
  * @since 1.0
  */
