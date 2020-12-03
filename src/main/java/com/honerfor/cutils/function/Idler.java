@@ -57,7 +57,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    *
    * <p>1: Dealer
    */
-  private transient Pair<? extends T, ? extends T> triplet = Pair.with(null, null);
+  private transient Pair<? extends T, ? extends T> pair = Pair.with(null, null);
 
   /**
    * Sealed constructor takes the supplier.
