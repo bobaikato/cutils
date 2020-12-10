@@ -35,7 +35,7 @@ import java.util.function.Function;
  *
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
- * @author Bobai Kato <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @since 1.0
  */
 @FunctionalInterface

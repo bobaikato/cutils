@@ -44,7 +44,7 @@ import org.apache.commons.lang3.SerializationUtils;
  *
  * <p>#ThreadSafe#
  *
- * @author Bobai Kato <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @since 1.0
  */
 public class Serialization extends SerializationUtils {

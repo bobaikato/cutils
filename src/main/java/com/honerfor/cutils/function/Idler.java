@@ -38,7 +38,7 @@ import org.javatuples.Pair;
  * and the result and served whenever needed and hence improving the performance.
  *
  * @param <T> the type value
- * @author Bobai Kato <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @see Supplier
  * @see Dealer
  * @since 5.0

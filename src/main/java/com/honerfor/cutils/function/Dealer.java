@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * {@link #deal()}.
  *
  * @param <T> the type of results supplied by this supplier.
- * @author Bobai Kato <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @see Callable
  * @see Supplier
  * @since 2.0
