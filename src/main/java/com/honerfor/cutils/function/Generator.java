@@ -30,7 +30,7 @@ package com.honerfor.cutils.function;
  * same behavior as the {@link Dealer} and {@link Runnable}.
  *
  * @param <T> type of value.
- * @author Bobai Kato <https://github.com/09905x0>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @see Runnable
  * @see Dealer
  * @since 2.0
