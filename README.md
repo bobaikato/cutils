@@ -1,11 +1,11 @@
 ## Prohorde Common Utilities (Cutils)
+
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
-[![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=master)](https://travis-ci.org/Honerfor/cutils)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/context:java)
-[![CircleCI](https://img.shields.io/circleci/build/gh/Honerfor/cutils?color=%23088A08&label=test)](https://circleci.com/gh/Honerfor/cutils)
-[![Coverage Status](https://coveralls.io/repos/github/Honerfor/cutils/badge.svg?branch=master)](https://coveralls.io/github/Honerfor/cutils?branch=master)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/alerts/)
-[![codebeat badge](https://codebeat.co/badges/da875096-0224-474a-82ba-41e39b146a89)](https://codebeat.co/projects/github-com-honerfor-cutils-development)
+[![Build Status](https://img.shields.io/circleci/build/github/prohorde/cutils/master)](https://circleci.com/gh/prohorde/cutils/tree/master)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/prohorde/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prohorde/cutils/context:java)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/prohorde/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prohorde/cutils/alerts/)
+[![codebeat badge](https://codebeat.co/badges/be9f0284-b007-4f52-add7-479bb0140382)](https://codebeat.co/projects/github-com-prohorde-cutils-master)
+
 
 A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/com.honerfor/cutils). If you have any questions related to usage, simple open an issue.
 
