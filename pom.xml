@@ -29,7 +29,7 @@
 
     <groupId>prohor.dev</groupId>
     <artifactId>cutils</artifactId>
-    <version>7.1.0</version>
+    <version>1.0.0</version>
     <build>
         <plugins>
             <plugin>
