@@ -192,15 +192,13 @@
     </licenses>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>github</id>
+            <name>GitHub Honerfor Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Honerfor/cutils-github-deployment</url>
         </repository>
     </distributionManagement>
+
 
     <scm>
         <connection>scm:git:git://github.com/Honerfor/cutils.git</connection>

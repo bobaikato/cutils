@@ -27,23 +27,23 @@
   http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <servers>
     <server>
-      <id>ossrh</id>
-      <username>${env.SONATYPE_USERNAME}</username>
-      <password>${env.SONATYPE_PASSWORD}</password>
+      <id>github</id>
+      <username>Honerfor</username>
+      <password>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</password>
     </server>
     
   </servers>
-  <profiles>
-    <profile>
-      <id>ossrh</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <gpg.keyname>Honerfor, Inc.</gpg.keyname>
-        <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>
-        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-      </properties>
-    </profile>
-  </profiles>
+<!--  <profiles>-->
+<!--    <profile>-->
+<!--      <id>ossrh</id>-->
+<!--      <activation>-->
+<!--        <activeByDefault>true</activeByDefault>-->
+<!--      </activation>-->
+<!--      <properties>-->
+<!--        <gpg.keyname>Honerfor, Inc.</gpg.keyname>-->
+<!--        <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>-->
+<!--        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>-->
+<!--      </properties>-->
+<!--    </profile>-->
+<!--  </profiles>-->
 </settings>
