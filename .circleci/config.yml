@@ -1,40 +1,22 @@
 version: 2 # use CircleCI 2.0
 jobs:
   build:
-
+    branches:
+      only:
+        - master
 
     working_directory: ~/cutils
-
     docker: # run the steps with Docker
       - image: circleci/openjdk:8-jdk-stretch-node-browsers-legacy
-
     steps:
-
       - checkout
-
       - restore_cache:
           key: cutils-{{ checksum "pom.xml" }}
-
       - save_cache:
           paths:
             - ~/.m2
           key: cutils-{{ checksum "pom.xml" }}
-
-      - run: mvn package -B # run the actual tests
-
+      - run: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
       - store_test_results:
           path: target/surefire-reports
-
-      - run: mvn integration-test
-
-    deployment:
-      filters: # using regex filters requires the entire branch to match
-        branches:
-          only: # only branches matching the below regex filters will run
-            - master
-
-          steps:
-            - run: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
-
-
 
