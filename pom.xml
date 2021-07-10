@@ -27,9 +27,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.h14r</groupId>
+    <groupId>prohor.dev</groupId>
     <artifactId>cutils</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.0-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
@@ -152,11 +152,11 @@
         </profile>
     </profiles>
 
-    <name>Honerfor Common Utilities</name>
+    <name>Prohorde Common Utilities</name>
     <description>
         This is a package of utilities classes intended to enhance and simplify Java development
     </description>
-    <url>https://github.com/Honerfor/cutils-github-deployment</url>
+    <url>https://github.com/prohorde/cutils</url>
     <inceptionYear>2019</inceptionYear>
 
     <licenses>
@@ -169,16 +169,17 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub Honerfor Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Honerfor/cutils-github-deployment</url>
+            <name>GitHub prohorde Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/prohorde/cutils</url>
         </repository>
     </distributionManagement>
 
 
     <scm>
-        <connection>scm:git:git://github.com/Honerfor/cutils-github-deployment.git</connection>
-        <developerConnection>scm:git:ssh://github.com:Honerfor/cutils-github-deployment.git</developerConnection>
-        <url>http://github.com/Honerfor/cutils-github-deployment/tree/master</url>
+        <connection>scm:git:git://github.com/prohorde/cutils</connection>
+        <developerConnection>scm:git:ssh://github.com:prohorde/cutils.git
+        </developerConnection>
+        <url>http://github.com/prohorde/cutils/tree/master</url>
     </scm>
 
     <issueManagement>
@@ -189,9 +190,9 @@
     <developers>
         <developer>
             <name>Bobai Kato</name>
-            <email>bobaikato@gmail.com</email>
-            <organization>Honerfor</organization>
-            <organizationUrl>http://www.honerfor.com</organizationUrl>
+            <email>os@prohor.dev</email>
+            <organization>Prohorde, LTD</organization>
+            <organizationUrl>http://www.prohorde.com</organizationUrl>
             <roles>
                 <role>Engineer</role>
             </roles>
@@ -202,11 +203,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-
-        <!-- SonarCloud-->
-        <sonar.projectKey>Honerfor_cutils</sonar.projectKey>
-        <sonar.organization>honerfor</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
