@@ -24,6 +24,7 @@ package string;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.honerfor.cutils.string.StringIncubator;
@@ -62,8 +63,8 @@ final class StringIncubatorTest {
   @ParameterizedTest(name = "{index} => First hatch={0}, Second hatch={1}")
   @MethodSource("resourceII")
   void shouldHatchUniqueStringsOfSpecifyLength(String firstString, String secondString) {
-    assertNotEquals(firstString, null);
-    assertNotEquals(secondString, null);
+    assertNotNull(firstString);
+    assertNotNull(secondString);
     assertNotEquals(firstString, secondString);
   }
 
@@ -80,13 +81,13 @@ final class StringIncubatorTest {
   @DisplayName("Should successfully hatch String with 64 characters.")
   void defaultHatchStringSizeShouldBe64() {
     final String hatchedString = new StringIncubator().hatch();
-    assertEquals(hatchedString.length(), 64);
+    assertEquals(64,hatchedString.length());
   }
 
   @Test
   @DisplayName(
       "Should successfully hatch String from supplied symbol of specified length characters.")
-  void defaultHatchStringSizeShouldBeOFSpecifiedSizeAndSymbol() {
+  void defaultHatchStringSizeShouldBeOfSpecifiedSizeAndSymbol() {
     final String hatchedString = new StringIncubator(12, "AaDdZz").hatch();
     assertEquals(hatchedString.length(), 12);
   }
