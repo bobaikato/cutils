@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.apache.commons.lang3.Validate;
  * This class provide a means to partition List into List of sublist.
  *
  * @author Szymon Stepniak
- * @author B0BAI <https://github.com/b0bai>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @since v1.0
  */
 public final class ListPartition<T> extends AbstractList<List<? super T>> {

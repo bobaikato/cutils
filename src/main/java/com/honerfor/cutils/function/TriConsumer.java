@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  * @param <X> the type of the first argument to the operation.
  * @param <Y> the type of the second argument to the operation.
  * @param <Z> the type of the third argument to the operation.
- * @author B0BAI <https://github.com/b0bai>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @see BiConsumer
  * @since 2.0
  */
