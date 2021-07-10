@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import java.util.stream.IntStream;
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
  *
- * @author B0BAI <https://github.com/b0bai>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 2.0
  */

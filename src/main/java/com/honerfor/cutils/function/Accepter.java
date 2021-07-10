@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2020 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import java.util.function.Consumer;
  * effects.
  *
  * @param <T> the type of the input to the operation.
- * @author B0BAI <https://github.com/b0bai>
+ * @author Bobai Kato <https://github.com/B0BAI>
  * @see Consumer
  * @since 3.2
  * @since 2.0
