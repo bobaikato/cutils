@@ -1,4 +1,4 @@
-## Honerfor Common Utilities (Cutils)
+## Prohorde Common Utilities (Cutils)
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Build Status](https://travis-ci.org/Honerfor/cutils.svg?branch=master)](https://travis-ci.org/Honerfor/cutils)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Honerfor/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Honerfor/cutils/context:java)
@@ -14,29 +14,6 @@ A package of utilities classes intended to enhance and simplify Java development
 <a href="https://www.jetbrains.com/?from=Cutils" target="_blank"><img src="https://avatars0.githubusercontent.com/u/878437?s=200&v=4" width="50"></a>
 
 
-
-## Where can I get the latest release?
-[![Maven Central](https://img.shields.io/maven-central/v/com.honerfor/cutils)](https://search.maven.org/artifact/com.honerfor/cutils)
-[![Javadocs](https://javadoc.io/badge/com.honerfor/cutils.svg?color=brown)](https://javadoc.io/doc/com.honerfor/cutils)
-
-
-```xml
-<dependency>
-  <groupId>com.honerfor</groupId>
-  <artifactId>cutils</artifactId>
-  <version>{version}</version>
-</dependency> 
-```
-- Gradle Groovy
-```
-implementation 'com.honerfor:cutils:{version}'
-```
-- Gradle Kotlin
-```
-compile("com.honerfor:cutils:{version}")
-```
-- [More, and others](https://search.maven.org/artifact/com.honerfor/cutils)
-
 ## Contributing
 We accept Pull Requests via GitHub. A public Slack Channel will soon be made available for communications.
 But, in the mean time, there are some guidelines which will make applying PRs easier for us:
@@ -50,4 +27,4 @@ But, in the mean time, there are some guidelines which will make applying PRs ea
 
 ## License
 
-This code is under the [Apache Licence v2](https://github.com/Honerfor/Common/blob/master/LICENSE).
+This code is under the [Apache Licence v2](https://github.com/prohorde/cutils/blob/master/LICENSE).

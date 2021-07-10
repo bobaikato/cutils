@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils.security;
+package prohor.dev.cutils.security;
 
-import static com.honerfor.cutils.security.AES.Algorithm.SHA256;
+import static prohor.dev.cutils.security.AES.Algorithm.SHA256;
 import static java.security.MessageDigest.getInstance;
 import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
 
-import com.honerfor.cutils.Serialization;
+import prohor.dev.cutils.Serialization;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
