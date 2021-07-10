@@ -25,3 +25,5 @@ jobs:
           path: target/surefire-reports
 
       - run: mvn integration-test
+
+      - run: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U

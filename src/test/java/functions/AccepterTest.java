@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.honerfor.cutils.function.Accepter;
+import prohor.dev.cutils.function.Accepter;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;

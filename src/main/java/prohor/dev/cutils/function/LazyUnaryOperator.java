@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils.function;
+package prohor.dev.cutils.function;
 
 import java.io.Serializable;
 import java.util.Objects;

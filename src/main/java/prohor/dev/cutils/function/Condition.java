@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,36 +21,33 @@
  * limitations under the License.
  */
 
-package com.honerfor.cutils.function;
-
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
+package prohor.dev.cutils.function;
 
 /**
- * Represents a dealer of results. UnLike {@link Supplier} and like {@link Callable}, {@link
- * Dealer#deal()} throw an {@link Exception}. Uses the {@link Dealer} instead of {@link Supplier} if
- * an {@link Exception} will be thrown for the operation prior to the supplying of a result.
+ * Represents an operation that returns a condition/boolean. whose functional method is {@link
+ * #isMet()}.
  *
- * <p>There is no requirement that the {@link Dealer} will return distinct result when called.
- *
- * <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is
- * {@link #deal()}.
- *
- * @param <T> the type of results supplied by this supplier.
  * @author Bobai Kato <https://github.com/B0BAI>
- * @see Callable
- * @see Supplier
- * @since 2.0
+ * @since 1.0
  */
 @FunctionalInterface
-public interface Dealer<T> {
-
+public interface Condition {
 
   /**
-   * Gets a result.
+   * Check the condition.
    *
-   * @return a result
-   * @throws Exception operation exception thrown
+   * @return the final condition of boolean
+   * @since 1.0
    */
-  T deal() throws Exception;
+  boolean isMet();
+
+  /**
+   * Negates the condition. True is condition isn't met and False when condition is met.
+   *
+   * @return the final negation of the actual condition of boolean.
+   * @since 3.0
+   */
+  default boolean isNotMet() {
+    return !this.isMet();
+  }
 }

@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,11 @@ package value;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import com.honerfor.cutils.function.Dealer;
-import com.honerfor.cutils.function.Executable;
-import com.honerfor.cutils.value.Pause;
-import com.honerfor.cutils.value.Try;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +37,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import prohor.dev.cutils.function.Dealer;
+import prohor.dev.cutils.function.Executable;
+import prohor.dev.cutils.value.Pause;
+import prohor.dev.cutils.value.Try;
 
 @DisplayName("PauseTest Operation test.")
 final class PauseTest {
@@ -184,23 +185,23 @@ final class PauseTest {
 
   @Test
   void testPauseContracts() {
-    final Pause p1 = Pause.until(1);
-    final Pause p2 = Pause.until(2);
+    final Pause<Object> p1 = Pause.until(1);
+    final Pause<Object> p2 = Pause.until(2);
 
-    assertFalse(p1.equals(p2));
-    assertFalse(p1.hashCode() == p2.hashCode());
+    assertNotEquals(p1, p2);
+    assertNotEquals(p1.hashCode(), p2.hashCode());
 
-    assertFalse(p1.microSeconds().equals(p2.microSeconds()));
-    assertFalse(p1.microSeconds().hashCode() == p2.microSeconds().hashCode());
+    assertNotEquals(p1.microSeconds(), p2.microSeconds());
+    assertNotEquals(p1.microSeconds().hashCode(), p2.microSeconds().hashCode());
 
-    assertTrue(p1.seconds().thenRun(() -> {}).equals(p2.seconds().thenRun(() -> {})));
+    assertEquals(p1.seconds().thenRun(() -> {}), p2.seconds().thenRun(() -> {}));
 
-    assertFalse(
+    assertNotEquals(
         p1.seconds()
             .thenRun(
                 () -> {
                   return "";
-                })
-            .equals(p2.seconds().thenRun(() -> {})));
+                }),
+        p2.seconds().thenRun(() -> {}));
   }
 }
