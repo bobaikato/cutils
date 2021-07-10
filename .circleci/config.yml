@@ -2,6 +2,7 @@ version: 2 # use CircleCI 2.0
 jobs:
   build:
 
+
     working_directory: ~/cutils
 
     docker: # run the steps with Docker
@@ -26,7 +27,14 @@ jobs:
 
       - run: mvn integration-test
 
-    main:
-      branch: master
-      commands:
-        - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
+    deployment:
+      filters: # using regex filters requires the entire branch to match
+        branches:
+          only: # only branches matching the below regex filters will run
+            - master
+
+          steps:
+            - run: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U
+
+
+
