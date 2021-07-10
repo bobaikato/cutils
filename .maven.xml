@@ -6,7 +6,7 @@
   ~  \______  /______/   |____|   |___|_______ \/_______  /
   ~         \/                                \/        \/
   ~
-  ~ Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+  ~ Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -22,28 +22,14 @@
   -->
 
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
   http://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <servers>
-    <server>
-      <id>github</id>
-      <username>Honerfor</username>
-      <password>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</password>
-    </server>
-    
-  </servers>
-<!--  <profiles>-->
-<!--    <profile>-->
-<!--      <id>ossrh</id>-->
-<!--      <activation>-->
-<!--        <activeByDefault>true</activeByDefault>-->
-<!--      </activation>-->
-<!--      <properties>-->
-<!--        <gpg.keyname>Honerfor, Inc.</gpg.keyname>-->
-<!--        <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>-->
-<!--        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>-->
-<!--      </properties>-->
-<!--    </profile>-->
-<!--  </profiles>-->
+    <servers>
+        <server>
+            <id>github</id>
+            <username>prohorde</username>
+            <password>${env.GITHUB_TOKEN}</password>
+        </server>
+    </servers>
 </settings>

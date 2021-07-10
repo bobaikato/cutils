@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import com.honerfor.cutils.function.Dealer;
-import com.honerfor.cutils.function.Executable;
-import com.honerfor.cutils.value.Pause;
-import com.honerfor.cutils.value.Try;
+import prohor.dev.cutils.function.Dealer;
+import prohor.dev.cutils.function.Executable;
+import prohor.dev.cutils.value.Pause;
+import prohor.dev.cutils.value.Try;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

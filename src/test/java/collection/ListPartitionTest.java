@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Honerfor, Inc. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,12 @@
 
 package collection;
 
-import static com.honerfor.cutils.collection.ListPartition.of;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static prohor.dev.cutils.collection.ListPartition.of;
 
-import com.honerfor.cutils.collection.ListPartition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import prohor.dev.cutils.collection.ListPartition;
 
 @DisplayName("Test List Partitioning")
 final class ListPartitionTest {
