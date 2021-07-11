@@ -14,6 +14,9 @@ A package of utilities classes intended to enhance and simplify Java development
 <a href="https://www.jetbrains.com/?from=Cutils" target="_blank"><img src="https://avatars0.githubusercontent.com/u/878437?s=200&v=4" width="50"></a>
 
 
+## [Install](https://github.com/prohorde/cutils/packages/892378)
+
+
 ## Contributing
 We accept Pull Requests via GitHub. A public Slack Channel will soon be made available for communications.
 But, in the mean time, there are some guidelines which will make applying PRs easier for us:
