@@ -29,7 +29,7 @@
 
     <groupId>pro.horde</groupId>
     <artifactId>cutils</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.0-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
@@ -108,6 +108,17 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -132,6 +143,20 @@
                         </configuration>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -167,18 +192,19 @@
     </licenses>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>github</id>
-            <name>GitHub prohorde Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/prohorde/cutils</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
-
     <scm>
-        <connection>scm:git:git://github.com/prohorde/cutils</connection>
-        <developerConnection>scm:git:ssh://github.com:prohorde/cutils.git
-        </developerConnection>
+        <connection>scm:git:git://github.com/prohorde/cutils.git</connection>
+        <developerConnection>scm:git:ssh://github.com:prohorde/cutils.git</developerConnection>
         <url>http://github.com/prohorde/cutils/tree/master</url>
     </scm>
 
@@ -189,7 +215,7 @@
 
     <developers>
         <developer>
-            <name>Bobai Kato</name>
+            <name>Prohorde</name>
             <email>os@prohor.dev</email>
             <organization>Prohorde, LTD</organization>
             <organizationUrl>http://www.prohorde.com</organizationUrl>
@@ -203,6 +229,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
+        <!-- SonarCloud-->
+        <sonar.projectKey>prohorde_cutils</sonar.projectKey>
+        <sonar.organization>prohorde</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
