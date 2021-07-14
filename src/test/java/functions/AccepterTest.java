@@ -26,7 +26,7 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import prohor.dev.cutils.function.Accepter;
+import pro.horde.cutils.function.Accepter;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;

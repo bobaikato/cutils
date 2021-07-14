@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.value;
+package pro.horde.cutils.value;
 
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -31,8 +31,8 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import prohor.dev.cutils.function.Dealer;
-import prohor.dev.cutils.function.Executable;
+import pro.horde.cutils.function.Dealer;
+import pro.horde.cutils.function.Executable;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;

@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.function;
+package pro.horde.cutils.function;
 
 import java.io.Serializable;
 import java.util.Map;

@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.string;
+package pro.horde.cutils.string;
 
 import static org.apache.commons.lang3.Validate.isTrue;
 

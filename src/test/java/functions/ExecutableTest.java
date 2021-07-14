@@ -23,7 +23,7 @@
 
 package functions;
 
-import prohor.dev.cutils.function.Executable;
+import pro.horde.cutils.function.Executable;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

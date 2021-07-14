@@ -21,28 +21,36 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.function;
+package pro.horde.cutils.function;
+
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 /**
- * Represent operations that will return unique/generated values every time {@link
- * Generator#generate()} is called. Please note that the onus is on you to provide the
- * implementation that will return the unique values.Else {@link Generator} Function will have the
- * same behavior as the {@link Dealer} and {@link Runnable}.
+ * Represents a dealer of results. UnLike {@link Supplier} and like {@link Callable}, {@link
+ * Dealer#deal()} throw an {@link Exception}. Uses the {@link Dealer} instead of {@link Supplier} if
+ * an {@link Exception} will be thrown for the operation prior to the supplying of a result.
  *
- * @param <T> type of value.
+ * <p>There is no requirement that the {@link Dealer} will return distinct result when called.
+ *
+ * <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is
+ * {@link #deal()}.
+ *
+ * @param <T> the type of results supplied by this supplier.
  * @author Bobai Kato <https://github.com/B0BAI>
- * @see Runnable
- * @see Dealer
+ * @see Callable
+ * @see Supplier
  * @since 2.0
  */
 @FunctionalInterface
-public interface Generator<T> {
+public interface Dealer<T> {
+
 
   /**
-   * Generates values.
+   * Gets a result.
    *
-   * @return return generate values of T type.
-   * @since 2.o
+   * @return a result
+   * @throws Exception operation exception thrown
    */
-  T generate();
+  T deal() throws Exception;
 }

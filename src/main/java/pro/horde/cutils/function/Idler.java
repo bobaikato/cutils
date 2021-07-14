@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.function;
+package pro.horde.cutils.function;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;

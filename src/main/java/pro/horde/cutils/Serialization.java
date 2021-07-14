@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils;
+package pro.horde.cutils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

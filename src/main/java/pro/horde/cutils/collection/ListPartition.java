@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.collection;
+package pro.horde.cutils.collection;
 
 import static java.lang.String.format;
 

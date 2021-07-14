@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.function;
+package pro.horde.cutils.function;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;

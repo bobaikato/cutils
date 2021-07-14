@@ -37,10 +37,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import prohor.dev.cutils.function.Dealer;
-import prohor.dev.cutils.function.Executable;
-import prohor.dev.cutils.value.Pause;
-import prohor.dev.cutils.value.Try;
+import pro.horde.cutils.function.Dealer;
+import pro.horde.cutils.function.Executable;
+import pro.horde.cutils.value.Pause;
+import pro.horde.cutils.value.Try;
 
 @DisplayName("PauseTest Operation test.")
 final class PauseTest {

@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import prohor.dev.cutils.function.Dealer;
-import prohor.dev.cutils.function.Idler;
-import prohor.dev.cutils.value.Try;
+import pro.horde.cutils.function.Dealer;
+import pro.horde.cutils.function.Idler;
+import pro.horde.cutils.value.Try;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

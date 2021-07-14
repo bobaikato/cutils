@@ -21,11 +21,11 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.value;
+package pro.horde.cutils.value;
 
-import prohor.dev.cutils.function.Accepter;
-import prohor.dev.cutils.function.Dealer;
-import prohor.dev.cutils.function.Executable;
+import pro.horde.cutils.function.Executable;
+import pro.horde.cutils.function.Accepter;
+import pro.horde.cutils.function.Dealer;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;

@@ -21,23 +21,28 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.function;
+package pro.horde.cutils.function;
 
 /**
- * Represent operations that need the {@link Runnable} like behavior. Use the {@link Executable} for
- * operation that may throw and {@link Exception}
+ * Represent operations that will return unique/generated values every time {@link
+ * Generator#generate()} is called. Please note that the onus is on you to provide the
+ * implementation that will return the unique values.Else {@link Generator} Function will have the
+ * same behavior as the {@link Dealer} and {@link Runnable}.
  *
+ * @param <T> type of value.
  * @author Bobai Kato <https://github.com/B0BAI>
  * @see Runnable
- * @since 1.0
+ * @see Dealer
+ * @since 2.0
  */
 @FunctionalInterface
-public interface Executable {
+public interface Generator<T> {
 
   /**
-   * Execute the operation that may likely throw and Exception.
+   * Generates values.
    *
-   * @throws Exception that is thrown when operation executes.
+   * @return return generate values of T type.
+   * @since 2.o
    */
-  void execute() throws Exception;
+  T generate();
 }

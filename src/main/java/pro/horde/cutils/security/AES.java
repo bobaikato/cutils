@@ -21,9 +21,9 @@
  * limitations under the License.
  */
 
-package prohor.dev.cutils.security;
+package pro.horde.cutils.security;
 
-import static prohor.dev.cutils.security.AES.Algorithm.SHA256;
+import static pro.horde.cutils.security.AES.Algorithm.SHA256;
 import static java.security.MessageDigest.getInstance;
 import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
 
-import prohor.dev.cutils.Serialization;
+import pro.horde.cutils.Serialization;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
