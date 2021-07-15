@@ -22,21 +22,21 @@
  */
 package security;
 
-import static pro.horde.cutils.security.AES.Algorithm;
-import static pro.horde.cutils.security.AES.Algorithm.MD2;
-import static pro.horde.cutils.security.AES.Algorithm.MD5;
-import static pro.horde.cutils.security.AES.Algorithm.SHA1;
-import static pro.horde.cutils.security.AES.Algorithm.SHA224;
-import static pro.horde.cutils.security.AES.Algorithm.SHA256;
-import static pro.horde.cutils.security.AES.Algorithm.SHA384;
-import static pro.horde.cutils.security.AES.Algorithm.SHA512;
+import static pro.horde.os.cutils.security.AES.Algorithm;
+import static pro.horde.os.cutils.security.AES.Algorithm.MD2;
+import static pro.horde.os.cutils.security.AES.Algorithm.MD5;
+import static pro.horde.os.cutils.security.AES.Algorithm.SHA1;
+import static pro.horde.os.cutils.security.AES.Algorithm.SHA224;
+import static pro.horde.os.cutils.security.AES.Algorithm.SHA256;
+import static pro.horde.os.cutils.security.AES.Algorithm.SHA384;
+import static pro.horde.os.cutils.security.AES.Algorithm.SHA512;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import pro.horde.cutils.security.AES;
+import pro.horde.os.cutils.security.AES;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;

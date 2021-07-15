@@ -25,7 +25,7 @@ package functions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import pro.horde.cutils.function.TriConsumer;
+import pro.horde.os.cutils.function.TriConsumer;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 

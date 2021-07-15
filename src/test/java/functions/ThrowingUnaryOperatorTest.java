@@ -26,7 +26,7 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import pro.horde.cutils.function.ThrowingUnaryOperation;
+import pro.horde.os.cutils.function.ThrowingUnaryOperation;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;

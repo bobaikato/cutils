@@ -28,8 +28,8 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import pro.horde.cutils.function.LazyUnaryOperator;
-import pro.horde.cutils.function.ThrowingUnaryOperation;
+import pro.horde.os.cutils.function.LazyUnaryOperator;
+import pro.horde.os.cutils.function.ThrowingUnaryOperation;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;

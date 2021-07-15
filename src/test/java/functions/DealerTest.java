@@ -26,7 +26,7 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import pro.horde.cutils.function.Dealer;
+import pro.horde.os.cutils.function.Dealer;
 import java.io.File;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;

@@ -29,8 +29,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import pro.horde.cutils.function.LazyFunction;
-import pro.horde.cutils.function.ThrowingFunction;
+import pro.horde.os.cutils.function.LazyFunction;
+import pro.horde.os.cutils.function.ThrowingFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

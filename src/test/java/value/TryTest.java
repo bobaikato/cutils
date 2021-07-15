@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import pro.horde.cutils.value.Try;
+import pro.horde.os.cutils.value.Try;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

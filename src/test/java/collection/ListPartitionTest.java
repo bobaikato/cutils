@@ -27,7 +27,7 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pro.horde.cutils.collection.ListPartition.of;
+import static pro.horde.os.cutils.collection.ListPartition.of;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import pro.horde.cutils.collection.ListPartition;
+import pro.horde.os.cutils.collection.ListPartition;
 
 @DisplayName("Test List Partitioning")
 final class ListPartitionTest {

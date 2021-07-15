@@ -26,7 +26,7 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import pro.horde.cutils.function.Condition;
+import pro.horde.os.cutils.function.Condition;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
