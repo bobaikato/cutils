@@ -17,6 +17,7 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/labeler@v2
+    - name: RegEx Issue Labeler
+    - uses: github/issue-labeler@v2.4
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
