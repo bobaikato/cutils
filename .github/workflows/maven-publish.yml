@@ -27,7 +27,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Publish to GitHub Packages Apache Maven
+    - name: Publish to Sonar Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/.maven.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
