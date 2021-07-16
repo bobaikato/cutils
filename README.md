@@ -1,7 +1,7 @@
-## Prohorde, Common Utilities (Cutils). Formerly: [Honerfor Cutils](https://search.maven.org/artifact/com.honerfor/cutils)
+## Prohorde, Common Utilities (Cutils). 
 
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
-[![Build Status](https://img.shields.io/circleci/build/github/prohorde/cutils/master)](https://circleci.com/gh/prohorde/cutils/tree/master)
+[![Build Status](https://github.com/prohorde/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/prohorde/cutils/actions/workflows/maven.yml)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/prohorde/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prohorde/cutils/context:java)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/prohorde/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prohorde/cutils/alerts/)
 [![codebeat badge](https://codebeat.co/badges/be9f0284-b007-4f52-add7-479bb0140382)](https://codebeat.co/projects/github-com-prohorde-cutils-master)
