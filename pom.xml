@@ -179,10 +179,10 @@
 
     <name>Prohorde Common Utilities</name>
     <description>
-        This is a package of utilities classes intended to enhance and simplify Java development
+        This is a package of utility classes intended to enhance and simplify Java development
     </description>
     <url>https://github.com/prohorde/cutils</url>
-    <inceptionYear>2019</inceptionYear>
+    <inceptionYear>2018</inceptionYear>
 
     <licenses>
         <license>
