@@ -40,9 +40,9 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <gpg.keyname>Honerfor, Inc.</gpg.keyname>
-        <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>
-        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+        <gpg.keyname>Prohorde, LTD.</gpg.keyname>
+        <gpg.executable>${secrets.GPG_EXECUTABLE}</gpg.executable>
+        <gpg.passphrase>${secrets.GPG_PASSPHRASE}</gpg.passphrase>
       </properties>
     </profile>
   </profiles>
