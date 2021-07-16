@@ -28,7 +28,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Publish to Sonar Packages Apache Maven
-        run: mvn clean deploy -P release -s $GITHUB_WORKSPACE/.maven.xml
+        run: mvn clean deploy -e -X -s $GITHUB_WORKSPACE/.maven.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
