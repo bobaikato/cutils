@@ -29,7 +29,7 @@
 
     <groupId>pro.horde.os</groupId>
     <artifactId>cutils</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>1.0.0</version>
     <build>
         <plugins>
             <plugin>
