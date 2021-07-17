@@ -27,9 +27,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>prohor.dev</groupId>
+    <groupId>pro.horde.os</groupId>
     <artifactId>cutils</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.2-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
@@ -108,6 +108,17 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -136,6 +147,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Prevent gpg from using pinentry programs -->
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <packaging>jar</packaging>
@@ -154,10 +186,10 @@
 
     <name>Prohorde Common Utilities</name>
     <description>
-        This is a package of utilities classes intended to enhance and simplify Java development
+        This is a package of utility classes intended to enhance and simplify Java development
     </description>
     <url>https://github.com/prohorde/cutils</url>
-    <inceptionYear>2019</inceptionYear>
+    <inceptionYear>2018</inceptionYear>
 
     <licenses>
         <license>
@@ -167,18 +199,19 @@
     </licenses>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>github</id>
-            <name>GitHub prohorde Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/prohorde/cutils</url>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
-
     <scm>
-        <connection>scm:git:git://github.com/prohorde/cutils</connection>
-        <developerConnection>scm:git:ssh://github.com:prohorde/cutils.git
-        </developerConnection>
+        <connection>scm:git:git://github.com/prohorde/cutils.git</connection>
+        <developerConnection>scm:git:ssh://github.com:prohorde/cutils.git</developerConnection>
         <url>http://github.com/prohorde/cutils/tree/master</url>
     </scm>
 
@@ -190,7 +223,7 @@
     <developers>
         <developer>
             <name>Bobai Kato</name>
-            <email>os@prohor.dev</email>
+            <email>bobai@prohor.dev</email>
             <organization>Prohorde, LTD</organization>
             <organizationUrl>http://www.prohorde.com</organizationUrl>
             <roles>
@@ -203,6 +236,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
+        <!-- SonarCloud-->
+        <sonar.projectKey>prohorde_cutils</sonar.projectKey>
+        <sonar.organization>prohorde</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>

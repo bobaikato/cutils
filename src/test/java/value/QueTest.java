@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import prohor.dev.cutils.value.Que;
+import pro.horde.os.cutils.value.Que;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

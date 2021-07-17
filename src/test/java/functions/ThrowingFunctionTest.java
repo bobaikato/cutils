@@ -25,8 +25,8 @@ package functions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import prohor.dev.cutils.function.ThrowingFunction;
-import prohor.dev.cutils.value.Que;
+import pro.horde.os.cutils.function.ThrowingFunction;
+import pro.horde.os.cutils.value.Que;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
