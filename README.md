@@ -7,7 +7,7 @@
 [![codebeat badge](https://codebeat.co/badges/be9f0284-b007-4f52-add7-479bb0140382)](https://codebeat.co/projects/github-com-prohorde-cutils-master)
 [![Release](https://github.com/prohorde/cutils/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/prohorde/cutils/actions/workflows/maven-publish.yml)
 
-A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/com.honerfor/cutils). If you have any questions related to usage, simple open an issue.
+A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/pro.horde.os/cutils). If you have any questions related to usage, simple open an issue.
 
 
 
@@ -49,7 +49,7 @@ But, in the mean time, there are some guidelines which will make applying PRs ea
 3. Create minimal diffs.
 4. If it will help, disable on save actions like reformat source code or organize imports. **If you feel the source code should be reformatted create a separate PR for this change**.
 5. Please, provide **JUnit tests** for your changes and make sure your changes don't break any existing tests by running `mvn clean test`.
-6. Lastly, [follow this rudimentary convention](https://blog.jasonmeridth.com/posts/do-not-issue-pull-requests-from-your-master-branch/)
+6. Lastly, open PR to `development` branch and [follow this rudimentary convention](https://blog.jasonmeridth.com/posts/do-not-issue-pull-requests-from-your-master-branch/)
 
 ## License
 
