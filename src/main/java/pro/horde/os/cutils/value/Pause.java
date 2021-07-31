@@ -190,6 +190,15 @@ public final class Pause<T> {
     }
 
     /**
+     * This is empty, if you don't intend to chain any expression
+     *
+     * @return an instance of {@link Delay} operations.
+     */
+    public Delay<T> empty() {
+      return new Delay<>(this.timeOut, this.timeUnit);
+    }
+
+    /**
      * This class execute the delay and cause the pause before the set operations executed.
      *
      * @param <T> type
@@ -200,7 +209,16 @@ public final class Pause<T> {
       private final Try<T> tryResult;
 
       /**
-       * Seal constructor.
+       * Seal constructor for no expression.
+       *
+       * @param timeOut Number to be interpreted to time
+       * @param timeUnit Instance of {@link TimeUnit} that is use to interpret the specified time
+       *     out value
+       */
+      private Delay(final int timeOut, final TimeUnit timeUnit) {
+        this.tryResult = Try.of(() -> timeUnit.sleep(timeOut));
+      }
+
       /**
        * Seal constructor for the {@link Executable} expressions.
        *
