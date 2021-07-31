@@ -32,11 +32,11 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import pro.horde.os.cutils.function.Dealer;
-import pro.horde.os.cutils.function.Executable;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import pro.horde.os.cutils.function.Dealer;
+import pro.horde.os.cutils.function.Executable;
 
 /**
  * Pause allows you to write a safe an idiomatic expression to pause an execution on the current
@@ -169,22 +169,33 @@ public final class Pause<T> {
     }
 
     /**
-     * This methods take an {@link Executable} instance with the operations to be executed after the
-     * pause.
+     * This method chains a {@link Executable} expression that execute after the pause.
      *
-     * @param executable instance of {@link Executable}
-     * @return an instance of {@link Delay}
+     * @param executable this method take an expressions {@link Executable} that has no return
+     *     value.
+     * @return an instance of {@link Delay} for further operations.
      */
     public Delay<T> thenRun(final Executable executable) {
       return new Delay<>(this.timeOut, this.timeUnit, executable);
     }
 
     /**
-     * @param dealer
-     * @return
+     * This method chains a {@link Dealer} expression that execute after the pause.
+     *
+     * @param dealer this method take an expressions {@link Dealer} that has a return value.
+     * @return an instance of {@link Delay} operations.
      */
     public Delay<T> thenRun(final Dealer<T> dealer) {
       return new Delay<>(this.timeOut, this.timeUnit, dealer);
+    }
+
+    /**
+     * This is empty, if you don't intend to chain any expression
+     *
+     * @return an instance of {@link Delay} operations.
+     */
+    public Delay<T> empty() {
+      return new Delay<>(this.timeOut, this.timeUnit);
     }
 
     /**
@@ -198,7 +209,18 @@ public final class Pause<T> {
       private final Try<T> tryResult;
 
       /**
-       * Seal constructor.
+       * Seal constructor for no expression.
+       *
+       * @param timeOut Number to be interpreted to time
+       * @param timeUnit Instance of {@link TimeUnit} that is use to interpret the specified time
+       *     out value
+       */
+      private Delay(final int timeOut, final TimeUnit timeUnit) {
+        this.tryResult = Try.of(() -> timeUnit.sleep(timeOut));
+      }
+
+      /**
+       * Seal constructor for the {@link Executable} expressions.
        *
        * @param timeOut Number to be interpreted to time
        * @param timeUnit Instance of {@link TimeUnit} that is use to interpret the specified time
@@ -216,7 +238,7 @@ public final class Pause<T> {
       }
 
       /**
-       * Seal constructor.
+       * Seal constructor for the {@link Dealer} expressions.
        *
        * @param timeOut Number to be interpreted to time
        * @param timeUnit Instance of {@link TimeUnit} that is use to interpret the specified time

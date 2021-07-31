@@ -32,6 +32,7 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -203,5 +204,16 @@ final class PauseTest {
                   return "";
                 }),
         p2.seconds().thenRun(() -> {}));
+  }
+
+  @Test
+  void testPauseEmpty() {
+    Pause.until(1)
+        .nanoSeconds()
+        .empty()
+        .onComplete(
+            result -> {
+              Assertions.assertFalse(result.isResult());
+            });
   }
 }
