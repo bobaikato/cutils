@@ -1,4 +1,4 @@
-## Prohorde, Common Utilities (Cutils). 
+## CUTILS ART
 
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Build Status](https://github.com/prohorde/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/prohorde/cutils/actions/workflows/maven.yml)
