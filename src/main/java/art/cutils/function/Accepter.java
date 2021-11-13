@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  * effects.
  *
  * @param <T> the type of the input to the operation.
- * @author Bobai Kato <https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI>
  * @see Consumer
  * @since 3.2
  * @since 2.0

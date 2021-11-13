@@ -28,7 +28,7 @@ package art.cutils.function;
  * Represents an operation that returns a condition/boolean. whose functional method is {@link
  * #isMet()}.
  *
- * @author Bobai Kato <https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI>
  * @since 1.0
  */
 @FunctionalInterface
