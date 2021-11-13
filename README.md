@@ -18,7 +18,7 @@ A package of utilities classes intended to enhance and simplify my development â
 
 ## Where can I get the latest release?
 [![Maven Central](https://img.shields.io/maven-central/v/art.cutils/cutils)](https://search.maven.org/artifact/art.cutils/cutils)
-[![javadoc](https://javadoc.io/badge2/art.cutils/cutils/javadoc.svg)](https://javadoc.io/doc/art.cutils/cutils)
+[![javadoc](https://javadoc.io/badge/art.cutils/cutils.svg?color=brown)](https://javadoc.io/doc/art.cutils/cutils)
 
 ```xml
 <dependency>
