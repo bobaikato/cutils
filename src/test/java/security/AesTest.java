@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +22,21 @@
  */
 package security;
 
-import static pro.horde.os.cutils.security.AES.Algorithm;
-import static pro.horde.os.cutils.security.AES.Algorithm.MD2;
-import static pro.horde.os.cutils.security.AES.Algorithm.MD5;
-import static pro.horde.os.cutils.security.AES.Algorithm.SHA1;
-import static pro.horde.os.cutils.security.AES.Algorithm.SHA224;
-import static pro.horde.os.cutils.security.AES.Algorithm.SHA256;
-import static pro.horde.os.cutils.security.AES.Algorithm.SHA384;
-import static pro.horde.os.cutils.security.AES.Algorithm.SHA512;
+import static art.cutils.security.AES.Algorithm;
+import static art.cutils.security.AES.Algorithm.MD2;
+import static art.cutils.security.AES.Algorithm.MD5;
+import static art.cutils.security.AES.Algorithm.SHA1;
+import static art.cutils.security.AES.Algorithm.SHA224;
+import static art.cutils.security.AES.Algorithm.SHA256;
+import static art.cutils.security.AES.Algorithm.SHA384;
+import static art.cutils.security.AES.Algorithm.SHA512;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import pro.horde.os.cutils.security.AES;
+import art.cutils.security.AES;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;

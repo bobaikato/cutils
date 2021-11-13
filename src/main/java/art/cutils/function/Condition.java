@@ -6,7 +6,7 @@
  *   \______  /______/   |____|   |___|_______ \/_______  /
  *          \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,28 +22,33 @@
  *
  */
 
-package pro.horde.os.cutils.function;
+package art.cutils.function;
 
 /**
- * Represent operations that will return unique/generated values every time {@link
- * Generator#generate()} is called. Please note that the onus is on you to provide the
- * implementation that will return the unique values.Else {@link Generator} Function will have the
- * same behavior as the {@link Dealer} and {@link Runnable}.
+ * Represents an operation that returns a condition/boolean. whose functional method is {@link
+ * #isMet()}.
  *
- * @param <T> type of value.
  * @author Bobai Kato <https://github.com/B0BAI>
- * @see Runnable
- * @see Dealer
- * @since 2.0
+ * @since 1.0
  */
 @FunctionalInterface
-public interface Generator<T> {
+public interface Condition {
 
   /**
-   * Generates values.
+   * Check the condition.
    *
-   * @return return generate values of T type.
-   * @since 2.o
+   * @return the final condition of boolean
+   * @since 1.0
    */
-  T generate();
+  boolean isMet();
+
+  /**
+   * Negates the condition. True is condition isn't met and False when condition is met.
+   *
+   * @return the final negation of the actual condition of boolean.
+   * @since 3.0
+   */
+  default boolean isNotMet() {
+    return !this.isMet();
+  }
 }

@@ -1,13 +1,13 @@
 ## CUTILS ART
 
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
-[![Build Status](https://github.com/prohorde/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/prohorde/cutils/actions/workflows/maven.yml)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/prohorde/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prohorde/cutils/context:java)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/prohorde/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prohorde/cutils/alerts/)
-[![codebeat badge](https://codebeat.co/badges/be9f0284-b007-4f52-add7-479bb0140382)](https://codebeat.co/projects/github-com-prohorde-cutils-master)
-[![Release](https://github.com/prohorde/cutils/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/prohorde/cutils/actions/workflows/maven-publish.yml)
+[![Build & Test](https://github.com/B0BAI/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/B0BAI/cutils/actions/workflows/maven.yml)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/B0BAI/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/B0BAI/cutils/context:java)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/B0BAI/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/B0BAI/cutils/alerts/)
+[![codebeat badge](https://codebeat.co/badges/0938a891-4a79-4966-b914-e07720cd1771)](https://codebeat.co/projects/github-com-b0bai-cutils-master)
+[![Release](https://github.com/B0BAI/cutils/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/B0BAI/cutils/actions/workflows/maven-publish.yml)
 
-A package of utilities classes intended to enhance and simplify Java development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/pro.horde.os/cutils). If you have any questions related to usage, simple open an issue.
+A package of utilities classes intended to enhance and simplify my development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/art.cutils/cutils). If you have any questions related to usage, simple open an issue.
 
 
 
@@ -17,26 +17,25 @@ A package of utilities classes intended to enhance and simplify Java development
 
 
 ## Where can I get the latest release?
-[![Maven Central](https://img.shields.io/maven-central/v/pro.horde.os/cutils)](https://search.maven.org/artifact/pro.horde.os/cutils)
-[![Javadocs](https://javadoc.io/badge/pro.horde.os/cutils.svg?color=brown)](https://javadoc.io/doc/pro.horde.os/cutils)
-
+[![Maven Central](https://img.shields.io/maven-central/v/art.cutils/cutils)](https://search.maven.org/artifact/art.cutils/cutils)
+[![javadoc](https://javadoc.io/badge2/art.cutils/cutils/javadoc.svg)](https://javadoc.io/doc/art.cutils/cutils)
 
 ```xml
 <dependency>
-  <groupId>pro.horde.os</groupId>
+  <groupId>art.cutils</groupId>
   <artifactId>cutils</artifactId>
   <version>{version}</version>
 </dependency> 
 ```
 - Gradle Groovy
 ```
-implementation 'pro.horde.os:cutils:{version}'
+implementation 'art.cutils:cutils:{version}'
 ```
 - Gradle Kotlin
 ```
-compile("pro.horde.os:cutils:{version}")
+compile("art.cutils:cutils:{version}")
 ```
-- [More, and others](https://search.maven.org/artifact/pro.horde.os/cutils)
+- [More, and others](https://search.maven.org/artifact/art.cutils/cutils)
 
 
 

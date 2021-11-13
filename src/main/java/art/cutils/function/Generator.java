@@ -6,7 +6,7 @@
  *   \______  /______/   |____|   |___|_______ \/_______  /
  *          \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,23 +22,28 @@
  *
  */
 
-package pro.horde.os.cutils.function;
+package art.cutils.function;
 
 /**
- * Represent operations that need the {@link Runnable} like behavior. Use the {@link Executable} for
- * operation that may throw and {@link Exception}
+ * Represent operations that will return unique/generated values every time {@link
+ * Generator#generate()} is called. Please note that the onus is on you to provide the
+ * implementation that will return the unique values.Else {@link Generator} Function will have the
+ * same behavior as the {@link Dealer} and {@link Runnable}.
  *
+ * @param <T> type of value.
  * @author Bobai Kato <https://github.com/B0BAI>
  * @see Runnable
- * @since 1.0
+ * @see Dealer
+ * @since 2.0
  */
 @FunctionalInterface
-public interface Executable {
+public interface Generator<T> {
 
   /**
-   * Execute the operation that may likely throw and Exception.
+   * Generates values.
    *
-   * @throws Exception that is thrown when operation executes.
+   * @return return generate values of T type.
+   * @since 2.o
    */
-  void execute() throws Exception;
+  T generate();
 }

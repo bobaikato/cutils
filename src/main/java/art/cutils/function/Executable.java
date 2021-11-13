@@ -6,7 +6,7 @@
  *   \______  /______/   |____|   |___|_______ \/_______  /
  *          \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,33 +22,23 @@
  *
  */
 
-package pro.horde.os.cutils.function;
+package art.cutils.function;
 
 /**
- * Represents an operation that returns a condition/boolean. whose functional method is {@link
- * #isMet()}.
+ * Represent operations that need the {@link Runnable} like behavior. Use the {@link Executable} for
+ * operation that may throw and {@link Exception}
  *
  * @author Bobai Kato <https://github.com/B0BAI>
+ * @see Runnable
  * @since 1.0
  */
 @FunctionalInterface
-public interface Condition {
+public interface Executable {
 
   /**
-   * Check the condition.
+   * Execute the operation that may likely throw and Exception.
    *
-   * @return the final condition of boolean
-   * @since 1.0
+   * @throws Exception that is thrown when operation executes.
    */
-  boolean isMet();
-
-  /**
-   * Negates the condition. True is condition isn't met and False when condition is met.
-   *
-   * @return the final negation of the actual condition of boolean.
-   * @since 3.0
-   */
-  default boolean isNotMet() {
-    return !this.isMet();
-  }
+  void execute() throws Exception;
 }

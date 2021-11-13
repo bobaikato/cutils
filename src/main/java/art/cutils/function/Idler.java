@@ -6,7 +6,7 @@
  *   \______  /______/   |____|   |___|_______ \/_______  /
  *          \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  *
  */
 
-package pro.horde.os.cutils.function;
+package art.cutils.function;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;

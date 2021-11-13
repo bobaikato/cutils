@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import pro.horde.os.cutils.function.Dealer;
-import pro.horde.os.cutils.function.Idler;
-import pro.horde.os.cutils.value.Try;
+import art.cutils.function.Dealer;
+import art.cutils.function.Idler;
+import art.cutils.value.Try;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

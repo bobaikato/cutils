@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 package functions;
 
-import pro.horde.os.cutils.function.Executable;
+import art.cutils.function.Executable;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

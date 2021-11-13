@@ -6,7 +6,7 @@
  *  \______  /______/   |____|   |___|_______ \/_______  /
  *         \/                                \/        \/
  *
- * Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import pro.horde.os.cutils.function.LazyFunction;
-import pro.horde.os.cutils.function.ThrowingFunction;
+import art.cutils.function.LazyFunction;
+import art.cutils.function.ThrowingFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

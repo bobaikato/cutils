@@ -6,7 +6,7 @@
  *   \______  /______/   |____|   |___|_______ \/_______  /
  *          \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Prohorde, LTD. All Rights Reserved.
+ *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  *
  */
 
-package pro.horde.os.cutils.value;
+package art.cutils.value;
 
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -35,8 +35,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import pro.horde.os.cutils.function.Dealer;
-import pro.horde.os.cutils.function.Executable;
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
 
 /**
  * Pause allows you to write a safe an idiomatic expression to pause an execution on the current
