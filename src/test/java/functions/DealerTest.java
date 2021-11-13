@@ -26,10 +26,9 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import art.cutils.function.Dealer;
 import java.io.File;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
+import art.cutils.function.Dealer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,11 +37,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class DealerTest {
 
-  @SneakyThrows
   @DisplayName("Expect Dealer to return variable of same Type that was Initialized.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("firstDealerFunctions")
-  void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) {
+  void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) throws Exception {
 
     assertNotNull(dealer.deal());
 
