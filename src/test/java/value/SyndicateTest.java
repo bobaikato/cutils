@@ -71,7 +71,7 @@ final class SyndicateTest {
           .execute()
           .onComplete(
               futures -> {
-                for (final Future<?> f : futures) {
+                for (final Future<Object> f : futures) {
                   Assertions.assertTrue(results.contains(f.get()));
                   Assertions.assertEquals(futures.size(), results.size());
                 }
@@ -94,7 +94,7 @@ final class SyndicateTest {
           .setTimeOut(3L, TimeUnit.SECONDS)
           .onComplete(
               futures -> {
-                for (final Future<?> f : futures) {
+                for (final Future<Object> f : futures) {
                   Assertions.assertTrue(results.contains(f.get()));
                   Assertions.assertEquals(futures.size(), results.size());
                 }
