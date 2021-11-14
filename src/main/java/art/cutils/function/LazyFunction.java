@@ -39,7 +39,7 @@ import java.util.function.Function;
  *
  * @param <T> the result type
  * @param <R> the return type
- * @author Bobai Kato <https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI>
  * @see Function
  * @since 5.0
  */

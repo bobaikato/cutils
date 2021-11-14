@@ -36,17 +36,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import art.cutils.security.AES;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Stream;
 import javax.crypto.AEADBadTagException;
 import javax.crypto.NoSuchPaddingException;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import art.cutils.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,15 +53,42 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("Test AES Encryption and Decryption operation.")
 final class AesTest {
 
-  @Getter
-  @Setter
-  @ToString
-  @EqualsAndHashCode
   private static class PersonExample implements Serializable {
     private static final long serialVersionUID = -4359123926347587815L;
 
     private int age;
     private String name;
+
+    public PersonExample() {}
+
+    public int getAge() {
+      return age;
+    }
+
+    public void setAge(final int age) {
+      this.age = age;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(final String name) {
+      this.name = name;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+      if (this == o) return true;
+      if (!(o instanceof PersonExample)) return false;
+      final PersonExample that = (PersonExample) o;
+      return getAge() == that.getAge() && Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getAge(), getName());
+    }
   }
 
   private static Stream<Arguments> customObjectResource() {
