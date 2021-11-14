@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -87,11 +88,11 @@ final class SyndicateTest {
           .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
           .add(
               () -> {
-                Pause.until(1).seconds();
+                Pause.until(1).seconds().empty();
                 return "aeroplanes";
               })
           .execute()
-          .setTimeOut(3L, TimeUnit.SECONDS)
+          .setTimeOut(1L, TimeUnit.MILLISECONDS)
           .onComplete(
               futures -> {
                 for (final Future<Object> f : futures) {
@@ -101,7 +102,7 @@ final class SyndicateTest {
               });
 
     } catch (Exception e) {
-      e.printStackTrace();
+      Assertions.assertTrue(e instanceof CancellationException);
     }
   }
 
