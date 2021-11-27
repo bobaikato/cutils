@@ -66,7 +66,7 @@ final class SyndicateTest {
           .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
           .add(
               () -> {
-                Pause.until(1).seconds();
+                Pause.until(1).seconds().empty();
                 return "aeroplanes";
               })
           .execute()
