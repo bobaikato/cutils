@@ -27,37 +27,40 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import art.cutils.value.Pause;
 import art.cutils.value.Syndicate;
+import art.cutils.value.Syndicate.Close;
+import art.cutils.value.Try;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /** Created by B0BAI on 13 Nov, 2021 */
 final class SyndicateTest {
 
+  private final List<Integer> numbers =
+      new ArrayList<Integer>() {
+        {
+          add(1);
+          add(2);
+          add(3);
+        }
+      };
+
+  private final Set<Object> results =
+      new HashSet<Object>() {
+        {
+          add(6);
+          add(14);
+          add("aeroplanes");
+        }
+      };
+
   @Test
-  void testProcessing() {
-
-    final List<Integer> numbers =
-        new ArrayList<Integer>() {
-          {
-            add(1);
-            add(2);
-            add(3);
-          }
-        };
-
-    final Set<Object> results =
-        new HashSet<Object>() {
-          {
-            add(6);
-            add(14);
-            add("aeroplanes");
-          }
-        };
+  void testProcessingWithinTryResourceSuccess() {
 
     try (final Syndicate<Object> syndicate = Syndicate.init()) {
       syndicate
@@ -65,33 +68,10 @@ final class SyndicateTest {
           .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
           .add(
               () -> {
-                Pause.until(1).seconds();
+                Pause.until(1).seconds().empty();
                 return "aeroplanes";
               })
           .execute()
-          .onComplete(
-              futures -> {
-                for (final Future<Object> f : futures) {
-                  Assertions.assertTrue(results.contains(f.get()));
-                  Assertions.assertEquals(futures.size(), results.size());
-                }
-              });
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    try (final Syndicate<Object> syndicate = Syndicate.init(Executors.newFixedThreadPool(2))) {
-      syndicate
-          .add(() -> numbers.stream().mapToInt(i -> i).sum())
-          .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
-          .add(
-              () -> {
-                Pause.until(1).seconds();
-                return "aeroplanes";
-              })
-          .execute()
-          .setTimeOut(3L, TimeUnit.SECONDS)
           .onComplete(
               futures -> {
                 for (final Future<Object> f : futures) {
@@ -106,7 +86,88 @@ final class SyndicateTest {
   }
 
   @Test
-  void testContracts() {
+  void testProcessingWithinTryResourceWithExceptionThrown() {
+    try (final Syndicate<Object> syndicate = Syndicate.init(Executors.newFixedThreadPool(2))) {
+      syndicate
+          .add(() -> numbers.stream().mapToInt(i -> i).sum())
+          .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+          .add(
+              () -> {
+                Pause.until(1).seconds().empty();
+                return "aeroplanes";
+              })
+          .execute()
+          .setTimeOut(1L, TimeUnit.MILLISECONDS)
+          .onComplete(
+              futures -> {
+                for (final Future<Object> f : futures) {
+                  Assertions.assertTrue(results.contains(f.get()));
+                  Assertions.assertEquals(futures.size(), results.size());
+                }
+              });
+
+    } catch (Exception e) {
+      Assertions.assertTrue(e instanceof CancellationException);
+    }
+  }
+
+  @Test
+  void testingProcessingOutSideTryResource() {
+    final Try<?> aTry =
+        Try.of(
+            () -> {
+              Syndicate.init()
+                  .add(() -> numbers.stream().mapToInt(i -> i).sum())
+                  .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                  .add(
+                      () -> {
+                        Pause.until(1).seconds().empty();
+                        return "aeroplanes";
+                      })
+                  .execute()
+                  .onComplete(
+                      futures -> {
+                        for (final Future<Object> f : futures) {
+                          Assertions.assertTrue(results.contains(f.get()));
+                          Assertions.assertEquals(futures.size(), results.size());
+                        }
+                      })
+                  .close();
+            });
+
+    Assertions.assertTrue(aTry.isSuccess());
+  }
+
+  @Test
+  void testingProcessingOutSideTryResourceWithExceptionThrown() {
+    final Try<?> aTry =
+        Try.of(
+            () -> {
+              Syndicate.init()
+                  .add(() -> numbers.stream().mapToInt(i -> i).sum())
+                  .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                  .add(
+                      () -> {
+                        Pause.until(1).seconds().empty();
+                        return "aeroplanes";
+                      })
+                  .execute()
+                  .setTimeOut(1L, TimeUnit.MILLISECONDS)
+                  .onComplete(
+                      futures -> {
+                        for (final Future<Object> f : futures) {
+                          Assertions.assertTrue(results.contains(f.get()));
+                          Assertions.assertEquals(futures.size(), results.size());
+                        }
+                      })
+                  .close();
+            });
+    Assertions.assertTrue(aTry.isFailure());
+    Assertions.assertTrue(aTry.getCause() instanceof CancellationException);
+  }
+
+  @Test
+  void testContracts() throws Exception {
     final Syndicate<?> s1 = Syndicate.init();
     final Syndicate<?> s2 = Syndicate.init(Executors.newFixedThreadPool(1));
 
@@ -130,5 +191,12 @@ final class SyndicateTest {
     Assertions.assertNotEquals(s2.execute(), s1.execute());
     Assertions.assertNotEquals(s1.execute().toString(), s2.execute().toString());
     Assertions.assertNotEquals(s1.execute().hashCode(), s2.execute().hashCode());
+
+    final Close<?> close = s1.execute().onComplete(futures -> {});
+    Assertions.assertNotEquals(close.toString(), "");
+    Assertions.assertNotEquals(close, s2.execute());
+    Assertions.assertNotEquals(close, s2.execute().onComplete(futures -> {}));
+    Assertions.assertEquals(close, s1.execute().onComplete(futures -> {
+    }));
   }
 }
