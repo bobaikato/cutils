@@ -62,10 +62,10 @@ public final class Syndicate<T> implements AutoCloseable {
    * An Executor that provides methods to manage termination and methods that can produce a Future
    * for tracking progress of one or more asynchronous tasks.
    */
-  private final ExecutorService executorService;
+  private final ExecutorService es;
 
   /** This list of task to be executed. */
-  private final Collection<Callable<T>> callableTaskList = new ArrayList<>();
+  private final Collection<Callable<T>> taskList = new ArrayList<>();
 
   /**
    * Creates a new instance of {@link Syndicate} with your preferred instance of {@link
@@ -92,23 +92,23 @@ public final class Syndicate<T> implements AutoCloseable {
 
   // Sealed constructor
   private Syndicate() {
-    this.executorService = Executors.newCachedThreadPool();
+    this.es = Executors.newCachedThreadPool();
   }
 
   // Sealed constructor
-  private Syndicate(final ExecutorService executorService) {
-    this.executorService = executorService;
+  private Syndicate(final ExecutorService es) {
+    this.es = es;
   }
 
   /**
    * Use to add a task of Callable type
    *
    * @param callableTask instance of a {@link Callable}, the task to be executed as part of the
-   *     Syndicate
+   *     {@link Syndicate}
    * @return existing instance of {@link Syndicate}
    */
   public Syndicate<T> add(Callable<T> callableTask) {
-    this.callableTaskList.add(callableTask);
+    this.taskList.add(callableTask);
     return this;
   }
 
@@ -118,14 +118,13 @@ public final class Syndicate<T> implements AutoCloseable {
    * @return new instance of a {@link Conductor}
    */
   public Conductor<T> execute() {
-    return new Conductor<>(this.executorService, this.callableTaskList);
+    return new Conductor<>(this);
   }
 
   /**
    * Shuts down {@link ExecutorService}, relinquishing any underlying resources. This method is
    * invoked automatically on objects managed by the {@code try}-with-resources statement.
    *
-   * @throws Exception if this resource cannot be closed
    * @apiNote While this interface method is declared to throw {@code Exception}, implementers are
    *     <em>strongly</em> encouraged to declare concrete implementations of the {@code close}
    *     method to throw more specific exceptions, or to throw no exception at all if the close
@@ -151,8 +150,10 @@ public final class Syndicate<T> implements AutoCloseable {
    *     close} methods idempotent.
    */
   @Override
-  public void close() throws Exception {
-    this.executorService.shutdown();
+  public void close() {
+    if (!this.es.isTerminated()) {
+      this.es.shutdown();
+    }
   }
 
   @Override
@@ -164,8 +165,8 @@ public final class Syndicate<T> implements AutoCloseable {
     if (o instanceof Syndicate) {
       final Syndicate<?> syndicate = (Syndicate<?>) o;
       return new EqualsBuilder()
-          .append(executorService, syndicate.executorService)
-          .append(callableTaskList, syndicate.callableTaskList)
+          .append(es, syndicate.es)
+          .append(taskList, syndicate.taskList)
           .isEquals();
     }
     return false;
@@ -173,20 +174,12 @@ public final class Syndicate<T> implements AutoCloseable {
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(executorService)
-        .append(callableTaskList)
-        .toHashCode();
+    return new HashCodeBuilder(17, 37).append(es).append(taskList).toHashCode();
   }
 
   @Override
   public String toString() {
-    return "Syndicate{"
-        + "executorService="
-        + executorService
-        + ", callableTaskList="
-        + callableTaskList
-        + '}';
+    return "Syndicate{" + "executorService=" + es + ", callableTaskList=" + taskList + '}';
   }
 
   /**
@@ -196,14 +189,8 @@ public final class Syndicate<T> implements AutoCloseable {
    */
   public static final class Conductor<T> {
 
-    /**
-     * An Executor that provides methods to manage termination and methods that can produce a Future
-     * for tracking progress of one or more asynchronous tasks.
-     */
-    private final ExecutorService executorService;
-
-    /** This list of task to be executed. */
-    private final Collection<? extends Callable<T>> taskList;
+    /** Hold the instance of {@link Syndicate} */
+    private final Syndicate<T> syndicate;
 
     /** timeout the maximum time to wait */
     private long timeout = 0L;
@@ -212,14 +199,12 @@ public final class Syndicate<T> implements AutoCloseable {
     private TimeUnit unit;
 
     // Sealed Constructor
-    private Conductor(
-        final ExecutorService executorService, final Collection<? extends Callable<T>> taskList) {
-      this.executorService = executorService;
-      this.taskList = taskList;
+    private Conductor(final Syndicate<T> syndicate) {
+      this.syndicate = syndicate;
     }
 
     /**
-     * Use to set processing timeout.
+     * Use this to set processing timeout.
      *
      * @param timeout the maximum time to wait
      * @param unit the time unit of the timeout argument
@@ -243,15 +228,19 @@ public final class Syndicate<T> implements AutoCloseable {
      * @throws Exception a list of exceptions could be thrown
      *     <p>InterruptedException – if interrupted while waiting, in which case unfinished tasks
      *     are cancelled.
-     *     <p>NullPointerException – if tasks, any of its elements, or unit are null
+     *     <p>NullPointerException – if tasks, any of its elements, or unit are null.
      *     <p>RejectedExecutionException – if any task cannot be scheduled for execution
+     * @return new instance of Close for manual shutdown of Thread.
      */
-    public void onComplete(final Accepter<List<Future<T>>> futureResults) throws Exception {
+    public Close<T> onComplete(final Accepter<List<Future<T>>> futureResults) throws Exception {
+      final List<Future<T>> futures;
       if (this.timeout > 0L && Objects.nonNull(this.unit)) {
-        futureResults.accept(this.executorService.invokeAll(taskList, this.timeout, this.unit));
+        futures = this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
       } else {
-        futureResults.accept(this.executorService.invokeAll(taskList));
+        futures = this.syndicate.es.invokeAll(this.syndicate.taskList);
       }
+      futureResults.accept(futures);
+      return new Close<>(this.syndicate);
     }
 
     @Override
@@ -265,8 +254,7 @@ public final class Syndicate<T> implements AutoCloseable {
 
         return new EqualsBuilder()
             .append(timeout, conductor.timeout)
-            .append(executorService, conductor.executorService)
-            .append(taskList, conductor.taskList)
+            .append(syndicate, conductor.syndicate)
             .append(unit, conductor.unit)
             .isEquals();
       }
@@ -276,8 +264,7 @@ public final class Syndicate<T> implements AutoCloseable {
     @Override
     public int hashCode() {
       return new HashCodeBuilder(17, 37)
-          .append(executorService)
-          .append(taskList)
+          .append(syndicate)
           .append(timeout)
           .append(unit)
           .toHashCode();
@@ -286,15 +273,60 @@ public final class Syndicate<T> implements AutoCloseable {
     @Override
     public String toString() {
       return "Conductor{"
-          + "executorService="
-          + executorService
-          + ", taskList="
-          + taskList
+          + "syndicate="
+          + syndicate
           + ", timeout="
           + timeout
           + ", unit="
           + unit
           + '}';
+    }
+  }
+
+  /**
+   * Represent the operation used to shutdown the current {@link ExecutorService} running the
+   * Syndicate.
+   *
+   * @param <T> the type of the values from the tasks
+   */
+  public static final class Close<T> {
+    /** Existing instance of the Syndicate */
+    private final Syndicate<T> syndicate;
+
+    /**
+     * Constructor
+     *
+     * @param syndicate existing instance of Syndicate which needs to shutdown.
+     */
+    public Close(final Syndicate<T> syndicate) {
+      this.syndicate = syndicate;
+    }
+
+    /** Use to shutdown Thread Manually. */
+    public void close() {
+      this.syndicate.close();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o instanceof Close) {
+        final Close<?> close = (Close<?>) o;
+        return new EqualsBuilder().append(syndicate, close.syndicate).isEquals();
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37).append(syndicate).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+      return "Close{" + "syndicate=" + syndicate + '}';
     }
   }
 }
