@@ -40,8 +40,7 @@ compile("art.cutils:cutils:{version}")
 
 
 ## Contributing
-We accept Pull Requests via GitHub. A public Slack Channel will soon be made available for communications.
-But, in the mean time, there are some guidelines which will make applying PRs easier for us:
+I accept Pull Requests via GitHub. Here are some guidelines which will make applying PRs easier:
 
 1. No tabs! Please use spaces for indentation.
 2. Respect the code style.
