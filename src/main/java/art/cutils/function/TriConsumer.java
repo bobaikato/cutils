@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  * @param <X> the type of the first argument to the operation.
  * @param <Y> the type of the second argument to the operation.
  * @param <Z> the type of the third argument to the operation.
- * @author Bobai Kato — https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI
  * @see BiConsumer
  * @since 2.0
  */

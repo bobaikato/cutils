@@ -50,7 +50,7 @@ import java.util.stream.IntStream;
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
  *
- * @author Bobai Kato — https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 2.0
  */

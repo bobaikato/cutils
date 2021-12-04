@@ -53,7 +53,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p>}
  *
  * @param <T> the type of the values from the tasks.
- * @author Bobai Kato {https://github.com/B0BAI}
+ * @author Bobai Kato https://github.com/B0BAI
  * @since 1.0
  */
 public final class Syndicate<T> implements AutoCloseable {
