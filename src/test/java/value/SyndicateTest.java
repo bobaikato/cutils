@@ -196,7 +196,6 @@ final class SyndicateTest {
     Assertions.assertNotEquals(close.toString(), "");
     Assertions.assertNotEquals(close, s2.execute());
     Assertions.assertNotEquals(close, s2.execute().onComplete(futures -> {}));
-    Assertions.assertEquals(close, s1.execute().onComplete(futures -> {
-    }));
+    Assertions.assertEquals(close, s1.execute().onComplete(futures -> {}));
   }
 }

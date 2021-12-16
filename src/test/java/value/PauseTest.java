@@ -46,6 +46,24 @@ import art.cutils.value.Try;
 @DisplayName("PauseTest Operation test.")
 final class PauseTest {
 
+  private static Stream<Arguments> resource1() {
+    final Executable ex = () -> System.out.println("Executable executed after a pause.");
+    return Stream.of(
+        of(TimeUnit.NANOSECONDS, ex),
+        of(TimeUnit.SECONDS, ex),
+        of(TimeUnit.MILLISECONDS, ex),
+        of(TimeUnit.MICROSECONDS, ex));
+  }
+
+  private static Stream<Arguments> resource2() {
+    final Dealer<String> dealer = () -> "Dealer executed after a pause.";
+    return Stream.of(
+        of(TimeUnit.NANOSECONDS, dealer),
+        of(TimeUnit.SECONDS, dealer),
+        of(TimeUnit.MILLISECONDS, dealer),
+        of(TimeUnit.MICROSECONDS, dealer));
+  }
+
   @DisplayName("Should successfully pause operation with no return value.")
   @ParameterizedTest(name = "Time Unit={0}")
   @MethodSource("resource1")
@@ -103,15 +121,6 @@ final class PauseTest {
                 assertFalse(tryResult.isResult());
               });
     }
-  }
-
-  private static Stream<Arguments> resource1() {
-    final Executable ex = () -> System.out.println("Executable executed after a pause.");
-    return Stream.of(
-        of(TimeUnit.NANOSECONDS, ex),
-        of(TimeUnit.SECONDS, ex),
-        of(TimeUnit.MILLISECONDS, ex),
-        of(TimeUnit.MICROSECONDS, ex));
   }
 
   @DisplayName("Should successfully pause operation with return value.")
@@ -173,15 +182,6 @@ final class PauseTest {
                 assertEquals(returnValue, ((Try<?>) tryResult).get());
               });
     }
-  }
-
-  private static Stream<Arguments> resource2() {
-    final Dealer<String> dealer = () -> "Dealer executed after a pause.";
-    return Stream.of(
-        of(TimeUnit.NANOSECONDS, dealer),
-        of(TimeUnit.SECONDS, dealer),
-        of(TimeUnit.MILLISECONDS, dealer),
-        of(TimeUnit.MICROSECONDS, dealer));
   }
 
   @Test

@@ -75,6 +75,10 @@ final class ListPartitionTest {
         Arguments.of(-2, asList('a', 'b', 'c', 'd')));
   }
 
+  private static Stream<Arguments> partitionListNullResource() {
+    return Stream.of(Arguments.of(1, null), Arguments.of(2, null));
+  }
+
   @DisplayName("Should successfully ListPartition List by the provided sub-list Size.")
   @ParameterizedTest(name = "{index} => partitionSize={0}, list={1}")
   @MethodSource("partitionListInSubListIResource")
@@ -93,10 +97,6 @@ final class ListPartitionTest {
     assertEquals(partitionedList.size(), 1);
     partitionedList.forEach(item -> assertNotEquals(item.size(), partitionSize));
     partitionedList.forEach(item -> assertEquals(item.size(), list.size()));
-  }
-
-  private static Stream<Arguments> partitionListNullResource() {
-    return Stream.of(Arguments.of(1, null), Arguments.of(2, null));
   }
 
   @DisplayName("Should throw NullPointerException  when trying to ListPartition a null List.")

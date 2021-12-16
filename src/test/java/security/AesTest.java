@@ -53,44 +53,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("Test AES Encryption and Decryption operation.")
 final class AesTest {
 
-  private static class PersonExample implements Serializable {
-    private static final long serialVersionUID = -4359123926347587815L;
-
-    private int age;
-    private String name;
-
-    public PersonExample() {}
-
-    public int getAge() {
-      return age;
-    }
-
-    public void setAge(final int age) {
-      this.age = age;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(final String name) {
-      this.name = name;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-      if (this == o) return true;
-      if (!(o instanceof PersonExample)) return false;
-      final PersonExample that = (PersonExample) o;
-      return getAge() == that.getAge() && Objects.equals(getName(), that.getName());
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(getAge(), getName());
-    }
-  }
-
   private static Stream<Arguments> customObjectResource() {
     final PersonExample personExampleI =
         new PersonExample() {
@@ -129,6 +91,14 @@ final class AesTest {
     return Stream.of(of(MD2), of(MD5), of(SHA1), of(SHA224), of(SHA256), of(SHA384), of(SHA512));
   }
 
+  private static Stream<Arguments> intEncryptionValues() {
+    return Stream.of(of("10020", "K3y"), of("1929", "K37"), of("-199", "620w37"));
+  }
+
+  private static Stream<Arguments> doubleEncryptionValues() {
+    return Stream.of(of("10.020", "l0.p3zz"), of("192.99", "l0p3zz"), of("-1.99", "0p3zz"));
+  }
+
   @DisplayName("Should Throw IllegalArgumentException when trying to encrypt Null values.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("illegalValuesResource")
@@ -141,14 +111,6 @@ final class AesTest {
   @MethodSource("illegalValuesResource")
   void throwIllegalArgumentExceptionOnDecryption(final String value) {
     assertThrows(IllegalArgumentException.class, () -> AES.init().decrypt(value));
-  }
-
-  private static Stream<Arguments> intEncryptionValues() {
-    return Stream.of(of("10020", "K3y"), of("1929", "K37"), of("-199", "620w37"));
-  }
-
-  private static Stream<Arguments> doubleEncryptionValues() {
-    return Stream.of(of("10.020", "l0.p3zz"), of("192.99", "l0p3zz"), of("-1.99", "0p3zz"));
   }
 
   @DisplayName("Should successfully Encrypt and Decrypt Custom Object with Custom Encryption Key")
@@ -308,5 +270,43 @@ final class AesTest {
     assertNotEquals(aes1, aes2);
     assertNotEquals(aes1, new ArrayList<>());
     assertNotEquals(aes1.hashCode(), aes2.hashCode());
+  }
+
+  private static class PersonExample implements Serializable {
+    private static final long serialVersionUID = -4359123926347587815L;
+
+    private int age;
+    private String name;
+
+    public PersonExample() {}
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getAge(), getName());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+      if (this == o) return true;
+      if (!(o instanceof PersonExample)) return false;
+      final PersonExample that = (PersonExample) o;
+      return getAge() == that.getAge() && Objects.equals(getName(), that.getName());
+    }
+
+    public int getAge() {
+      return age;
+    }
+
+    public void setAge(final int age) {
+      this.age = age;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(final String name) {
+      this.name = name;
+    }
   }
 }

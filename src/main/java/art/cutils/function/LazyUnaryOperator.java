@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.function;
@@ -41,7 +40,7 @@ import java.util.function.UnaryOperator;
  * @author Bobai Kato — https://github.com/B0BAI
  * @see Function
  * @see LazyFunction
- * @since 5.0
+ * @since 1.0
  */
 public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializable {
   private static final long serialVersionUID = 9181168161835004440L;
@@ -81,6 +80,11 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(state);
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -91,10 +95,5 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
     } else {
       return false;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(state);
   }
 }

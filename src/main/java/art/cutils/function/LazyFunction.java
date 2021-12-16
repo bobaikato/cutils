@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.function;
@@ -41,7 +40,7 @@ import java.util.function.Function;
  * @param <R> the return type
  * @author Bobai Kato — https://github.com/B0BAI
  * @see Function
- * @since 5.0
+ * @since 1.0
  */
 public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   private static final long serialVersionUID = 398334400292617685L;
@@ -51,7 +50,7 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   /**
    * Store the current result of function by the the argument provided.
    *
-   * @since 5.0
+   * @since 1.0
    */
   private final transient Map<T, R> store = new ConcurrentHashMap<>();
 
@@ -94,6 +93,11 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(function, store);
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -103,10 +107,5 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
       return function.equals(that.function) && store.equals(that.store);
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(function, store);
   }
 }

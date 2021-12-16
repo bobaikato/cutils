@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.value;
@@ -44,14 +43,14 @@ import art.cutils.function.Executable;
  *
  * @param <T> type.
  * @author Bobai Kato - https://github.com/B0BAI
- * @since 7.0
+ * @since 1.0
  */
 public final class Pause<T> {
 
   /**
    * This will hold instance of {@link Run} to serve other run operations.
    *
-   * @since 7.0
+   * @since 1.0
    */
   private final Run<T> run;
 
@@ -135,6 +134,24 @@ public final class Pause<T> {
     return this.run.setTimeUnit(DAYS);
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(run);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o instanceof Pause) {
+      final Pause<?> pause = (Pause<?>) o;
+      return run.equals(pause.run);
+    } else {
+      return false;
+    }
+  }
+
   /**
    * This class is responsible for executing the operations base on the set time interpreted to the
    * requested unit.
@@ -196,6 +213,24 @@ public final class Pause<T> {
      */
     public Delay<T> empty() {
       return new Delay<>(this.timeOut, this.timeUnit);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(timeOut, timeUnit);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o instanceof Run) {
+        final Run<?> run = (Run<?>) o;
+        return timeOut == run.timeOut && timeUnit == run.timeUnit;
+      } else {
+        return false;
+      }
     }
 
     /**
@@ -273,6 +308,11 @@ public final class Pause<T> {
       }
 
       @Override
+      public int hashCode() {
+        return Objects.hash(tryResult);
+      }
+
+      @Override
       public boolean equals(final Object o) {
         if (this == o) {
           return true;
@@ -284,47 +324,6 @@ public final class Pause<T> {
           return false;
         }
       }
-
-      @Override
-      public int hashCode() {
-        return Objects.hash(tryResult);
-      }
     }
-
-    @Override
-    public boolean equals(final Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o instanceof Run) {
-        final Run<?> run = (Run<?>) o;
-        return timeOut == run.timeOut && timeUnit == run.timeUnit;
-      } else {
-        return false;
-      }
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(timeOut, timeUnit);
-    }
-  }
-
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o instanceof Pause) {
-      final Pause<?> pause = (Pause<?>) o;
-      return run.equals(pause.run);
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(run);
   }
 }

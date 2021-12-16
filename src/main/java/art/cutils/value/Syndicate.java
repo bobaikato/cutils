@@ -67,6 +67,16 @@ public final class Syndicate<T> implements AutoCloseable {
   /** This list of task to be executed. */
   private final Collection<Callable<T>> taskList = new ArrayList<>();
 
+  // Sealed constructor
+  private Syndicate() {
+    this.es = Executors.newCachedThreadPool();
+  }
+
+  // Sealed constructor
+  private Syndicate(final ExecutorService es) {
+    this.es = es;
+  }
+
   /**
    * Creates a new instance of {@link Syndicate} with your preferred instance of {@link
    * ExecutorService} to power the Syndicate ops.
@@ -88,16 +98,6 @@ public final class Syndicate<T> implements AutoCloseable {
    */
   public static <T> Syndicate<T> init() {
     return new Syndicate<>();
-  }
-
-  // Sealed constructor
-  private Syndicate() {
-    this.es = Executors.newCachedThreadPool();
-  }
-
-  // Sealed constructor
-  private Syndicate(final ExecutorService es) {
-    this.es = es;
   }
 
   /**
@@ -157,6 +157,11 @@ public final class Syndicate<T> implements AutoCloseable {
   }
 
   @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(es).append(taskList).toHashCode();
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -170,11 +175,6 @@ public final class Syndicate<T> implements AutoCloseable {
           .isEquals();
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(es).append(taskList).toHashCode();
   }
 
   @Override
@@ -244,6 +244,15 @@ public final class Syndicate<T> implements AutoCloseable {
     }
 
     @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+          .append(syndicate)
+          .append(timeout)
+          .append(unit)
+          .toHashCode();
+    }
+
+    @Override
     public boolean equals(final Object o) {
       if (this == o) {
         return true;
@@ -259,15 +268,6 @@ public final class Syndicate<T> implements AutoCloseable {
             .isEquals();
       }
       return false;
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37)
-          .append(syndicate)
-          .append(timeout)
-          .append(unit)
-          .toHashCode();
     }
 
     @Override
@@ -308,6 +308,11 @@ public final class Syndicate<T> implements AutoCloseable {
     }
 
     @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37).append(syndicate).toHashCode();
+    }
+
+    @Override
     public boolean equals(final Object o) {
       if (this == o) {
         return true;
@@ -317,11 +322,6 @@ public final class Syndicate<T> implements AutoCloseable {
         return new EqualsBuilder().append(syndicate, close.syndicate).isEquals();
       }
       return false;
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37).append(syndicate).toHashCode();
     }
 
     @Override

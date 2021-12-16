@@ -38,18 +38,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-
 @DisplayName("Test Random String Hatching.")
 final class StringIncubatorTest {
-
-  @DisplayName("Should successfully hatch specify length of random String.")
-  @ParameterizedTest(name = "{index} => Length={0}, Random Instance={1}")
-  @MethodSource("resourceI")
-  void shouldHatchRandomStringOfSpecifyLength(int length, Random random) {
-    final String hatchedString = new StringIncubator(length, random).hatch();
-    assertNotEquals(hatchedString, null);
-    assertEquals(hatchedString.length(), length);
-  }
 
   private static Stream<Arguments> resourceI() {
     return Stream.of(
@@ -57,15 +47,6 @@ final class StringIncubatorTest {
         Arguments.of(128, ThreadLocalRandom.current()),
         Arguments.of(30, new SecureRandom()),
         Arguments.of(1000, ThreadLocalRandom.current()));
-  }
-
-  @DisplayName("Should successfully hatch unique random string.")
-  @ParameterizedTest(name = "{index} => First hatch={0}, Second hatch={1}")
-  @MethodSource("resourceII")
-  void shouldHatchUniqueStringsOfSpecifyLength(String firstString, String secondString) {
-    assertNotNull(firstString);
-    assertNotNull(secondString);
-    assertNotEquals(firstString, secondString);
   }
 
   private static Stream<Arguments> resourceII() {
@@ -77,11 +58,37 @@ final class StringIncubatorTest {
         Arguments.of(new StringIncubator(23).hatch(), new StringIncubator(23).hatch()));
   }
 
+  private static Stream<Arguments> resourceIII() {
+    return Stream.of(Arguments.of(-10), Arguments.of(0), Arguments.of(-30), Arguments.of(-1));
+  }
+
+  private static Stream<Arguments> resourceIV() {
+    return Stream.of(Arguments.of("1"), Arguments.of("a"), Arguments.of("D"));
+  }
+
+  @DisplayName("Should successfully hatch specify length of random String.")
+  @ParameterizedTest(name = "{index} => Length={0}, Random Instance={1}")
+  @MethodSource("resourceI")
+  void shouldHatchRandomStringOfSpecifyLength(int length, Random random) {
+    final String hatchedString = new StringIncubator(length, random).hatch();
+    assertNotEquals(hatchedString, null);
+    assertEquals(hatchedString.length(), length);
+  }
+
+  @DisplayName("Should successfully hatch unique random string.")
+  @ParameterizedTest(name = "{index} => First hatch={0}, Second hatch={1}")
+  @MethodSource("resourceII")
+  void shouldHatchUniqueStringsOfSpecifyLength(String firstString, String secondString) {
+    assertNotNull(firstString);
+    assertNotNull(secondString);
+    assertNotEquals(firstString, secondString);
+  }
+
   @Test
   @DisplayName("Should successfully hatch String with 64 characters.")
   void defaultHatchStringSizeShouldBe64() {
     final String hatchedString = new StringIncubator().hatch();
-    assertEquals(64,hatchedString.length());
+    assertEquals(64, hatchedString.length());
   }
 
   @Test
@@ -99,10 +106,6 @@ final class StringIncubatorTest {
     assertThrows(IllegalArgumentException.class, () -> new StringIncubator(length).hatch());
   }
 
-  private static Stream<Arguments> resourceIII() {
-    return Stream.of(Arguments.of(-10), Arguments.of(0), Arguments.of(-30), Arguments.of(-1));
-  }
-
   @DisplayName("Should throw IllegalArgumentException when specified Symbol is less than 2.")
   @ParameterizedTest(name = "{index} => Symbol={0}, Length={1}")
   @MethodSource("resourceIV")
@@ -110,9 +113,5 @@ final class StringIncubatorTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> new StringIncubator(12, new SecureRandom(), symbol).hatch());
-  }
-
-  private static Stream<Arguments> resourceIV() {
-    return Stream.of(Arguments.of("1"), Arguments.of("a"), Arguments.of("D"));
   }
 }
