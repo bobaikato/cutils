@@ -36,13 +36,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class ThrowingFunctionTest {
 
-  @DisplayName("Should take checked exception operationa and throw the exception when thrown")
-  @ParameterizedTest(name = "{index} => input={1}")
-  @MethodSource("throwingFunctionOperations")
-  void throwingFunctionOperations(final Function<String, Integer> fn, final String input) {
-    assertThrows(Exception.class, () -> fn.apply(input));
-  }
-
   private static Stream<Arguments> throwingFunctionOperations() {
     final Function<String, Integer> convertStringToInteger =
         ThrowingFunction.unchecked(
@@ -55,5 +48,12 @@ final class ThrowingFunctionTest {
         Arguments.of(convertStringToInteger, ""),
         Arguments.of(convertStringToInteger, "12E4"),
         Arguments.of(convertStringToInteger, "O"));
+  }
+
+  @DisplayName("Should take checked exception operationa and throw the exception when thrown")
+  @ParameterizedTest(name = "{index} => input={1}")
+  @MethodSource("throwingFunctionOperations")
+  void throwingFunctionOperations(final Function<String, Integer> fn, final String input) {
+    assertThrows(Exception.class, () -> fn.apply(input));
   }
 }

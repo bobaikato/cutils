@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.value;
@@ -122,6 +121,24 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
+   * Use to check the stage of the try operation.
+   *
+   * @return a {@link Boolean} depending on the state: {@code true} if try was successful else
+   *     {@code false} if operation fails.
+   */
+  public abstract boolean isSuccess();
+
+  /**
+   * Use this method to retrieve the try operation result.
+   *
+   * @return try operation result
+   * @throws IllegalStateException Try state is {@link Success} without an available result.
+   * @throws UnsupportedOperationException Try state is {@link Failure} when a try operation fails
+   * @since v5
+   */
+  public abstract T get();
+
+  /**
    * If try operations fails, invoke the specified consumer with the exception thrown during the
    * execution, otherwise do nothing.
    *
@@ -134,6 +151,23 @@ public abstract class Try<T> implements Serializable {
       exceptionConsumer.accept(this.getCause());
     }
   }
+
+  /**
+   * Use to check the state of the try operation.
+   *
+   * @return a {@link Boolean} depending on the state: {@code true} if try operation fails else
+   *     {@code false} if operation was successful..
+   */
+  public abstract boolean isFailure();
+
+  /**
+   * Retrieve the Cause of try operation failure.
+   *
+   * @return exception thrown during try operation.
+   * @throws UnsupportedOperationException if try operation is successful
+   * @since v5
+   */
+  public abstract Throwable getCause();
 
   /**
    * Perform further operation on successful try {@code result}, if the try fails the second
@@ -219,25 +253,6 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
-   * Use this method to retrieve the try operation result.
-   *
-   * @return try operation result
-   * @throws IllegalStateException Try state is {@link Success} without an available result.
-   * @throws UnsupportedOperationException Try state is {@link Failure} when a try operation fails
-   * @since v5
-   */
-  public abstract T get();
-
-  /**
-   * Retrieve the Cause of try operation failure.
-   *
-   * @return exception thrown during try operation.
-   * @throws UnsupportedOperationException if try operation is successful
-   * @since v5
-   */
-  public abstract Throwable getCause();
-
-  /**
    * If a try operation return a result, apply the provided mapping function to it, and return and
    * instance of {@link Try} with the applied result.
    *
@@ -285,28 +300,12 @@ public abstract class Try<T> implements Serializable {
       throws X;
 
   /**
-   * Use to check the stage of the try operation.
-   *
-   * @return a {@link Boolean} depending on the state: {@code true} if try was successful else
-   *     {@code false} if operation fails.
-   */
-  public abstract boolean isSuccess();
-
-  /**
    * Use to check the state of a successful try operation if or not it has a result.
    *
    * @return a {@link Boolean} depending on the state: {@code true} if try operation was successful
    *     and has a result or {@code false} if operation fails or successful but without a result.
    */
   public abstract boolean isResult();
-
-  /**
-   * Use to check the state of the try operation.
-   *
-   * @return a {@link Boolean} depending on the state: {@code true} if try operation fails else
-   *     {@code false} if operation was successful..
-   */
-  public abstract boolean isFailure();
 
   private static class Success<S> extends Try<S> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
@@ -323,6 +322,43 @@ public abstract class Try<T> implements Serializable {
     private Success(final S result) {
       this.isResult = true;
       this.result = result;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(this.isResult(), this.result);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o instanceof Success) {
+        final Success<?> success = (Success<?>) o;
+        return isResult() == success.isResult() && this.result == success.result;
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public boolean isSuccess() {
+      return true;
+    }
+
+    @Override
+    public S get() {
+      if (this.isResult) {
+        return this.result;
+      }
+
+      throw new IllegalStateException("Operation has no result available.");
+    }
+
+    @Override
+    public boolean isFailure() {
+      return false;
     }
 
     @Override
@@ -358,45 +394,8 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
-    public S get() {
-      if (this.isResult) {
-        return this.result;
-      }
-
-      throw new IllegalStateException("Operation has no result available.");
-    }
-
-    @Override
-    public boolean isSuccess() {
-      return true;
-    }
-
-    @Override
     public boolean isResult() {
       return this.isResult;
-    }
-
-    @Override
-    public boolean isFailure() {
-      return false;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o instanceof Success) {
-        final Success<?> success = (Success<?>) o;
-        return isResult() == success.isResult() && this.result == success.result;
-      } else {
-        return false;
-      }
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.isResult(), this.result);
     }
   }
 
@@ -410,9 +409,19 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    public boolean isSuccess() {
+      return false;
+    }
+
+    @Override
     public F get() {
       throw new UnsupportedOperationException(
           "No result available, operation failed with an exception.");
+    }
+
+    @Override
+    public boolean isFailure() {
+      return true;
     }
 
     @Override
@@ -443,18 +452,13 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
-    public boolean isSuccess() {
-      return false;
-    }
-
-    @Override
     public boolean isResult() {
       return false;
     }
 
     @Override
-    public boolean isFailure() {
-      return true;
+    public int hashCode() {
+      return Objects.hash(exception);
     }
 
     @Override
@@ -468,11 +472,6 @@ public abstract class Try<T> implements Serializable {
       } else {
         return false;
       }
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(exception);
     }
   }
 }

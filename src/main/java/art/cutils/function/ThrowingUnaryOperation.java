@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.function;
@@ -42,8 +41,8 @@ import java.util.function.UnaryOperator;
  * @param <T> the type of the input to the function
  * @see ThrowingFunction
  * @see UnaryOperator
- * @author Bobai Kato — https://github.com/B0BAI>
- * @since 5.0
+ * @author Bobai Kato — https://github.com/B0BAI
+ * @since 1.0
  */
 @FunctionalInterface
 public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
@@ -56,20 +55,6 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
    */
   static <T> UnaryOperator<T> identity() {
     return t -> t;
-  }
-
-  /**
-   * Sneak exception on function execution.
-   *
-   * @param ex exception throw on operation
-   * @param <T> arg type
-   * @param <R> return type
-   * @return an exception
-   * @throws T arg type exception
-   */
-  @SuppressWarnings("unchecked")
-  static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
-    throw (T) ex;
   }
 
   /**
@@ -88,5 +73,19 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
         return sneakyThrow(ex);
       }
     };
+  }
+
+  /**
+   * Sneak exception on function execution.
+   *
+   * @param ex exception throw on operation
+   * @param <T> arg type
+   * @param <R> return type
+   * @return an exception
+   * @throws T arg type exception
+   */
+  @SuppressWarnings("unchecked")
+  static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
+    throw (T) ex;
   }
 }

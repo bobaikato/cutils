@@ -1,32 +1,28 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.value;
 
-import art.cutils.function.Executable;
-import art.cutils.function.Accepter;
-import art.cutils.function.Dealer;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,13 +30,16 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import art.cutils.function.Accepter;
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
 
 /**
  * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
  * orchestrate operation while also, signalling precise action(s) and flow with full read(ability).
  *
  * @param <T> type.
- * @author Bobai Kato — https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI
  * @since 1.0
  */
 public final class Que<T> implements Serializable {
@@ -73,24 +72,6 @@ public final class Que<T> implements Serializable {
   }
 
   /**
-   * The method should be used to get {@link Que} instance.
-   *
-   * @param <T> Type of value
-   * @return existing or newly created instance of {@link Que}
-   */
-  @SuppressWarnings("unchecked")
-  private static <T> Que<T> getInstance() {
-    if (Objects.isNull(instance)) {
-      synchronized (Que.class) {
-        if (Objects.isNull(instance)) {
-          instance = new Que<>();
-        }
-      }
-    }
-    return (Que<T>) instance;
-  }
-
-  /**
    * This method will set {@code value} and returns instance of {@link Que} for other sequential
    * Operations.
    *
@@ -103,6 +84,18 @@ public final class Que<T> implements Serializable {
   }
 
   /**
+   * This method is a helper method used to create {@link Que} reference of a {@code value}.
+   *
+   * @param value the {@code value} of the reference
+   * @param <T> Type of the {@code value}
+   * @return an instance of {@link Que}
+   * @since 1.0
+   */
+  private static <T> Que<T> createReference(final T value) {
+    return new Que<>(value);
+  }
+
+  /**
    * This method will take a {@link Supplier} of Type t and will set {@code value} and returns
    * instance of {@link Que} for other sequential Operations.
    *
@@ -112,18 +105,6 @@ public final class Que<T> implements Serializable {
    */
   public static <T> Que<T> of(final Supplier<? extends T> supplier) {
     return Que.createReference(supplier.get());
-  }
-
-  /**
-   * This method is a helper method used to create {@link Que} reference of a {@code value}.
-   *
-   * @param value the {@code value} of the reference
-   * @param <T> Type of the {@code value}
-   * @return an instance of {@link Que}
-   * @since 3.0
-   */
-  private static <T> Que<T> createReference(final T value) {
-    return new Que<>(value);
   }
 
   /**
@@ -154,14 +135,21 @@ public final class Que<T> implements Serializable {
   }
 
   /**
-   * This method will consume execute {@link Consumer} type variable.
+   * The method should be used to get {@link Que} instance.
    *
-   * @param consumer {@link Consumer} type variable.
-   * @return existing instance of the {@link Que}
-   * @since 1.0
+   * @param <T> Type of value
+   * @return existing or newly created instance of {@link Que}
    */
-  public Que<T> run(final Consumer<? super T> consumer) {
-    return this.consumer(consumer);
+  @SuppressWarnings("unchecked")
+  private static <T> Que<T> getInstance() {
+    if (Objects.isNull(instance)) {
+      synchronized (Que.class) {
+        if (Objects.isNull(instance)) {
+          instance = new Que<>();
+        }
+      }
+    }
+    return (Que<T>) instance;
   }
 
   /**
@@ -180,6 +168,23 @@ public final class Que<T> implements Serializable {
   }
 
   /**
+   * This method will consume execute {@link Consumer} type variable.
+   *
+   * @param consumer {@link Consumer} type variable.
+   * @return existing instance of the {@link Que}
+   * @since 1.0
+   */
+  public Que<T> run(final Consumer<? super T> consumer) {
+    return this.consumer(consumer);
+  }
+
+  private Que<T> consumer(final Consumer<? super T> consumer) {
+    Objects.requireNonNull(consumer, "consumer cannot be null");
+    consumer.accept(this.value);
+    return this;
+  }
+
+  /**
    * This method will Accept and execute {@link Accepter} type variable.
    *
    * @param accepter {@link Accepter} type variable.
@@ -188,6 +193,12 @@ public final class Que<T> implements Serializable {
    */
   public Que<T> execute(final Accepter<? super T> accepter) throws Exception {
     return this.accepter(accepter);
+  }
+
+  private Que<T> accepter(final Accepter<? super T> accepter) throws Exception {
+    Objects.requireNonNull(accepter, "accepter cannot be null");
+    accepter.accept(this.value);
+    return this;
   }
 
   /**
@@ -235,17 +246,11 @@ public final class Que<T> implements Serializable {
    *
    * @param dealer {@link Dealer} variable
    * @return existing instance of {@link Que}
-   * @since 2.0
+   * @since 1.0
    */
   public Que<T> andDeal(final Dealer<? extends T> dealer) throws Exception {
     Objects.requireNonNull(dealer, "dealer cannot be null");
     return Que.createReference(dealer.deal());
-  }
-
-  private Que<T> consumer(final Consumer<? super T> consumer) {
-    Objects.requireNonNull(consumer, "consumer cannot be null");
-    consumer.accept(this.value);
-    return this;
   }
 
   /**
@@ -269,12 +274,6 @@ public final class Que<T> implements Serializable {
    */
   public Que<T> andAccept(final Accepter<? super T> accepter) throws Exception {
     return this.accepter(accepter);
-  }
-
-  private Que<T> accepter(final Accepter<? super T> accepter) throws Exception {
-    Objects.requireNonNull(accepter, "accepter cannot be null");
-    accepter.accept(this.value);
-    return this;
   }
 
   /**
@@ -314,10 +313,15 @@ public final class Que<T> implements Serializable {
    * Used to get current value of {@link Optional} type.
    *
    * @return {@link Optional} of {@link Que#value}
-   * @since 3.0
+   * @since 1.0
    */
   public Optional<T> optional() {
     return Optional.ofNullable(this.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.value);
   }
 
   @Override
@@ -331,10 +335,5 @@ public final class Que<T> implements Serializable {
     } else {
       return false;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.value);
   }
 }

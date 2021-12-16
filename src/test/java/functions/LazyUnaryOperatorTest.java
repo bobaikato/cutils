@@ -43,23 +43,6 @@ final class LazyUnaryOperatorTest {
 
   static final int MOCK_LATENCY = 2000;
 
-  @DisplayName("Expect Lazy Function to memoize values for Functions of same argument.")
-  @ParameterizedTest(name = "{index} =>  input={1}  second={2}")
-  @MethodSource("lazyFunctionOperations")
-  void verifyLazyUnaryOperatorValues(
-      final UnaryOperator<String> operator, final String input, int sec) {
-
-    final long startTime = nanoTime();
-
-    final String result = operator.apply(input);
-
-    final long endTime = nanoTime();
-    final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
-
-    Assertions.assertEquals(MOCK_LATENCY + input, result); // result check
-    Assertions.assertEquals(sec, executionTime); // check execution time
-  }
-
   private static Stream<Arguments> lazyFunctionOperations() {
 
     final UnaryOperator<String> function =
@@ -84,6 +67,23 @@ final class LazyUnaryOperatorTest {
         Arguments.of(function, "24", 0),
         Arguments.of(function, "23", 0),
         Arguments.of(function, "24", 0));
+  }
+
+  @DisplayName("Expect Lazy Function to memoize values for Functions of same argument.")
+  @ParameterizedTest(name = "{index} =>  input={1}  second={2}")
+  @MethodSource("lazyFunctionOperations")
+  void verifyLazyUnaryOperatorValues(
+      final UnaryOperator<String> operator, final String input, int sec) {
+
+    final long startTime = nanoTime();
+
+    final String result = operator.apply(input);
+
+    final long endTime = nanoTime();
+    final long executionTime = SECONDS.convert((endTime - startTime), NANOSECONDS);
+
+    Assertions.assertEquals(MOCK_LATENCY + input, result); // result check
+    Assertions.assertEquals(sec, executionTime); // check execution time
   }
 
   @Test

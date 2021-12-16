@@ -37,34 +37,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class DealerTest {
 
-  @DisplayName("Expect Dealer to return variable of same Type that was Initialized.")
-  @ParameterizedTest(name = "{index} => value={0}")
-  @MethodSource("firstDealerFunctions")
-  void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) throws Exception {
-
-    assertNotNull(dealer.deal());
-
-    if (dealer.deal() instanceof Integer) {
-      assertEquals(122, dealer.deal());
-    }
-
-    if (dealer.deal() instanceof String) {
-      assertEquals("flash", dealer.deal());
-    }
-  }
-
   private static Stream<Arguments> firstDealerFunctions() {
     final Dealer<String> firstDealer = () -> "flash";
     final Dealer<Integer> secondDealer = () -> 122;
 
     return Stream.of(Arguments.of(firstDealer), Arguments.of(secondDealer));
-  }
-
-  @DisplayName("Expect Dealer throws an Exception.")
-  @ParameterizedTest(name = "{index} => value={0}")
-  @MethodSource("secondDealerFunctions")
-  void verifyDealerThrowsAnException(Dealer<?> dealer) {
-    Assertions.assertThrows(Exception.class, dealer::deal);
   }
 
   private static Stream<Arguments> secondDealerFunctions() {
@@ -85,5 +62,28 @@ final class DealerTest {
 
     return Stream.of(
         Arguments.of(firstDealer), Arguments.of(secondDealer), Arguments.of(thirdDealer));
+  }
+
+  @DisplayName("Expect Dealer to return variable of same Type that was Initialized.")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("firstDealerFunctions")
+  void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) throws Exception {
+
+    assertNotNull(dealer.deal());
+
+    if (dealer.deal() instanceof Integer) {
+      assertEquals(122, dealer.deal());
+    }
+
+    if (dealer.deal() instanceof String) {
+      assertEquals("flash", dealer.deal());
+    }
+  }
+
+  @DisplayName("Expect Dealer throws an Exception.")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("secondDealerFunctions")
+  void verifyDealerThrowsAnException(Dealer<?> dealer) {
+    Assertions.assertThrows(Exception.class, dealer::deal);
   }
 }

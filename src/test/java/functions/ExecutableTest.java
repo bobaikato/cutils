@@ -33,13 +33,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class ExecutableTest {
 
-  @DisplayName("Expect Dealer throws an Exception.")
-  @ParameterizedTest(name = "{index} => value={0}")
-  @MethodSource("executableFunctions")
-  void verifyExecutableThrowsAnException(Executable executable) {
-    Assertions.assertThrows(Exception.class, executable::execute);
-  }
-
   private static Stream<Arguments> executableFunctions() {
     final Executable firstExec =
         () -> {
@@ -57,5 +50,12 @@ final class ExecutableTest {
         };
 
     return Stream.of(Arguments.of(firstExec), Arguments.of(secondExec), Arguments.of(thirdExec));
+  }
+
+  @DisplayName("Expect Dealer throws an Exception.")
+  @ParameterizedTest(name = "{index} => value={0}")
+  @MethodSource("executableFunctions")
+  void verifyExecutableThrowsAnException(Executable executable) {
+    Assertions.assertThrows(Exception.class, executable::execute);
   }
 }

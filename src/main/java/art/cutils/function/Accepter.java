@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.function;
@@ -35,10 +34,10 @@ import java.util.function.Consumer;
  * effects.
  *
  * @param <T> the type of the input to the operation.
- * @author Bobai Kato — https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI
  * @see Consumer
- * @since 3.2
- * @since 2.0
+ * @since 1.0
+ * @since 1.0
  */
 @FunctionalInterface
 public interface Accepter<T> {
@@ -51,7 +50,7 @@ public interface Accepter<T> {
    *
    * @param after the operation to perform after this operation
    * @return a composed {@code Consumer} that performs in sequence this operation followed by the
-   * {@code after} operation.
+   *     {@code after} operation.
    */
   default Accepter<T> andThen(final Accepter<? super T> after) {
     Objects.requireNonNull(after, after.getClass().getSimpleName() + " cannot be null");
@@ -65,11 +64,6 @@ public interface Accepter<T> {
     };
   }
 
-  @SuppressWarnings("unchecked")
-  static <T extends Exception> void sneakyThrow(final Exception ex) throws T {
-    throw (T) ex;
-  }
-
   /**
    * Performs this operation on the given argument.
    *
@@ -77,4 +71,9 @@ public interface Accepter<T> {
    * @throws Exception throws accepter exception
    */
   void accept(T t) throws Exception;
+
+  @SuppressWarnings("unchecked")
+  static <T extends Exception> void sneakyThrow(final Exception ex) throws T {
+    throw (T) ex;
+  }
 }

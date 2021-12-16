@@ -36,6 +36,20 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("Test Custom Functions")
 final class ConditionTest {
 
+  private static Stream<Arguments> trueConditionFunctions() {
+    final Condition firstCondition = () -> true;
+    final Condition secondCondition = () -> true;
+
+    return Stream.of(Arguments.of(firstCondition), Arguments.of(secondCondition));
+  }
+
+  private static Stream<Arguments> falseConditionFunctions() {
+    final Condition firstCondition = () -> false;
+    final Condition secondCondition = () -> false;
+
+    return Stream.of(Arguments.of(firstCondition), Arguments.of(secondCondition));
+  }
+
   @DisplayName("Should return Boolean True based on the given conditions.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("trueConditionFunctions")
@@ -44,25 +58,11 @@ final class ConditionTest {
     assertFalse(condition.isNotMet());
   }
 
-  private static Stream<Arguments> trueConditionFunctions() {
-    final Condition firstCondition = () -> true;
-    final Condition secondCondition = () -> true;
-
-    return Stream.of(Arguments.of(firstCondition), Arguments.of(secondCondition));
-  }
-
   @DisplayName("Should return Boolean False based on the given conditions.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("falseConditionFunctions")
   void verifyDealerThrowsException(Condition condition) {
     assertFalse(condition.isMet());
     assertTrue(condition.isNotMet());
-  }
-
-  private static Stream<Arguments> falseConditionFunctions() {
-    final Condition firstCondition = () -> false;
-    final Condition secondCondition = () -> false;
-
-    return Stream.of(Arguments.of(firstCondition), Arguments.of(secondCondition));
   }
 }

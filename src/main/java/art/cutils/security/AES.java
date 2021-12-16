@@ -1,25 +1,24 @@
 /*
- *  _________  ____ ______________.___.____       _________
- *  \_   ___ \|    |   \__    ___/|   |    |     /   _____/
- *  /    \  \/|    |   / |    |   |   |    |     \_____  \
- *  \     \___|    |  /  |    |   |   |    |___  /        \
- *   \______  /______/   |____|   |___|_______ \/_______  /
- *          \/                                \/        \/
+ * _________  ____ ______________.___.____       _________
+ * \_   ___ \|    |   \__    ___/|   |    |     /   _____/
+ * /    \  \/|    |   / |    |   |   |    |     \_____  \
+ * \     \___|    |  /  |    |   |   |    |___  /        \
+ *  \______  /______/   |____|   |___|_______ \/_______  /
+ *         \/                                \/        \/
  *
- *  Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
+ * Copyright (C) 2018 — 2021 Bobai Kato. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package art.cutils.security;
@@ -33,7 +32,6 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
 
-import art.cutils.Serialization;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -55,6 +53,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import art.cutils.Serialization;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -63,53 +62,19 @@ import org.apache.commons.lang3.Validate;
  * any type.
  *
  * @param <T> Type of value
- * @author Bobai Kato — https://github.com/B0BAI>
+ * @author Bobai Kato — https://github.com/B0BAI
  * @since 1.0
  */
 public final class AES<T> implements Serializable {
   private static final long serialVersionUID = 977987773346721438L;
-
-  /**
-   * This holds valid {@link MessageDigest} algorithm types.
-   *
-   * @since 5.0
-   */
-  public enum Algorithm {
-    /** MD2 algorithm type. */
-    MD2("MD2"),
-
-    /** MD5 algorithm type. */
-    MD5("MD5"),
-
-    /** SHA-1 algorithm type. */
-    SHA1("SHA-1"),
-
-    /** SHA-224 algorithm type. */
-    SHA224("SHA-224"),
-
-    /** SHA-256 algorithm type. */
-    SHA256("SHA-256"),
-
-    /** SHA-384 algorithm type. */
-    SHA384("SHA-384"),
-
-    /** SHA-512 algorithm type. */
-    SHA512("SHA-512");
-
-    private final String type;
-
-    Algorithm(final String type) {
-      this.type = type;
-    }
-  }
-
   /**
    * Default encryption Key.
    *
-   * @since 5.0
+   * @since 1.0
    */
   private static final String DEFAULT_KEY = "Set yours with: `AES.init('fW&yNtP2peBndT5Hz&')`";
-
+  /** GCM Length. */
+  private static final int GCM_IV_LENGTH = 12;
   /**
    * Instance of {@link Cipher}.
    *
@@ -123,14 +88,10 @@ public final class AES<T> implements Serializable {
    * @since 1.0
    */
   private final SecretKeySpec secretKey;
-
-  /** GCM Length. */
-  private static final int GCM_IV_LENGTH = 12;
-
   /**
    * Additional Authentication Data for GCM.
    *
-   * @since 4.0
+   * @since 1.0
    */
   private final byte[] aad;
 
@@ -186,6 +147,24 @@ public final class AES<T> implements Serializable {
   }
 
   /**
+   * This initiates encryption with the specified algorithm type.
+   *
+   * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
+   *     null}.
+   * @param <T> Type of value
+   * @return Instance of {@link AES}
+   * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
+   *     algorithm is requested but is not available in the environment.
+   * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
+   *     requested but is not available in the environment.
+   * @since 1.0
+   */
+  public static <T> AES<T> init(final AES.Algorithm algorithm)
+      throws NoSuchAlgorithmException, NoSuchPaddingException {
+    return AES.init(algorithm, AES.DEFAULT_KEY);
+  }
+
+  /**
    * This initiates encryption with the specified algorithm type and encryption key.
    *
    * @param encryptionKey user encryption Key
@@ -197,30 +176,12 @@ public final class AES<T> implements Serializable {
    *     algorithm is requested but is not available in the environment.
    * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
    *     requested but is not available in the environment.
-   * @since 5.0
+   * @since 1.0
    */
   public static <T> AES<T> init(final AES.Algorithm algorithm, final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     requireNonNull(encryptionKey, "encryption Key cannot be null");
     return new AES<>(isNull(algorithm) ? SHA256 : algorithm, encryptionKey);
-  }
-
-  /**
-   * This initiates encryption with the specified algorithm type.
-   *
-   * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
-   *     null}.
-   * @param <T> Type of value
-   * @return Instance of {@link AES}
-   * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
-   *     algorithm is requested but is not available in the environment.
-   * @throws NoSuchPaddingException This exception is thrown when a particular padding mechanism is
-   *     requested but is not available in the environment.
-   * @since 5.0
-   */
-  public static <T> AES<T> init(final AES.Algorithm algorithm)
-      throws NoSuchAlgorithmException, NoSuchPaddingException {
-    return AES.init(algorithm, AES.DEFAULT_KEY);
   }
 
   /**
@@ -306,6 +267,13 @@ public final class AES<T> implements Serializable {
   }
 
   @Override
+  public int hashCode() {
+    int result = hash(cipher, secretKey);
+    result = 31 * result + Arrays.hashCode(aad);
+    return result;
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -320,10 +288,37 @@ public final class AES<T> implements Serializable {
     return false;
   }
 
-  @Override
-  public int hashCode() {
-    int result = hash(cipher, secretKey);
-    result = 31 * result + Arrays.hashCode(aad);
-    return result;
+  /**
+   * This holds valid {@link MessageDigest} algorithm types.
+   *
+   * @since 1.0
+   */
+  public enum Algorithm {
+    /** MD2 algorithm type. */
+    MD2("MD2"),
+
+    /** MD5 algorithm type. */
+    MD5("MD5"),
+
+    /** SHA-1 algorithm type. */
+    SHA1("SHA-1"),
+
+    /** SHA-224 algorithm type. */
+    SHA224("SHA-224"),
+
+    /** SHA-256 algorithm type. */
+    SHA256("SHA-256"),
+
+    /** SHA-384 algorithm type. */
+    SHA384("SHA-384"),
+
+    /** SHA-512 algorithm type. */
+    SHA512("SHA-512");
+
+    private final String type;
+
+    Algorithm(final String type) {
+      this.type = type;
+    }
   }
 }
