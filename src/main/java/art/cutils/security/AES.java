@@ -114,7 +114,8 @@ public final class AES<T> implements Serializable {
   }
 
   /**
-   * This initiates encryption with default algorithm type and encryption key.
+   * This initiates encryption with default {@link MessageDigest} {@link Algorithm#type} and
+   * encryption key.
    *
    * @param <T> Type of value
    * @return Instance of {@link AES}
@@ -129,7 +130,8 @@ public final class AES<T> implements Serializable {
   }
 
   /**
-   * This initiates encryption with the default:{@code SHA-256}.
+   * This initiates encryption with the default {@link MessageDigest} {@link Algorithm#type}:{@code
+   * SHA-256}.
    *
    * @param encryptionKey user encryption Key
    * @param <T> Type of value
@@ -147,7 +149,8 @@ public final class AES<T> implements Serializable {
   }
 
   /**
-   * This initiates encryption with the specified algorithm type.
+   * This initiates encryption with the specified {@link MessageDigest} {@link Algorithm#type} type
+   * and default Key.
    *
    * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
    *     null}.
@@ -165,7 +168,8 @@ public final class AES<T> implements Serializable {
   }
 
   /**
-   * This initiates encryption with the specified algorithm type and encryption key.
+   * This initiates encryption with the specified {@link MessageDigest} {@link Algorithm#type} and
+   * encryption key.
    *
    * @param encryptionKey user encryption Key
    * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
