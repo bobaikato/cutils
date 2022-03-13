@@ -28,10 +28,11 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import art.cutils.function.LazyUnaryOperator;
-import art.cutils.function.ThrowingUnaryOperation;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import art.cutils.function.LazyUnaryOperator;
+import art.cutils.function.ThrowingUnaryOperation;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ final class LazyUnaryOperatorTest {
 
   static final int MOCK_LATENCY = 2000;
 
-  private static Stream<Arguments> lazyFunctionOperations() {
+  private static @NotNull Stream<Arguments> lazyFunctionOperations() {
 
     final UnaryOperator<String> function =
         LazyUnaryOperator.of(
@@ -73,7 +74,7 @@ final class LazyUnaryOperatorTest {
   @ParameterizedTest(name = "{index} =>  input={1}  second={2}")
   @MethodSource("lazyFunctionOperations")
   void verifyLazyUnaryOperatorValues(
-      final UnaryOperator<String> operator, final String input, int sec) {
+      final @NotNull UnaryOperator<String> operator, final String input, int sec) {
 
     final long startTime = nanoTime();
 

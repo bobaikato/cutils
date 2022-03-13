@@ -23,8 +23,9 @@
 
 package functions;
 
-import art.cutils.function.Executable;
 import java.util.stream.Stream;
+import art.cutils.function.Executable;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +34,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class ExecutableTest {
 
-  private static Stream<Arguments> executableFunctions() {
+  private static @NotNull Stream<Arguments> executableFunctions() {
     final Executable firstExec =
         () -> {
           throw new ClassCastException();
@@ -55,7 +56,7 @@ final class ExecutableTest {
   @DisplayName("Expect Dealer throws an Exception.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("executableFunctions")
-  void verifyExecutableThrowsAnException(Executable executable) {
+  void verifyExecutableThrowsAnException(@NotNull Executable executable) {
     Assertions.assertThrows(Exception.class, executable::execute);
   }
 }

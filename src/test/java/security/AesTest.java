@@ -44,6 +44,8 @@ import java.util.stream.Stream;
 import javax.crypto.AEADBadTagException;
 import javax.crypto.NoSuchPaddingException;
 import art.cutils.security.AES;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -53,7 +55,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("Test AES Encryption and Decryption operation.")
 final class AesTest {
 
-  private static Stream<Arguments> customObjectResource() {
+  private static @NotNull Stream<Arguments> customObjectResource() {
     final PersonExample personExampleI =
         new PersonExample() {
           {
@@ -75,27 +77,27 @@ final class AesTest {
         of(personExampleII, "n3w P37s0n3x4mpl3-Cust0m-k3y"));
   }
 
-  private static Stream<Arguments> illegalValuesResource() {
+  private static @NotNull Stream<Arguments> illegalValuesResource() {
     return Stream.of(of(""), of((Object) null));
   }
 
-  private static Stream<Arguments> illegalKeyValuesResource() {
+  private static @NotNull Stream<Arguments> illegalKeyValuesResource() {
     return Stream.of(of("Should fail", "s0m3 K3y"), of("Should Also fail", "4n0th37 k3Y"));
   }
 
-  private static Stream<Arguments> stringEncryptionValues() {
+  private static @NotNull Stream<Arguments> stringEncryptionValues() {
     return Stream.of(of("Encryption Test", "Xyx", MD5), of("GCM Encryption test", "A K3y", SHA1));
   }
 
-  private static Stream<Arguments> algorithmTypes() {
+  private static @NotNull Stream<Arguments> algorithmTypes() {
     return Stream.of(of(MD2), of(MD5), of(SHA1), of(SHA224), of(SHA256), of(SHA384), of(SHA512));
   }
 
-  private static Stream<Arguments> intEncryptionValues() {
+  private static @NotNull Stream<Arguments> intEncryptionValues() {
     return Stream.of(of("10020", "K3y"), of("1929", "K37"), of("-199", "620w37"));
   }
 
-  private static Stream<Arguments> doubleEncryptionValues() {
+  private static @NotNull Stream<Arguments> doubleEncryptionValues() {
     return Stream.of(of("10.020", "l0.p3zz"), of("192.99", "l0p3zz"), of("-1.99", "0p3zz"));
   }
 
@@ -278,6 +280,7 @@ final class AesTest {
     private int age;
     private String name;
 
+    @Contract(pure = true)
     public PersonExample() {}
 
     @Override
@@ -285,6 +288,7 @@ final class AesTest {
       return Objects.hash(getAge(), getName());
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(final Object o) {
       if (this == o) return true;

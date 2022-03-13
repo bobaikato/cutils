@@ -23,13 +23,15 @@
 
 package art.cutils.value;
 
-import art.cutils.function.Executable;
-import art.cutils.function.Dealer;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@link Try} class offers the ability write safe code without focusing on try-catch blocks in
@@ -66,18 +68,20 @@ public abstract class Try<T> implements Serializable {
   private static final long serialVersionUID = 4530258067856316628L;
 
   /** Locked for life. */
+  @Contract(pure = true)
   private Try() {}
 
   /**
    * Accepts a {@link Dealer} type function which is expected to return a result if operation was
    * successful.
    *
-   * @since v5
    * @param operation the operation that will be tried, a variable of {@link Dealer} type.
-   * @param <T> variable type
+   * @param <T>       variable type
    * @return instance of {@link Try} either with a {@link Success} or {@link Failure} state.
+   * @since v5
    */
-  public static <T> Try<T> of(final Dealer<? extends T> operation) {
+  @Contract("_ -> new")
+  public static <T> @NotNull Try<T> of(final Dealer<? extends T> operation) {
     Objects.requireNonNull(operation, "operation cannot be null");
     try {
       return new Success<>(operation.deal());
@@ -90,11 +94,12 @@ public abstract class Try<T> implements Serializable {
    * Accepts a {@link Executable} type function with no result expected if operation is successful.
    *
    * @param operation the operation that will be tried, a variable of {@link Executable} type.
-   * @param <T> variable type
+   * @param <T>       variable type
    * @return instance of {@link Try} either with a {@link Success} or {@link Failure} state.
    * @since v5
    */
-  public static <T> Try<T> of(final Executable operation) {
+  @Contract("_ -> new")
+  public static <T> @NotNull Try<T> of(final Executable operation) {
     Objects.requireNonNull(operation, "operation cannot be null");
     try {
       operation.execute();
@@ -108,9 +113,9 @@ public abstract class Try<T> implements Serializable {
    * If try is successful, invoke the specified consumer with the operation result, otherwise do
    * nothing.
    *
-   * @apiNote an {@link IllegalStateException} will be thrown if the successful try doesn't return
-   *     any result.
    * @param resultConsumer block of operation to be executed with try result
+   * @apiNote an {@link IllegalStateException} will be thrown if the successful try doesn't return
+   * any result.
    * @see Success#get()
    * @since v5
    */
@@ -330,6 +335,7 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    @Contract(value = "null -> false", pure = true)
     public boolean equals(final Object o) {
       if (this == o) {
         return true;
@@ -343,11 +349,13 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isSuccess() {
       return true;
     }
 
     @Override
+    @Contract(pure = true)
     public S get() {
       if (this.isResult) {
         return this.result;
@@ -357,18 +365,20 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isFailure() {
       return false;
     }
 
     @Override
+    @Contract(value = " -> fail", pure = true)
     public Throwable getCause() {
       throw new UnsupportedOperationException(
           "Operation was successful, without any exception thrown.");
     }
 
     @Override
-    public <M> Try<M> map(final Function<? super S, ? extends M> mapper) {
+    public <M> @NotNull Try<M> map(final Function<? super S, ? extends M> mapper) {
       Objects.requireNonNull(mapper, "mapper cannot be null");
 
       if (this.isResult()) {
@@ -379,21 +389,25 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    @Contract(pure = true)
     public S orElse(final S other) {
       return this.get();
     }
 
     @Override
+    @Contract(pure = true)
     public S orElseGet(final Supplier<? extends S> other) {
       return this.get();
     }
 
     @Override
+    @Contract(pure = true)
     public <X extends Throwable> S orElseThrow(final Supplier<? extends X> exceptionSupplier) {
       return this.get();
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isResult() {
       return this.isResult;
     }
@@ -409,49 +423,57 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isSuccess() {
       return false;
     }
 
     @Override
+    @Contract(value = " -> fail", pure = true)
     public F get() {
       throw new UnsupportedOperationException(
           "No result available, operation failed with an exception.");
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isFailure() {
       return true;
     }
 
     @Override
+    @Contract(pure = true)
     public Throwable getCause() {
       return this.exception;
     }
 
     @Override
+    @Contract(value = "_ -> fail", pure = true)
     public <M> Try<M> map(final Function<? super F, ? extends M> mapper) {
       throw new UnsupportedOperationException(
           "No result available to map, operation failed with an exception.");
     }
 
     @Override
+    @Contract(value = "_ -> param1", pure = true)
     public F orElse(final F other) {
       return other;
     }
 
     @Override
-    public F orElseGet(final Supplier<? extends F> other) {
+    public F orElseGet(final @NotNull Supplier<? extends F> other) {
       return other.get();
     }
 
     @Override
-    public <X extends Throwable> F orElseThrow(final Supplier<? extends X> exceptionSupplier)
-        throws X {
+    @Contract("_ -> fail")
+    public <X extends Throwable> F orElseThrow(
+        final @NotNull Supplier<? extends X> exceptionSupplier) throws X {
       throw exceptionSupplier.get();
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isResult() {
       return false;
     }
@@ -462,6 +484,7 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
+    @Contract(value = "null -> false", pure = true)
     public boolean equals(final Object o) {
       if (this == o) {
         return true;

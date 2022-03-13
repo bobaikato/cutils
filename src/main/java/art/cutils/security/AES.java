@@ -52,10 +52,11 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import art.cutils.Serialization;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This is an implementation of Advanced Encryption Standard, to can encrypt and decrypt Objects of
@@ -99,12 +100,12 @@ public final class AES<T> implements Serializable {
    * Default Constructor.
    *
    * @param encryptionKey meta data you want to verify secret message
-   * @throws NoSuchPaddingException when a bad/Wrong encryption key is supplied.
+   * @throws NoSuchPaddingException   when a bad/Wrong encryption key is supplied.
    * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not
-   *     available in the environment.
+   *                                  available in the environment.
    * @since 1.0
    */
-  private AES(final AES.Algorithm algorithm, final String encryptionKey)
+  private AES(final AES.@NotNull Algorithm algorithm, final @NotNull String encryptionKey)
       throws NoSuchPaddingException, NoSuchAlgorithmException {
     this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
     byte[] key = this.aad = encryptionKey.getBytes(StandardCharsets.UTF_8);
@@ -125,7 +126,8 @@ public final class AES<T> implements Serializable {
    *     requested but is not available in the environment.
    * @since 1.0
    */
-  public static <T> AES<T> init() throws NoSuchAlgorithmException, NoSuchPaddingException {
+  @Contract(" -> new")
+  public static <T> @NotNull AES<T> init() throws NoSuchAlgorithmException, NoSuchPaddingException {
     return AES.init(AES.DEFAULT_KEY);
   }
 
@@ -142,7 +144,8 @@ public final class AES<T> implements Serializable {
    *     requested but is not available in the environment.
    * @since 1.0
    */
-  public static <T> AES<T> init(final String encryptionKey)
+  @Contract("_ -> new")
+  public static <T> @NotNull AES<T> init(final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     requireNonNull(encryptionKey, "encryption Key cannot be null");
     return new AES<>(SHA256, encryptionKey);
@@ -162,7 +165,8 @@ public final class AES<T> implements Serializable {
    *     requested but is not available in the environment.
    * @since 1.0
    */
-  public static <T> AES<T> init(final AES.Algorithm algorithm)
+  @Contract("_ -> new")
+  public static <T> @NotNull AES<T> init(final AES.Algorithm algorithm)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     return AES.init(algorithm, AES.DEFAULT_KEY);
   }
@@ -182,7 +186,8 @@ public final class AES<T> implements Serializable {
    *     requested but is not available in the environment.
    * @since 1.0
    */
-  public static <T> AES<T> init(final AES.Algorithm algorithm, final String encryptionKey)
+  @Contract("_, _ -> new")
+  public static <T> @NotNull AES<T> init(final AES.Algorithm algorithm, final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     requireNonNull(encryptionKey, "encryption Key cannot be null");
     return new AES<>(isNull(algorithm) ? SHA256 : algorithm, encryptionKey);
@@ -249,9 +254,9 @@ public final class AES<T> implements Serializable {
    * @throws IllegalBlockSizeException This exception is thrown when the length of data provided to
    *     a block * cipher is incorrect, i.e., does not match the block size of the cipher.
    */
-  public T decrypt(@NotNull final String itemToDecrypt)
+  public T decrypt(final @NotNull String itemToDecrypt)
       throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
-          IllegalBlockSizeException {
+      IllegalBlockSizeException {
 
     isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
 
@@ -278,6 +283,7 @@ public final class AES<T> implements Serializable {
   }
 
   @Override
+  @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -321,6 +327,7 @@ public final class AES<T> implements Serializable {
 
     private final String type;
 
+    @Contract(pure = true)
     Algorithm(final String type) {
       this.type = type;
     }

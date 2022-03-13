@@ -23,26 +23,27 @@
 
 package collection;
 
+import static art.cutils.collection.ListPartition.of;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static art.cutils.collection.ListPartition.of;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import art.cutils.collection.ListPartition;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import art.cutils.collection.ListPartition;
 
 @DisplayName("Test List Partitioning")
 final class ListPartitionTest {
 
-  private static Stream<Arguments> partitionListInSubListIResource() {
+  private static @NotNull Stream<Arguments> partitionListInSubListIResource() {
     return Stream.of(
         Arguments.of(3, asList(1, 2, 3, 4, 5, 6, 7, 8, 9)),
         Arguments.of(2, asList("A", "B", "C", "D", "E", "F")),
@@ -61,21 +62,21 @@ final class ListPartitionTest {
             }));
   }
 
-  private static Stream<Arguments> partitionListInSubListIIResource() {
+  private static @NotNull Stream<Arguments> partitionListInSubListIIResource() {
     return Stream.of(
         Arguments.of(6, asList(1, 2, 3, 4, 5)),
         Arguments.of(7, asList("A", "B", "C", "D", "E", "F")),
         Arguments.of(20, asList('a', 'b', 'c', '4', '5', '6', '9', 'd', 'e')));
   }
 
-  private static Stream<Arguments> partitionSizeLessThanOneResource() {
+  private static @NotNull Stream<Arguments> partitionSizeLessThanOneResource() {
     return Stream.of(
         Arguments.of(0, asList(1, 2, 3, 4, 5)),
         Arguments.of(-7, asList("A", "B", "C", "D", "E", "F")),
         Arguments.of(-2, asList('a', 'b', 'c', 'd')));
   }
 
-  private static Stream<Arguments> partitionListNullResource() {
+  private static @NotNull Stream<Arguments> partitionListNullResource() {
     return Stream.of(Arguments.of(1, null), Arguments.of(2, null));
   }
 

@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 import art.cutils.function.Accepter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Syndicate simplifies and represent a specific operation of the Executor Service, InvokeAll. Use
@@ -82,10 +84,11 @@ public final class Syndicate<T> implements AutoCloseable {
    * ExecutorService} to power the Syndicate ops.
    *
    * @param executorService instance of {@link ExecutorService}
-   * @param <T> the type of the values from the tasks
+   * @param <T>             the type of the values from the tasks
    * @return new instance of {@link Syndicate}
    */
-  public static <T> Syndicate<T> init(final ExecutorService executorService) {
+  @Contract("_ -> new")
+  public static <T> @NotNull Syndicate<T> init(final ExecutorService executorService) {
     return new Syndicate<>(executorService);
   }
 
@@ -96,7 +99,8 @@ public final class Syndicate<T> implements AutoCloseable {
    * @param <T> the type of the values from the tasks
    * @return new instance of {@link Syndicate}
    */
-  public static <T> Syndicate<T> init() {
+  @Contract(" -> new")
+  public static <T> @NotNull Syndicate<T> init() {
     return new Syndicate<>();
   }
 
@@ -107,6 +111,7 @@ public final class Syndicate<T> implements AutoCloseable {
    *     {@link Syndicate}
    * @return existing instance of {@link Syndicate}
    */
+  @Contract("_ -> this")
   public Syndicate<T> add(Callable<T> callableTask) {
     this.taskList.add(callableTask);
     return this;
@@ -117,7 +122,8 @@ public final class Syndicate<T> implements AutoCloseable {
    *
    * @return new instance of a {@link Conductor}
    */
-  public Conductor<T> execute() {
+  @Contract(value = " -> new", pure = true)
+  public @NotNull Conductor<T> execute() {
     return new Conductor<>(this);
   }
 
@@ -161,6 +167,7 @@ public final class Syndicate<T> implements AutoCloseable {
     return new HashCodeBuilder(17, 37).append(es).append(taskList).toHashCode();
   }
 
+  @Contract(value = "null -> false", pure = true)
   @Override
   public boolean equals(final Object o) {
     if (this == o) {
@@ -199,6 +206,7 @@ public final class Syndicate<T> implements AutoCloseable {
     private TimeUnit unit;
 
     // Sealed Constructor
+    @Contract(pure = true)
     private Conductor(final Syndicate<T> syndicate) {
       this.syndicate = syndicate;
     }
@@ -210,6 +218,7 @@ public final class Syndicate<T> implements AutoCloseable {
      * @param unit the time unit of the timeout argument
      * @return existing instance of a {@link Conductor}
      */
+    @Contract(value = "_, _ -> this", mutates = "this")
     public Conductor<T> setTimeOut(final long timeout, final TimeUnit unit) {
       this.timeout = timeout;
       this.unit = unit;
@@ -232,7 +241,9 @@ public final class Syndicate<T> implements AutoCloseable {
      *     <p>RejectedExecutionException – if any task cannot be scheduled for execution
      * @return new instance of Close for manual shutdown of Thread.
      */
-    public Close<T> onComplete(final Accepter<List<Future<T>>> futureResults) throws Exception {
+    @Contract("_ -> new")
+    public @NotNull Close<T> onComplete(final Accepter<List<Future<T>>> futureResults)
+        throws Exception {
       final List<Future<T>> futures;
       if (this.timeout > 0L && Objects.nonNull(this.unit)) {
         futures = this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
@@ -253,6 +264,7 @@ public final class Syndicate<T> implements AutoCloseable {
     }
 
     @Override
+    @Contract(value = "null -> false", pure = true)
     public boolean equals(final Object o) {
       if (this == o) {
         return true;
@@ -271,7 +283,8 @@ public final class Syndicate<T> implements AutoCloseable {
     }
 
     @Override
-    public String toString() {
+    @Contract(pure = true)
+    public @NotNull String toString() {
       return "Conductor{"
           + "syndicate="
           + syndicate
@@ -298,6 +311,7 @@ public final class Syndicate<T> implements AutoCloseable {
      *
      * @param syndicate existing instance of Syndicate which needs to shutdown.
      */
+    @Contract(pure = true)
     public Close(final Syndicate<T> syndicate) {
       this.syndicate = syndicate;
     }
@@ -312,6 +326,7 @@ public final class Syndicate<T> implements AutoCloseable {
       return new HashCodeBuilder(17, 37).append(syndicate).toHashCode();
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(final Object o) {
       if (this == o) {
@@ -325,7 +340,8 @@ public final class Syndicate<T> implements AutoCloseable {
     }
 
     @Override
-    public String toString() {
+    @Contract(pure = true)
+    public @NotNull String toString() {
       return "Close{" + "syndicate=" + syndicate + '}';
     }
   }

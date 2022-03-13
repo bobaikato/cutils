@@ -26,6 +26,8 @@ package art.cutils.function;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an operation on a single operand that produces a result of the same type as its
@@ -53,7 +55,8 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
    * @param <T> the type of the input and output of the operator
    * @return a unary operator that always returns its input argument
    */
-  static <T> UnaryOperator<T> identity() {
+  @Contract(pure = true)
+  static <T> @NotNull UnaryOperator<T> identity() {
     return t -> t;
   }
 
@@ -61,10 +64,11 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
    * Uncheck method which will take operation that will throw Exception.
    *
    * @param operator Variable of {@link ThrowingFunction}
-   * @param <T> the type of the input to the function
+   * @param <T>      the type of the input to the function
    * @return A {@link Function}
    */
-  static <T> UnaryOperator<T> unchecked(final ThrowingUnaryOperation<T> operator) {
+  @Contract(pure = true)
+  static <T> @NotNull UnaryOperator<T> unchecked(final ThrowingUnaryOperation<T> operator) {
     Objects.requireNonNull(operator, "operator cannot be null");
     return argument -> {
       try {
@@ -85,6 +89,7 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
    * @throws T arg type exception
    */
   @SuppressWarnings("unchecked")
+  @Contract(value = "_ -> fail", pure = true)
   static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
     throw (T) ex;
   }

@@ -26,10 +26,11 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import art.cutils.function.Accepter;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
+import art.cutils.function.Accepter;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,7 +39,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class AccepterTest {
 
-  private static Stream<Arguments> accepterFunctions() {
+  private static @NotNull Stream<Arguments> accepterFunctions() {
 
     final Accepter<Class<?>> firstAccepter =
         value -> {
