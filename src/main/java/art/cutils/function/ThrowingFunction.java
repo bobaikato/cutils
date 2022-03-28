@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 @FunctionalInterface

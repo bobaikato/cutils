@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  * This class provide a means to partition List into List of sublist.
  *
  * @author Szymon Stepniak
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 public final class ListPartition<T> extends AbstractList<List<? super T>> {

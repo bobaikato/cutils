@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>#ThreadSafe#
  *
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 public class Serialization extends SerializationUtils {

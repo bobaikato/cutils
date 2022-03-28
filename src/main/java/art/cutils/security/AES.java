@@ -63,7 +63,7 @@ import org.jetbrains.annotations.NotNull;
  * any type.
  *
  * @param <T> Type of value
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 public final class AES<T> implements Serializable {

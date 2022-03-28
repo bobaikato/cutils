@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> the type of the input to the function
  * @see ThrowingFunction
  * @see UnaryOperator
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 @FunctionalInterface

@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Contract;
  * effects.
  *
  * @param <T> the type of the input to the operation.
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @see Consumer
  * @since 1.0
  * @since 1.0

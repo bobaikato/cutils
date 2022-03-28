@@ -51,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
  *
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 1.0
  */
