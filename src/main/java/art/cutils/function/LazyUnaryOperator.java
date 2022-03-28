@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Like the {@link LazyFunction} the {@link LazyUnaryOperator} can be used when the function
@@ -37,7 +39,7 @@ import java.util.function.UnaryOperator;
  * unique parameters and the result and served whenever needed.
  *
  * @param <T> the result type
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @see Function
  * @see LazyFunction
  * @since 1.0
@@ -59,11 +61,12 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   /**
    * Take the operator argument of of {@link UnaryOperator} type.
    *
-   * @param <T> the type parameter
+   * @param <T>      the type parameter
    * @param operator the function, of {@link UnaryOperator} type
    * @return the function, an instance of {@link Function} type.
    */
-  public static <T> UnaryOperator<T> of(final UnaryOperator<T> operator) {
+  @Contract("_ -> new")
+  public static <T> @NotNull UnaryOperator<T> of(final UnaryOperator<T> operator) {
     Objects.requireNonNull(operator, "operator cannot be null");
     return new LazyUnaryOperator<>(operator);
   }
@@ -85,6 +88,8 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   }
 
   @Override
+
+  @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
       return true;

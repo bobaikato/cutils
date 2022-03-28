@@ -27,11 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import art.cutils.string.StringIncubator;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+import art.cutils.string.StringIncubator;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +42,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("Test Random String Hatching.")
 final class StringIncubatorTest {
 
-  private static Stream<Arguments> resourceI() {
+  private static @NotNull Stream<Arguments> resourceI() {
     return Stream.of(
         Arguments.of(10, new Random()),
         Arguments.of(128, ThreadLocalRandom.current()),
@@ -49,7 +50,7 @@ final class StringIncubatorTest {
         Arguments.of(1000, ThreadLocalRandom.current()));
   }
 
-  private static Stream<Arguments> resourceII() {
+  private static @NotNull Stream<Arguments> resourceII() {
     return Stream.of(
         Arguments.of(new StringIncubator().hatch(), new StringIncubator().hatch()),
         Arguments.of(
@@ -58,11 +59,11 @@ final class StringIncubatorTest {
         Arguments.of(new StringIncubator(23).hatch(), new StringIncubator(23).hatch()));
   }
 
-  private static Stream<Arguments> resourceIII() {
+  private static @NotNull Stream<Arguments> resourceIII() {
     return Stream.of(Arguments.of(-10), Arguments.of(0), Arguments.of(-30), Arguments.of(-1));
   }
 
-  private static Stream<Arguments> resourceIV() {
+  private static @NotNull Stream<Arguments> resourceIV() {
     return Stream.of(Arguments.of("1"), Arguments.of("a"), Arguments.of("D"));
   }
 

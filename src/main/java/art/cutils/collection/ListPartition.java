@@ -30,12 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provide a means to partition List into List of sublist.
  *
  * @author Szymon Stepniak
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 public final class ListPartition<T> extends AbstractList<List<? super T>> {
@@ -67,10 +69,11 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
    * Method to receive the list to be partitioned.
    *
    * @param list List to be partitioned.
-   * @param <T> List type
+   * @param <T>  List type
    * @return instance of {@link ListPartition}
    */
-  public static <T> ListPartition<T> of(final List<? extends T> list) {
+  @Contract("_ -> new")
+  public static <T> @NotNull ListPartition<T> of(final List<? extends T> list) {
     Objects.requireNonNull(list, "List cannot be null");
     return new ListPartition<>(list);
   }
@@ -81,14 +84,16 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
    * @param sublistSize The sub-list/ListPartition size.
    * @return current instance of {@link ListPartition}
    */
+  @Contract(value = "_ -> this", mutates = "this")
   public ListPartition<T> into(final int sublistSize) {
     Validate.isTrue(sublistSize > 0, "Sub-list size must be greater than 0.");
     this.sublistSize = sublistSize;
     return this;
   }
 
+  @Contract(pure = true)
   @Override
-  public List<T> get(final int index) {
+  public @NotNull List<T> get(final int index) {
     final int start = index * sublistSize;
     final int end = Math.min(start + sublistSize, list.size());
     if (start > end) {
@@ -104,6 +109,7 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
   }
 
   @Override
+  @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
       return true;

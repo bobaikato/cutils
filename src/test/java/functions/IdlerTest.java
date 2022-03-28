@@ -30,11 +30,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 import art.cutils.function.Dealer;
 import art.cutils.function.Idler;
 import art.cutils.value.Try;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,7 +62,7 @@ final class IdlerTest {
         return time;
       };
 
-  private static Stream<Arguments> idlerOperations() {
+  private static @NotNull Stream<Arguments> idlerOperations() {
 
     final Dealer<Integer> dealer = Idler.deal(DEALER);
     final Supplier<Integer> supplier = Idler.supply(SUPPLIER);
@@ -78,7 +79,7 @@ final class IdlerTest {
         of(dealer, 0, supplier));
   }
 
-  private static Stream<Arguments> idlerOperationsForBothSupplierAndDealer() {
+  private static @NotNull Stream<Arguments> idlerOperationsForBothSupplierAndDealer() {
     final Idler<Integer> idler = Idler.of(SUPPLIER, DEALER);
     return Stream.of(
         of(idler, 4),
@@ -91,7 +92,7 @@ final class IdlerTest {
         of(idler, 0));
   }
 
-  private static Stream<Arguments> idlerOperationsForBothDealerAndSupplier() {
+  private static @NotNull Stream<Arguments> idlerOperationsForBothDealerAndSupplier() {
     final Idler<Integer> idler = Idler.of(DEALER, SUPPLIER);
     return Stream.of(
         of(idler, 4),
@@ -107,7 +108,7 @@ final class IdlerTest {
   @DisplayName("Expect Idler to memoize values for Dealers.")
   @ParameterizedTest(name = "{index} =>  seconds={1}")
   @MethodSource("idlerOperations")
-  void verifyIdlerMemoizedDealerValues(final Dealer<Integer> dealer, final long sec)
+  void verifyIdlerMemoizedDealerValues(final @NotNull Dealer<Integer> dealer, final long sec)
       throws Exception {
     final long startTime = nanoTime();
     final int result = dealer.deal();
@@ -123,7 +124,7 @@ final class IdlerTest {
   @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerOperations")
   void verifyIdlerMemoizedSupplierValues(
-      final Dealer<Integer> dealer, final long sec, final Supplier<Integer> supplier) {
+      final Dealer<Integer> dealer, final long sec, final @NotNull Supplier<Integer> supplier) {
     final long startTime = nanoTime();
 
     final int result = supplier.get();
@@ -138,7 +139,7 @@ final class IdlerTest {
   @DisplayName("Expect Idler to memoize values both Suppliers and Dealers.")
   @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerOperationsForBothSupplierAndDealer")
-  void verifyIdlerMemoizedSupplierAndDealerValues(Idler<Integer> idler, final long sec)
+  void verifyIdlerMemoizedSupplierAndDealerValues(@NotNull Idler<Integer> idler, final long sec)
       throws Exception {
     final long startTime = nanoTime();
 
@@ -156,7 +157,7 @@ final class IdlerTest {
   @DisplayName("Expect Idler to memoize values both Dealer and Supplier.")
   @ParameterizedTest(name = "{index} =>  second={1}")
   @MethodSource("idlerOperationsForBothDealerAndSupplier")
-  void verifyIdlerMemoizedDealerAndSupplierValues(Idler<Integer> idler, final long sec)
+  void verifyIdlerMemoizedDealerAndSupplierValues(@NotNull Idler<Integer> idler, final long sec)
       throws Exception {
     final long startTime = nanoTime();
 
@@ -172,7 +173,7 @@ final class IdlerTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeValid() {
+  void equalsAndHashCodeContractToBeValid() {
 
     final Supplier<?> idler1 = Idler.supply(() -> "Supplier");
     final Supplier<?> idler2 = idler1;
@@ -185,7 +186,7 @@ final class IdlerTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeInvalid() {
+  void equalsAndHashCodeContractToBeInvalid() {
 
     final Supplier<?> supplier = Idler.supply(() -> "Supplier");
     final Dealer<?> dealer = Idler.deal(() -> "Dealar");

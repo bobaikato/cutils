@@ -29,10 +29,11 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import art.cutils.function.LazyFunction;
-import art.cutils.function.ThrowingFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import art.cutils.function.LazyFunction;
+import art.cutils.function.ThrowingFunction;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,7 +44,7 @@ final class LazyFunctionTest {
 
   static final int MOCK_LATENCY = 2000;
 
-  private static Stream<Arguments> lazyFunctionOperations() {
+  private static @NotNull Stream<Arguments> lazyFunctionOperations() {
 
     final Function<Integer, Integer> function =
         LazyFunction.of(
@@ -66,7 +67,7 @@ final class LazyFunctionTest {
   @ParameterizedTest(name = "{index} =>  input={1}  second={2}")
   @MethodSource("lazyFunctionOperations")
   void verifyLazyFunctionMemoizedValues(
-      final Function<Integer, Integer> fn, final int input, final int sec) {
+      final @NotNull Function<Integer, Integer> fn, final int input, final int sec) {
 
     final long startTime = nanoTime();
 
@@ -80,7 +81,7 @@ final class LazyFunctionTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeValid() {
+  void equalsAndHashCodeContractToBeValid() {
     final Function<String, String> f1 = LazyFunction.of(value -> value.replace("o", "0"));
     final Function<String, String> f2 = f1;
 
@@ -89,7 +90,7 @@ final class LazyFunctionTest {
   }
 
   @Test
-  public void equalsAndHashCodeContractToBeInvalid() {
+  void equalsAndHashCodeContractToBeInvalid() {
     final Function<String, String> f1 = LazyFunction.of(value -> value.replace("o", "0"));
     final Function<String, String> f2 = LazyFunction.of(value -> value.replace("o", "0"));
 

@@ -25,6 +25,7 @@ package art.cutils.function;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.Contract;
 
 /**
  * This is similar to Java {@link Consumer} but the disparity of exceptions throws. {@link Accepter}
@@ -34,7 +35,7 @@ import java.util.function.Consumer;
  * effects.
  *
  * @param <T> the type of the input to the operation.
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @see Consumer
  * @since 1.0
  * @since 1.0
@@ -73,6 +74,7 @@ public interface Accepter<T> {
   void accept(T t) throws Exception;
 
   @SuppressWarnings("unchecked")
+  @Contract(value = "_ -> fail", pure = true)
   static <T extends Exception> void sneakyThrow(final Exception ex) throws T {
     throw (T) ex;
   }

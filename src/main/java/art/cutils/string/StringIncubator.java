@@ -32,6 +32,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
@@ -49,7 +51,7 @@ import java.util.stream.IntStream;
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
  *
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 1.0
  */
@@ -162,6 +164,7 @@ public class StringIncubator implements Serializable {
    *
    * @since 1.0
    */
+  @Contract(pure = true)
   public static String getUpper() {
     return upper;
   }
@@ -171,7 +174,7 @@ public class StringIncubator implements Serializable {
    *
    * @param uppercaseValue the upper case values.
    */
-  public static void setUpper(String uppercaseValue) {
+  public static void setUpper(@NotNull String uppercaseValue) {
     StringIncubator.upper = uppercaseValue.toUpperCase();
   }
 
@@ -180,6 +183,7 @@ public class StringIncubator implements Serializable {
    *
    * @since 1.0
    */
+  @Contract(pure = true)
   public static String getLower() {
     return lower;
   }
@@ -189,7 +193,7 @@ public class StringIncubator implements Serializable {
    *
    * @param lowercaseValue the lower case values.
    */
-  public static void setLower(final String lowercaseValue) {
+  public static void setLower(final @NotNull String lowercaseValue) {
     StringIncubator.lower = lowercaseValue.toLowerCase();
   }
 

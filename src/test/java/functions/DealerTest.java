@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.File;
 import java.util.stream.Stream;
 import art.cutils.function.Dealer;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,14 +38,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class DealerTest {
 
-  private static Stream<Arguments> firstDealerFunctions() {
+  private static @NotNull Stream<Arguments> firstDealerFunctions() {
     final Dealer<String> firstDealer = () -> "flash";
     final Dealer<Integer> secondDealer = () -> 122;
 
     return Stream.of(Arguments.of(firstDealer), Arguments.of(secondDealer));
   }
 
-  private static Stream<Arguments> secondDealerFunctions() {
+  private static @NotNull Stream<Arguments> secondDealerFunctions() {
     final Dealer<Class<?>> firstDealer =
         () -> {
           throw new ClassCastException();
@@ -67,7 +68,7 @@ final class DealerTest {
   @DisplayName("Expect Dealer to return variable of same Type that was Initialized.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("firstDealerFunctions")
-  void verifyDealerReturnsExpectedVariableOfSameType(Dealer<?> dealer) throws Exception {
+  void verifyDealerReturnsExpectedVariableOfSameType(@NotNull Dealer<?> dealer) throws Exception {
 
     assertNotNull(dealer.deal());
 
@@ -83,7 +84,7 @@ final class DealerTest {
   @DisplayName("Expect Dealer throws an Exception.")
   @ParameterizedTest(name = "{index} => value={0}")
   @MethodSource("secondDealerFunctions")
-  void verifyDealerThrowsAnException(Dealer<?> dealer) {
+  void verifyDealerThrowsAnException(@NotNull Dealer<?> dealer) {
     Assertions.assertThrows(Exception.class, dealer::deal);
   }
 }

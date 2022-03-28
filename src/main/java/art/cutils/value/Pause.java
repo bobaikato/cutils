@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Pause allows you to write a safe an idiomatic expression to pause an execution on the current
@@ -55,6 +57,7 @@ public final class Pause<T> {
   private final Run<T> run;
 
   /** Sealed. Default constructor to set time out number */
+  @Contract(pure = true)
   private Pause(final int timeOut) {
     this.run = new Run<>(timeOut);
   }
@@ -64,10 +67,11 @@ public final class Pause<T> {
    * equivalent
    *
    * @param timeOut Number to be interpreted to time
-   * @param <T> the type of the operation
+   * @param <T>     the type of the operation
    * @return an instance of {@link Pause} for subsequent operations.
    */
-  public static <T> Pause<T> until(final int timeOut) {
+  @Contract(value = "_ -> new", pure = true)
+  public static <T> @NotNull Pause<T> until(final int timeOut) {
     return new Pause<>(timeOut);
   }
 
@@ -140,6 +144,8 @@ public final class Pause<T> {
   }
 
   @Override
+  @Contract(value = "null -> false", pure = true)
+
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -171,6 +177,7 @@ public final class Pause<T> {
      *
      * @param timeOut Number to be interpreted to time
      */
+    @Contract(pure = true)
     private Run(final int timeOut) {
       this.timeOut = timeOut;
     }
@@ -180,6 +187,7 @@ public final class Pause<T> {
      *     value
      * @return instance of {@link Run} of the set type.
      */
+    @Contract(value = "_ -> this", mutates = "this")
     private Run<T> setTimeUnit(final TimeUnit timeUnit) {
       this.timeUnit = timeUnit;
       return this;
@@ -189,10 +197,11 @@ public final class Pause<T> {
      * This method chains a {@link Executable} expression that execute after the pause.
      *
      * @param executable this method take an expressions {@link Executable} that has no return
-     *     value.
+     *                   value.
      * @return an instance of {@link Delay} for further operations.
      */
-    public Delay<T> thenRun(final Executable executable) {
+    @Contract("_ -> new")
+    public @NotNull Delay<T> thenRun(final Executable executable) {
       return new Delay<>(this.timeOut, this.timeUnit, executable);
     }
 
@@ -202,7 +211,8 @@ public final class Pause<T> {
      * @param dealer this method take an expressions {@link Dealer} that has a return value.
      * @return an instance of {@link Delay} operations.
      */
-    public Delay<T> thenRun(final Dealer<T> dealer) {
+    @Contract("_ -> new")
+    public @NotNull Delay<T> thenRun(final Dealer<T> dealer) {
       return new Delay<>(this.timeOut, this.timeUnit, dealer);
     }
 
@@ -211,7 +221,8 @@ public final class Pause<T> {
      *
      * @return an instance of {@link Delay} operations.
      */
-    public Delay<T> empty() {
+    @Contract(" -> new")
+    public @NotNull Delay<T> empty() {
       return new Delay<>(this.timeOut, this.timeUnit);
     }
 
@@ -220,6 +231,7 @@ public final class Pause<T> {
       return Objects.hash(timeOut, timeUnit);
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(final Object o) {
       if (this == o) {
@@ -294,6 +306,7 @@ public final class Pause<T> {
        *
        * @return try result. Instance of {@link Try}
        */
+      @Contract(pure = true)
       public Try<T> get() {
         return this.tryResult;
       }
@@ -303,7 +316,7 @@ public final class Pause<T> {
        *
        * @param tryResult {@link Try} operation results.
        */
-      public void onComplete(final Consumer<Try<T>> tryResult) {
+      public void onComplete(final @NotNull Consumer<Try<T>> tryResult) {
         tryResult.accept(this.tryResult);
       }
 
@@ -312,6 +325,7 @@ public final class Pause<T> {
         return Objects.hash(tryResult);
       }
 
+      @Contract(value = "null -> false", pure = true)
       @Override
       public boolean equals(final Object o) {
         if (this == o) {

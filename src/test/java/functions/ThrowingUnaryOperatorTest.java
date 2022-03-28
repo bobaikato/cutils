@@ -26,9 +26,10 @@ package functions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-import art.cutils.function.ThrowingUnaryOperation;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import art.cutils.function.ThrowingUnaryOperation;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class ThrowingUnaryOperatorTest {
 
-  private static Stream<Arguments> throwingUnaryOperations() {
+  private static @NotNull Stream<Arguments> throwingUnaryOperations() {
     final UnaryOperator<String> someTask =
         ThrowingUnaryOperation.unchecked(
             string -> {

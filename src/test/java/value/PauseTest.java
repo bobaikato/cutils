@@ -32,21 +32,22 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
+import art.cutils.value.Pause;
+import art.cutils.value.Try;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import art.cutils.function.Dealer;
-import art.cutils.function.Executable;
-import art.cutils.value.Pause;
-import art.cutils.value.Try;
 
 @DisplayName("PauseTest Operation test.")
 final class PauseTest {
 
-  private static Stream<Arguments> resource1() {
+  private static @NotNull Stream<Arguments> resource1() {
     final Executable ex = () -> System.out.println("Executable executed after a pause.");
     return Stream.of(
         of(TimeUnit.NANOSECONDS, ex),
@@ -55,7 +56,7 @@ final class PauseTest {
         of(TimeUnit.MICROSECONDS, ex));
   }
 
-  private static Stream<Arguments> resource2() {
+  private static @NotNull Stream<Arguments> resource2() {
     final Dealer<String> dealer = () -> "Dealer executed after a pause.";
     return Stream.of(
         of(TimeUnit.NANOSECONDS, dealer),
@@ -67,7 +68,7 @@ final class PauseTest {
   @DisplayName("Should successfully pause operation with no return value.")
   @ParameterizedTest(name = "Time Unit={0}")
   @MethodSource("resource1")
-  void shouldPauseOperationWithNoReturnTYpe(final TimeUnit timeUnit, final Executable ex) {
+  void shouldPauseOperationWithNoReturnTYpe(final @NotNull TimeUnit timeUnit, final Executable ex) {
     final Pause<?> pause = Pause.until(1);
 
     if (timeUnit.equals(TimeUnit.NANOSECONDS)) {
@@ -126,7 +127,7 @@ final class PauseTest {
   @DisplayName("Should successfully pause operation with return value.")
   @ParameterizedTest(name = "Time Unit={0}")
   @MethodSource("resource2")
-  void shouldPauseOperationWithReturnTYpe(final TimeUnit timeUnit, final Dealer<String> dealer) {
+  void shouldPauseOperationWithReturnTYpe(final @NotNull TimeUnit timeUnit, final Dealer<String> dealer) {
 
     final String returnValue = "Dealer executed after a pause.";
     final Pause<String> pause = Pause.until(1);

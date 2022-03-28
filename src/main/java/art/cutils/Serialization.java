@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Objects;
 import org.apache.commons.lang3.SerializationUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Assists with the serialization process and performs additional functionality based on
@@ -44,7 +45,7 @@ import org.apache.commons.lang3.SerializationUtils;
  *
  * <p>#ThreadSafe#
  *
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 public class Serialization extends SerializationUtils {
@@ -57,7 +58,7 @@ public class Serialization extends SerializationUtils {
    * @throws java.io.IOException if the serialization fails
    * @since 1.0
    */
-  public static byte[] serialize(final Object object) throws IOException {
+  public static byte @NotNull [] serialize(final Object object) throws IOException {
     Objects.requireNonNull(object, "Object to serialize cannot be null.");
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
     final ObjectOutputStream os = new ObjectOutputStream(outputStream);

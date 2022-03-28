@@ -25,10 +25,11 @@ package functions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import art.cutils.function.ThrowingFunction;
-import art.cutils.value.Que;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import art.cutils.function.ThrowingFunction;
+import art.cutils.value.Que;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,7 +37,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 final class ThrowingFunctionTest {
 
-  private static Stream<Arguments> throwingFunctionOperations() {
+  private static @NotNull Stream<Arguments> throwingFunctionOperations() {
     final Function<String, Integer> convertStringToInteger =
         ThrowingFunction.unchecked(
             string -> {

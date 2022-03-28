@@ -25,6 +25,8 @@ package art.cutils.function;
 
 import java.util.Objects;
 import java.util.function.Function;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * When you find yourself in a situation where you need to use a method ( that throws an exception)
@@ -35,7 +37,7 @@ import java.util.function.Function;
  *
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 @FunctionalInterface
@@ -45,11 +47,11 @@ public interface ThrowingFunction<T, R> {
    * Uncheck method which will take operation that will throw Exception.
    *
    * @param function Variable of {@link ThrowingFunction}
-   * @param <T> the type of the input to the function
-   * @param <R> the type of the result of the function
+   * @param <T>      the type of the input to the function
+   * @param <R>      the type of the result of the function
    * @return A {@link Function}
    */
-  static <T, R> Function<T, R> unchecked(final ThrowingFunction<T, R> function) {
+  static <T, R> @NotNull Function<T, R> unchecked(final ThrowingFunction<T, R> function) {
     Objects.requireNonNull(function, function.getClass().getSimpleName() + " cannot be null");
     return argument -> {
       try {
@@ -79,6 +81,7 @@ public interface ThrowingFunction<T, R> {
    * @throws T arg type exception
    */
   @SuppressWarnings("unchecked")
+  @Contract(value = "_ -> fail", pure = true)
   static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
     throw (T) ex;
   }

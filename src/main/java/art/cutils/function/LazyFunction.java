@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@link LazyFunction} is intended to be memorized and idempotent for every parameter. This can
@@ -38,7 +40,7 @@ import java.util.function.Function;
  *
  * @param <T> the result type
  * @param <R> the return type
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @see Function
  * @since 1.0
  */
@@ -66,12 +68,13 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   /**
    * Take the function operation of {@link Function} type.
    *
-   * @param <T> the type parameter
-   * @param <R> the return type parameter
+   * @param <T>      the type parameter
+   * @param <R>      the return type parameter
    * @param function the function, of {@link Function} type
    * @return the function, an instance of {@link Function} type.
    */
-  public static <T, R> Function<T, R> of(final Function<? super T, ? extends R> function) {
+  @Contract("_ -> new")
+  public static <T, R> @NotNull Function<T, R> of(final Function<? super T, ? extends R> function) {
     Objects.requireNonNull(function, "function cannot be null");
     return new LazyFunction<>(function);
   }
@@ -98,6 +101,7 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   }
 
   @Override
+  @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
       return true;

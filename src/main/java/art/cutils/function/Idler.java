@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Supplier;
 import org.javatuples.Pair;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@link Idler}r is intended to be <b>memorized and idempotent</b>. This can be very useful for
@@ -38,7 +40,7 @@ import org.javatuples.Pair;
  * and the result and served whenever needed and hence improving the performance.
  *
  * @param <T> the type value
- * @author Bobai Kato — https://github.com/B0BAI
+ * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @see Supplier
  * @see Dealer
  * @since 1.0
@@ -82,11 +84,13 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     this.supplier = supplier;
   }
 
-  public static <T> Idler<T> of(final Dealer<? extends T> dealer, final Supplier<T> supplier) {
+  @Contract("_, _ -> new")
+  public static <T> @NotNull Idler<T> of(final Dealer<? extends T> dealer, final Supplier<T> supplier) {
     return Idler.of(supplier, dealer);
   }
 
-  public static <T> Idler<T> of(
+  @Contract("_, _ -> new")
+  public static <T> @NotNull Idler<T> of(
       final Supplier<? extends T> supplier, final Dealer<? extends T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     requireNonNull(supplier, "supplier cannot be null");
@@ -96,11 +100,12 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   /**
    * Supply take an instance of {@link Supplier} as parameter..
    *
-   * @param <T> the type parameter
+   * @param <T>      the type parameter
    * @param supplier the supplier, an instance of {@link Supplier}
    * @return the supplier, an instance of {@link Supplier}
    */
-  public static <T> Supplier<T> supply(final Supplier<? extends T> supplier) {
+  @Contract("_ -> new")
+  public static <T> @NotNull Supplier<T> supply(final Supplier<? extends T> supplier) {
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(supplier);
   }
@@ -108,11 +113,12 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   /**
    * Supply take an instance of {@link Dealer} as parameter..
    *
-   * @param <T> the type parameter
+   * @param <T>    the type parameter
    * @param dealer the supplier, an instance of {@link Dealer}
    * @return the supplier, an instance of {@link Dealer}
    */
-  public static <T> Dealer<T> deal(final Dealer<? extends T> dealer) {
+  @Contract("_ -> new")
+  public static <T> @NotNull Dealer<T> deal(final Dealer<? extends T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     return new Idler<>(dealer);
   }
@@ -154,6 +160,7 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   }
 
   @Override
+  @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
