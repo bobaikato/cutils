@@ -115,27 +115,46 @@ final class SyndicateTest {
   void testingProcessingOutSideTryResource() {
     final Try<?> aTry =
         Try.of(
-            () -> {
-              Syndicate.init()
-                  .add(() -> numbers.stream().mapToInt(i -> i).sum())
-                  .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
-                  .add(
-                      () -> {
-                        Pause.until(1).seconds().empty();
-                        return "aeroplanes";
-                      })
-                  .execute()
-                  .onComplete(
-                      futures -> {
-                        for (final Future<Object> f : futures) {
-                          Assertions.assertTrue(results.contains(f.get()));
-                          Assertions.assertEquals(futures.size(), results.size());
-                        }
-                      })
-                  .close();
-            });
+            () ->
+                Syndicate.init()
+                    .add(() -> numbers.stream().mapToInt(i -> i).sum())
+                    .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                    .add(
+                        () -> {
+                          Pause.until(1).seconds().empty();
+                          return "aeroplanes";
+                        })
+                    .execute()
+                    .onComplete(
+                        futures -> {
+                          for (final Future<Object> f : futures) {
+                            Assertions.assertTrue(results.contains(f.get()));
+                            Assertions.assertEquals(futures.size(), results.size());
+                          }
+                        })
+                    .close());
 
     Assertions.assertTrue(aTry.isSuccess());
+  }
+
+  @Test
+  void testingRetrievalOfResourceOutsideOnComplete() {
+    final Try<List<?>> aTry =
+        Try.of(
+            () ->
+                Syndicate.init()
+                    .add(() -> numbers.stream().mapToInt(i -> i).sum())
+                    .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                    .add(
+                        () -> {
+                          Pause.until(1).seconds().empty();
+                          return "aeroplanes";
+                        })
+                    .execute()
+                    .get());
+
+    Assertions.assertTrue(aTry.isSuccess());
+    Assertions.assertEquals(3, aTry.get().size());
   }
 
   @Test
