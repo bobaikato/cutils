@@ -84,7 +84,7 @@ public final class Syndicate<T> implements AutoCloseable {
    * ExecutorService} to power the Syndicate ops.
    *
    * @param executorService instance of {@link ExecutorService}
-   * @param <T>             the type of the values from the tasks
+   * @param <T> the type of the values from the tasks
    * @return new instance of {@link Syndicate}
    */
   @Contract("_ -> new")
@@ -242,16 +242,35 @@ public final class Syndicate<T> implements AutoCloseable {
      * @return new instance of Close for manual shutdown of Thread.
      */
     @Contract("_ -> new")
-    public @NotNull Close<T> onComplete(final Accepter<List<Future<T>>> futureResults)
+    public @NotNull Close<T> onComplete(final @NotNull Accepter<List<Future<T>>> futureResults)
         throws Exception {
-      final List<Future<T>> futures;
+      futureResults.accept(this.executeAll());
+      return new Close<>(this);
+    }
+
+    /**
+     * Executes the given tasks, passes a list of Futures holding their status and results when all.
+     *
+     * @return list of Futures holding their status
+     * @throws InterruptedException if interrupted while waiting, in which case unfinished tasks are
+     */
+    private @NotNull List<Future<T>> executeAll() throws InterruptedException {
       if (this.timeout > 0L && Objects.nonNull(this.unit)) {
-        futures = this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
+        return this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
       } else {
-        futures = this.syndicate.es.invokeAll(this.syndicate.taskList);
+        return this.syndicate.es.invokeAll(this.syndicate.taskList);
       }
-      futureResults.accept(futures);
-      return new Close<>(this.syndicate);
+    }
+
+    /**
+     * Get the list of Futures hold the results.
+     *
+     * @implSpec this method also closes the current {@link ExecutorService} running the Syndicate.
+     * @return list of Futures hold the results.
+     */
+    @Contract(pure = true)
+    public List<Future<T>> get() throws InterruptedException {
+      return this.executeAll();
     }
 
     @Override
@@ -303,27 +322,27 @@ public final class Syndicate<T> implements AutoCloseable {
    * @param <T> the type of the values from the tasks
    */
   public static final class Close<T> {
-    /** Existing instance of the Syndicate */
-    private final Syndicate<T> syndicate;
+    /** Existing instance of the Conductor */
+    private final Conductor<T> conductor;
 
     /**
-     * Constructor
+     * Constructor to create a new instance of Close.
      *
-     * @param syndicate existing instance of Syndicate which needs to shutdown.
+     * @param conductor existing instance of the Conductor
      */
     @Contract(pure = true)
-    public Close(final Syndicate<T> syndicate) {
-      this.syndicate = syndicate;
+    public Close(final Conductor<T> conductor) {
+      this.conductor = conductor;
     }
 
     /** Use to shutdown Thread Manually. */
     public void close() {
-      this.syndicate.close();
+      this.conductor.syndicate.close();
     }
 
     @Override
     public int hashCode() {
-      return new HashCodeBuilder(17, 37).append(syndicate).toHashCode();
+      return new HashCodeBuilder(17, 37).append(conductor).toHashCode();
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -332,17 +351,19 @@ public final class Syndicate<T> implements AutoCloseable {
       if (this == o) {
         return true;
       }
+
       if (o instanceof Close) {
         final Close<?> close = (Close<?>) o;
-        return new EqualsBuilder().append(syndicate, close.syndicate).isEquals();
+
+        return new EqualsBuilder().append(conductor, close.conductor).isEquals();
+      } else {
+        return false;
       }
-      return false;
     }
 
     @Override
-    @Contract(pure = true)
-    public @NotNull String toString() {
-      return "Close{" + "syndicate=" + syndicate + '}';
+    public String toString() {
+      return "Close{" + "conductor=" + conductor + '}';
     }
   }
 }
