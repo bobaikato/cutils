@@ -10,12 +10,6 @@
 A package of utility classes intended to enhance and simplify my development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/art.cutils/cutils). If you have any questions related to usage, simple open an issue.
 
 
-
-## Sponsor
-<a href="https://www.jetbrains.com/?from=Cutils" target="_blank"><img src="https://avatars0.githubusercontent.com/u/878437?s=200&v=4" width="50"></a>
-
-
-
 ## Where can I get the latest release?
 [![Maven Central](https://img.shields.io/maven-central/v/art.cutils/cutils)](https://search.maven.org/artifact/art.cutils/cutils)
 [![javadoc](https://javadoc.io/badge/art.cutils/cutils.svg?color=brown)](https://javadoc.io/doc/art.cutils/cutils)
