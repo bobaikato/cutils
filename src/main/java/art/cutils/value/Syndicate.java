@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import art.cutils.function.Accepter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -232,44 +233,41 @@ public final class Syndicate<T> implements AutoCloseable {
      * The results of this method are undefined if the given collection is modified while this
      * operation is in progress.
      *
-     * @param futureResults instance of {@link Accepter} to take the list of Futures hold the
-     *     results.
-     * @throws Exception a list of exceptions could be thrown
-     *     <p>InterruptedException – if interrupted while waiting, in which case unfinished tasks
-     *     are cancelled.
-     *     <p>NullPointerException – if tasks, any of its elements, or unit are null.
-     *     <p>RejectedExecutionException – if any task cannot be scheduled for execution
-     * @return new instance of Close for manual shutdown of Thread.
+     * @param futuresConsumer the consumer to accept the list of Futures
+     * @return the {@link Try} list of Futures holding the status of the tasks
      */
     @Contract("_ -> new")
-    public @NotNull Close<T> onComplete(final @NotNull Accepter<List<Future<T>>> futureResults)
-        throws Exception {
-      futureResults.accept(this.executeAll());
+    public @NotNull Close<T> onComplete(
+        final @NotNull Consumer<Try<List<Future<T>>>> futuresConsumer) {
+      futuresConsumer.accept(this.executeAll());
       return new Close<>(this);
     }
 
     /**
      * Executes the given tasks, passes a list of Futures holding their status and results when all.
      *
-     * @return list of Futures holding their status
-     * @throws InterruptedException if interrupted while waiting, in which case unfinished tasks are
+     * @return the {@link Try} list of Futures holding the status of the tasks
      */
-    private @NotNull List<Future<T>> executeAll() throws InterruptedException {
-      if (this.timeout > 0L && Objects.nonNull(this.unit)) {
-        return this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
-      } else {
-        return this.syndicate.es.invokeAll(this.syndicate.taskList);
-      }
+    @Contract(" -> new")
+    private @NotNull Try<List<Future<T>>> executeAll() {
+      return Try.of(
+          () -> {
+            if (this.timeout > 0L && Objects.nonNull(this.unit)) {
+              return this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
+            } else {
+              return this.syndicate.es.invokeAll(this.syndicate.taskList);
+            }
+          });
     }
 
     /**
      * Get the list of Futures hold the results.
      *
      * @implSpec this method also closes the current {@link ExecutorService} running the Syndicate.
-     * @return list of Futures hold the results.
+     * @return the {@link Try} list of Futures holding the status of the tasks
      */
     @Contract(pure = true)
-    public List<Future<T>> get() throws InterruptedException {
+    public @NotNull Try<List<Future<T>>> get() {
       return this.executeAll();
     }
 

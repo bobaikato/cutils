@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +36,7 @@ import art.cutils.value.Pause;
 import art.cutils.value.Syndicate;
 import art.cutils.value.Syndicate.Close;
 import art.cutils.value.Try;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -73,10 +75,16 @@ final class SyndicateTest {
               })
           .execute()
           .onComplete(
-              futures -> {
-                for (final Future<Object> f : futures) {
-                  Assertions.assertTrue(results.contains(f.get()));
-                  Assertions.assertEquals(futures.size(), results.size());
+              futuresTry -> {
+                Assertions.assertTrue(futuresTry.isSuccess());
+                final List<Future<Object>> futures = futuresTry.get();
+                for (final Future<Object> future : futures) {
+                  try {
+                    Assertions.assertTrue(results.contains(future.get()));
+                  } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                  }
+                  Assertions.assertEquals(futuresTry.get().size(), results.size());
                 }
               });
 
@@ -99,10 +107,16 @@ final class SyndicateTest {
           .execute()
           .setTimeOut(1L, TimeUnit.MILLISECONDS)
           .onComplete(
-              futures -> {
-                for (final Future<Object> f : futures) {
-                  Assertions.assertTrue(results.contains(f.get()));
-                  Assertions.assertEquals(futures.size(), results.size());
+              futuresTry -> {
+                Assertions.assertTrue(futuresTry.isSuccess());
+                final List<Future<Object>> futures = futuresTry.get();
+                for (final Future<Object> future : futures) {
+                  try {
+                    Assertions.assertTrue(results.contains(future.get()));
+                  } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                  }
+                  Assertions.assertEquals(futuresTry.get().size(), results.size());
                 }
               });
 
@@ -126,10 +140,16 @@ final class SyndicateTest {
                         })
                     .execute()
                     .onComplete(
-                        futures -> {
-                          for (final Future<Object> f : futures) {
-                            Assertions.assertTrue(results.contains(f.get()));
-                            Assertions.assertEquals(futures.size(), results.size());
+                        futuresTry -> {
+                          Assertions.assertTrue(futuresTry.isSuccess());
+                          final List<Future<Object>> futures = futuresTry.get();
+                          for (final Future<Object> future : futures) {
+                            try {
+                              Assertions.assertTrue(results.contains(future.get()));
+                            } catch (InterruptedException | ExecutionException e) {
+                              e.printStackTrace();
+                            }
+                            Assertions.assertEquals(futuresTry.get().size(), results.size());
                           }
                         })
                     .close());
@@ -139,19 +159,17 @@ final class SyndicateTest {
 
   @Test
   void testingRetrievalOfResourceOutsideOnComplete() {
-    final Try<List<?>> aTry =
-        Try.of(
-            () ->
-                Syndicate.init()
-                    .add(() -> numbers.stream().mapToInt(i -> i).sum())
-                    .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
-                    .add(
-                        () -> {
-                          Pause.until(1).seconds().empty();
-                          return "aeroplanes";
-                        })
-                    .execute()
-                    .get());
+    final @NotNull Try<List<Future<Object>>> aTry =
+        Syndicate.init()
+            .add(() -> numbers.stream().mapToInt(i -> i).sum())
+            .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+            .add(
+                () -> {
+                  Pause.until(1).seconds().empty();
+                  return "aeroplanes";
+                })
+            .execute()
+            .get();
 
     Assertions.assertTrue(aTry.isSuccess());
     Assertions.assertEquals(3, aTry.get().size());
@@ -173,10 +191,16 @@ final class SyndicateTest {
                   .execute()
                   .setTimeOut(1L, TimeUnit.MILLISECONDS)
                   .onComplete(
-                      futures -> {
-                        for (final Future<Object> f : futures) {
-                          Assertions.assertTrue(results.contains(f.get()));
-                          Assertions.assertEquals(futures.size(), results.size());
+                      futuresTry -> {
+                        Assertions.assertTrue(futuresTry.isSuccess());
+                        final List<Future<Object>> futures = futuresTry.get();
+                        for (final Future<Object> future : futures) {
+                          try {
+                            Assertions.assertTrue(results.contains(future.get()));
+                          } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                          }
+                          Assertions.assertEquals(futuresTry.get().size(), results.size());
                         }
                       })
                   .close();
