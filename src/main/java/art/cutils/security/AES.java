@@ -100,9 +100,9 @@ public final class AES<T> implements Serializable {
    * Default Constructor.
    *
    * @param encryptionKey meta data you want to verify secret message
-   * @throws NoSuchPaddingException   when a bad/Wrong encryption key is supplied.
+   * @throws NoSuchPaddingException when a bad/Wrong encryption key is supplied.
    * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not
-   *                                  available in the environment.
+   *     available in the environment.
    * @since 1.0
    */
   private AES(final AES.@NotNull Algorithm algorithm, final @NotNull String encryptionKey)
@@ -238,7 +238,7 @@ public final class AES<T> implements Serializable {
     byteBuffer.put(iv);
     byteBuffer.put(cipherText);
 
-    return Base64.getEncoder().encodeToString(byteBuffer.array());
+    return Base64.getUrlEncoder().withoutPadding().encodeToString(byteBuffer.array());
   }
 
   /**
@@ -256,11 +256,11 @@ public final class AES<T> implements Serializable {
    */
   public T decrypt(final @NotNull String itemToDecrypt)
       throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
-      IllegalBlockSizeException {
+          IllegalBlockSizeException {
 
     isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
 
-    final byte[] cipherMessage = Base64.getDecoder().decode(itemToDecrypt);
+    final byte[] cipherMessage = Base64.getUrlDecoder().decode(itemToDecrypt);
     final AlgorithmParameterSpec spec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
 
     this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, spec);
