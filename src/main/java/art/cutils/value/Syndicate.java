@@ -39,7 +39,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * Syndicate simplifies and represent a specific operation of the Executor Service, InvokeAll. Use
@@ -200,7 +199,7 @@ public final class Syndicate<T> implements AutoCloseable {
 
   @Override
   public String toString() {
-    return "Syndicate{" + "executorService=" + es + ", callableTaskList=" + taskList + '}';
+    return "Syndicate {" + "executorService=" + es + ", callableTaskList=" + taskList + '}';
   }
 
   /**
@@ -212,8 +211,6 @@ public final class Syndicate<T> implements AutoCloseable {
 
     /** Hold the instance of {@link Syndicate} */
     private final Syndicate<T> syndicate;
-
-    private Try<List<Future<T>>> tryFutureList;
 
     /** timeout the maximum time to wait */
     private long timeout = 0L;
@@ -241,55 +238,6 @@ public final class Syndicate<T> implements AutoCloseable {
       this.unit = unit;
     }
 
-    /**
-     * Executes the given tasks, passes a list of Futures holding their status and results when all
-     * complete to {@link Accepter}. Future.isDone is true for each element of the returned list.
-     * Note that a completed task could have terminated either normally or by throwing an exception.
-     * The results of this method are undefined if the given collection is modified while this
-     * operation is in progress.
-     *
-     * @param futuresConsumer the consumer to accept the list of Futures
-     * @return the {@link Try} list of Futures holding the status of the tasks
-     */
-    @Contract("_ -> new")
-    public @NotNull Close<T> onComplete(
-        final @NotNull Consumer<Try<List<Future<T>>>> futuresConsumer) {
-      futuresConsumer.accept(this.tryFutureList);
-      return new Close<>(this);
-    }
-
-    /**
-     * Executes the given tasks, passes a list of Futures holding their status and results.
-     *
-     * @return the {@link Try} list of Futures holding the status of the tasks
-     */
-    @Contract(" -> new")
-    public @NotNull Conductor<T> execute() {
-      this.tryFutureList =
-          Try.of(
-              () -> {
-                if (this.timeout > 0L && Objects.nonNull(this.unit)) {
-                  return this.syndicate.es.invokeAll(
-                      this.syndicate.taskList, this.timeout, this.unit);
-                } else {
-                  return this.syndicate.es.invokeAll(this.syndicate.taskList);
-                }
-              });
-
-      return this;
-    }
-
-    /**
-     * Get the list of Futures hold the results.
-     *
-     * @implSpec this method also closes the current {@link ExecutorService} running the Syndicate.
-     * @return the {@link Try} list of Futures holding the status of the tasks
-     */
-    @Contract(pure = true)
-    public @NotNull Try<List<Future<T>>> get() {
-      return this.tryFutureList;
-    }
-
     @Override
     public int hashCode() {
       return new HashCodeBuilder(17, 37)
@@ -306,81 +254,38 @@ public final class Syndicate<T> implements AutoCloseable {
         return true;
       }
 
-      if (o instanceof Conductor) {
-        final Conductor<?> conductor = (Conductor<?>) o;
-
-        return new EqualsBuilder()
-            .append(timeout, conductor.timeout)
-            .append(syndicate, conductor.syndicate)
-            .append(unit, conductor.unit)
-            .isEquals();
-      }
-      return false;
-    }
-
-    @Override
-    @Contract(pure = true)
-    public @NotNull String toString() {
-      return "Conductor{"
-          + "syndicate="
-          + syndicate
-          + ", timeout="
-          + timeout
-          + ", unit="
-          + unit
-          + '}';
-    }
-  }
-
-  /**
-   * Represent the operation used to shutdown the current {@link ExecutorService} running the
-   * Syndicate.
-   *
-   * @param <T> the type of the values from the tasks
-   */
-  public static final class Close<T> {
-    /** Existing instance of the Conductor */
-    private final Conductor<T> conductor;
-
-    /**
-     * Constructor to create a new instance of Close.
-     *
-     * @param conductor existing instance of the Conductor
-     */
-    @Contract(pure = true)
-    public Close(final Conductor<T> conductor) {
-      this.conductor = conductor;
-    }
-
-    /** Use to shutdown Thread Manually. */
-    public void close() {
-      this.conductor.syndicate.close();
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37).append(conductor).toHashCode();
-    }
-
-    @Contract(value = "null -> false", pure = true)
-    @Override
-    public boolean equals(final Object o) {
-      if (this == o) {
-        return true;
-      }
-
-      if (o instanceof Close) {
-        final Close<?> close = (Close<?>) o;
-
-        return new EqualsBuilder().append(conductor, close.conductor).isEquals();
-      } else {
+      if (o == null || getClass() != o.getClass()) {
         return false;
       }
+
+      final Conductor<?> conductor = (Conductor<?>) o;
+
+      return new EqualsBuilder()
+          .append(timeout, conductor.timeout)
+          .append(syndicate, conductor.syndicate)
+          .append(unit, conductor.unit)
+          .isEquals();
     }
 
-    @Override
-    public String toString() {
-      return "Close{" + "conductor=" + conductor + '}';
+    /**
+     * Executes the given tasks, passes a list of Futures holding their status and results when all
+     * complete to {@link Accepter}. Future.isDone is true for each element of the returned list.
+     * Note that a completed task could have terminated either normally or by throwing an exception.
+     * The results of this method are undefined if the given collection is modified while this
+     * operation is in progress.
+     *
+     * @return the {@link Try} list of Futures holding the status of the tasks
+     */
+    @Contract(" -> new")
+    public @NotNull Try<List<Future<T>>> execute() throws InterruptedException {
+      return Try.of(
+          () -> {
+            if (this.timeout > 0L && Objects.nonNull(this.unit)) {
+              return this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
+            } else {
+              return this.syndicate.es.invokeAll(this.syndicate.taskList);
+            }
+          });
     }
   }
 }

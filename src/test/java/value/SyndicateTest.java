@@ -25,9 +25,7 @@ package value;
 
 import art.cutils.value.Pause;
 import art.cutils.value.Syndicate;
-import art.cutils.value.Syndicate.Close;
 import art.cutils.value.Try;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -76,20 +74,17 @@ final class SyndicateTest {
               })
           .apply()
           .execute()
-          .onComplete(
-              futuresTry -> {
-                Assertions.assertTrue(futuresTry.isSuccess());
-                final List<Future<Object>> futures = futuresTry.get();
-                futures.forEach(
-                    future -> {
-                      try {
-                        Assertions.assertTrue(results.contains(future.get()));
-                      } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                      }
-                      Assertions.assertEquals(futuresTry.get().size(), results.size());
-                    });
-              });
+          .onSuccess(
+              futures ->
+                  futures.forEach(
+                      future -> {
+                        try {
+                          Assertions.assertTrue(results.contains(future.get()));
+                        } catch (InterruptedException | ExecutionException e) {
+                          e.printStackTrace();
+                        }
+                        Assertions.assertEquals(futures.size(), results.size());
+                      }));
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -109,20 +104,17 @@ final class SyndicateTest {
               })
           .apply(1L, TimeUnit.MILLISECONDS)
           .execute()
-          .onComplete(
-              futuresTry -> {
-                Assertions.assertTrue(futuresTry.isSuccess());
-                final List<Future<Object>> futures = futuresTry.get();
-                futures.forEach(
-                    future -> {
-                      try {
-                        Assertions.assertTrue(results.contains(future.get()));
-                      } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                      }
-                      Assertions.assertEquals(futuresTry.get().size(), results.size());
-                    });
-              });
+          .onSuccess(
+              futures ->
+                  futures.forEach(
+                      future -> {
+                        try {
+                          Assertions.assertTrue(results.contains(future.get()));
+                        } catch (InterruptedException | ExecutionException e) {
+                          e.printStackTrace();
+                        }
+                        Assertions.assertEquals(futures.size(), results.size());
+                      }));
 
     } catch (Exception e) {
       Assertions.assertTrue(e instanceof CancellationException);
@@ -133,39 +125,37 @@ final class SyndicateTest {
   void testingProcessingOutSideTryResource() {
     final Try<?> aTry =
         Try.of(
-            () ->
-                Syndicate.init()
-                    .add(() -> numbers.stream().mapToInt(i -> i).sum())
-                    .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
-                    .add(
-                        () -> {
-                          Pause.until(1).seconds().empty();
-                          return "aeroplanes";
-                        })
-                    .apply()
-                    .execute()
-                    .onComplete(
-                        futuresTry -> {
-                          Assertions.assertTrue(futuresTry.isSuccess());
-                          final List<Future<Object>> futures = futuresTry.get();
-                          futures.forEach(
-                              future -> {
-                                try {
-                                  Assertions.assertTrue(results.contains(future.get()));
-                                } catch (InterruptedException | ExecutionException e) {
-                                  e.printStackTrace();
-                                }
-                                Assertions.assertEquals(futuresTry.get().size(), results.size());
-                              });
-                        })
-                    .close());
+            () -> {
+              Syndicate.init()
+                  .add(() -> numbers.stream().mapToInt(i -> i).sum())
+                  .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                  .add(
+                      () -> {
+                        Pause.until(1).seconds().empty();
+                        return "aeroplanes";
+                      })
+                  .apply()
+                  .execute()
+                  .onSuccess(
+                      futures -> {
+                        futures.forEach(
+                            future -> {
+                              try {
+                                Assertions.assertTrue(results.contains(future.get()));
+                              } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                              }
+                              Assertions.assertEquals(futures.size(), results.size());
+                            });
+                      });
+            });
 
     Assertions.assertTrue(aTry.isSuccess());
   }
 
   @Test
-  void testingRetrievalOfResourceOutsideOnComplete() {
-    final @NotNull Try<List<Future<Object>>> aTry =
+  void testingRetrievalOfResourceOutsideOnComplete() throws InterruptedException {
+    final List<Future<Object>> futureList =
         Syndicate.init()
             .add(() -> numbers.stream().mapToInt(i -> i).sum())
             .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
@@ -178,8 +168,8 @@ final class SyndicateTest {
             .execute()
             .get();
 
-    Assertions.assertTrue(aTry.isSuccess());
-    Assertions.assertEquals(3, aTry.get().size());
+    Assertions.assertFalse(futureList.isEmpty());
+    Assertions.assertEquals(3, futureList.size());
   }
 
   @Test
@@ -197,21 +187,17 @@ final class SyndicateTest {
                       })
                   .apply(1L, TimeUnit.MILLISECONDS)
                   .execute()
-                  .onComplete(
-                      futuresTry -> {
-                        Assertions.assertTrue(futuresTry.isSuccess());
-                        final List<Future<Object>> futures = futuresTry.get();
-                        futures.forEach(
-                            future -> {
-                              try {
-                                Assertions.assertTrue(results.contains(future.get()));
-                              } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
-                              }
-                              Assertions.assertEquals(futuresTry.get().size(), results.size());
-                            });
-                      })
-                  .close();
+                  .onSuccess(
+                      futures ->
+                          futures.forEach(
+                              future -> {
+                                try {
+                                  Assertions.assertTrue(results.contains(future.get()));
+                                } catch (InterruptedException | ExecutionException e) {
+                                  e.printStackTrace();
+                                }
+                                Assertions.assertEquals(futures.size(), results.size());
+                              }));
             });
     Assertions.assertTrue(aTry.isFailure());
     Assertions.assertTrue(aTry.getCause() instanceof CancellationException);
@@ -242,11 +228,5 @@ final class SyndicateTest {
     Assertions.assertNotEquals(s2.apply(), s1.apply());
     Assertions.assertNotEquals(s1.apply().toString(), s2.apply().toString());
     Assertions.assertNotEquals(s1.apply().hashCode(), s2.apply().hashCode());
-
-    final Close<?> close = s1.apply().onComplete(futures -> {});
-    Assertions.assertNotEquals(close.toString(), "");
-    Assertions.assertNotEquals(close, s2.apply());
-    Assertions.assertNotEquals(close, s2.apply().onComplete(futures -> {}));
-    Assertions.assertEquals(close, s1.apply().onComplete(futures -> {}));
   }
 }
