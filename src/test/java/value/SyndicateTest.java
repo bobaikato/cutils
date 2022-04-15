@@ -26,9 +26,6 @@ package value;
 import art.cutils.value.Pause;
 import art.cutils.value.Syndicate;
 import art.cutils.value.Try;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +35,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Created by B0BAI on 13 Nov, 2021 */
 final class SyndicateTest {
@@ -61,64 +60,54 @@ final class SyndicateTest {
       };
 
   @Test
-  void testProcessingWithinTryResourceSuccess() {
+  void testProcessingWithinTryResourceSuccess() throws InterruptedException {
 
-    try (final Syndicate<Object> syndicate = Syndicate.init()) {
-      syndicate
-          .add(() -> numbers.stream().mapToInt(i -> i).sum())
-          .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
-          .add(
-              () -> {
-                Pause.until(1).seconds().empty();
-                return "aeroplanes";
-              })
-          .apply()
-          .execute()
-          .onSuccess(
-              futures ->
-                  futures.forEach(
-                      future -> {
-                        try {
-                          Assertions.assertTrue(results.contains(future.get()));
-                        } catch (InterruptedException | ExecutionException e) {
-                          e.printStackTrace();
-                        }
-                        Assertions.assertEquals(futures.size(), results.size());
-                      }));
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    Syndicate.init()
+        .add(() -> numbers.stream().mapToInt(i -> i).sum())
+        .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+        .add(
+            () -> {
+              Pause.until(1).seconds().empty();
+              return "aeroplanes";
+            })
+        .apply()
+        .execute()
+        .onSuccess(
+            futures ->
+                futures.forEach(
+                    future -> {
+                      try {
+                        Assertions.assertTrue(results.contains(future.get()));
+                      } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                      }
+                      Assertions.assertEquals(futures.size(), results.size());
+                    }));
   }
 
   @Test
-  void testProcessingWithinTryResourceWithExceptionThrown() {
-    try (final Syndicate<Object> syndicate = Syndicate.init(Executors.newFixedThreadPool(2))) {
-      syndicate
-          .add(() -> numbers.stream().mapToInt(i -> i).sum())
-          .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
-          .add(
-              () -> {
-                Pause.until(1).seconds().empty();
-                return "aeroplanes";
-              })
-          .apply(1L, TimeUnit.MILLISECONDS)
-          .execute()
-          .onSuccess(
-              futures ->
-                  futures.forEach(
-                      future -> {
-                        try {
-                          Assertions.assertTrue(results.contains(future.get()));
-                        } catch (InterruptedException | ExecutionException e) {
-                          e.printStackTrace();
-                        }
-                        Assertions.assertEquals(futures.size(), results.size());
-                      }));
-
-    } catch (Exception e) {
-      Assertions.assertTrue(e instanceof CancellationException);
-    }
+  void testProcessingWithinTryResourceWithExceptionThrown() throws InterruptedException {
+    Syndicate.init(Executors.newFixedThreadPool(2))
+        .add(() -> numbers.stream().mapToInt(i -> i).sum())
+        .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+        .add(
+            () -> {
+              Pause.until(1).seconds().empty();
+              return "aeroplanes";
+            })
+        .apply(1L, TimeUnit.MILLISECONDS)
+        .execute()
+        .onSuccess(
+            futures ->
+                futures.forEach(
+                    future -> {
+                      try {
+                        Assertions.assertTrue(results.contains(future.get()));
+                      } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                      }
+                      Assertions.assertEquals(futures.size(), results.size());
+                    }));
   }
 
   @Test
