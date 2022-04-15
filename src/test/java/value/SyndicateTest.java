@@ -26,6 +26,9 @@ package value;
 import art.cutils.value.Pause;
 import art.cutils.value.Syndicate;
 import art.cutils.value.Try;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -87,7 +90,7 @@ final class SyndicateTest {
 
   @Test
   void testProcessingWithinTryResourceWithExceptionThrown() throws InterruptedException {
-    Syndicate.init(Executors.newFixedThreadPool(2))
+    Syndicate.init(Executors.newFixedThreadPool(3))
         .add(() -> numbers.stream().mapToInt(i -> i).sum())
         .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
         .add(
@@ -95,7 +98,7 @@ final class SyndicateTest {
               Pause.until(1).seconds().empty();
               return "aeroplanes";
             })
-        .apply(1L, TimeUnit.MILLISECONDS)
+        .apply(4L, TimeUnit.SECONDS)
         .execute()
         .onSuccess(
             futures ->
@@ -126,17 +129,16 @@ final class SyndicateTest {
                   .apply()
                   .execute()
                   .onSuccess(
-                      futures -> {
-                        futures.forEach(
-                            future -> {
-                              try {
-                                Assertions.assertTrue(results.contains(future.get()));
-                              } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
-                              }
-                              Assertions.assertEquals(futures.size(), results.size());
-                            });
-                      });
+                      futures ->
+                          futures.forEach(
+                              future -> {
+                                try {
+                                  Assertions.assertTrue(results.contains(future.get()));
+                                } catch (InterruptedException | ExecutionException e) {
+                                  e.printStackTrace();
+                                }
+                                Assertions.assertEquals(futures.size(), results.size());
+                              }));
             });
 
     Assertions.assertTrue(aTry.isSuccess());
