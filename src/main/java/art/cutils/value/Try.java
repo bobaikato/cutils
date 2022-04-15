@@ -23,15 +23,16 @@
 
 package art.cutils.value;
 
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import art.cutils.function.Dealer;
-import art.cutils.function.Executable;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@link Try} class offers the ability write safe code without focusing on try-catch blocks in
@@ -61,7 +62,7 @@ import org.jetbrains.annotations.NotNull;
  * </ul>
  *
  * @param <T> type
- * @author Bobai Kato
+ * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since v5
  */
 public abstract class Try<T> implements Serializable {
