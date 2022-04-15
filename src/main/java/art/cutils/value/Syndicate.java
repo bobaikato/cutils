@@ -125,8 +125,20 @@ public final class Syndicate<T> implements AutoCloseable {
    * @return new instance of a {@link Conductor}
    */
   @Contract(value = " -> new", pure = true)
-  public @NotNull Conductor<T> execute() {
+  public @NotNull Conductor<T> apply() {
     return new Conductor<>(this);
+  }
+
+  /**
+   * Created the {@link Conductor} to initiate the processing of task in the Syndicate
+   *
+   * @param timeout the maximum time to wait for the tasks to complete
+   * @param unit the time unit of the timeout argument
+   * @return new instance of a {@link Conductor}
+   */
+  @Contract(value = "_, _ -> new", pure = true)
+  public @NotNull Conductor<T> apply(final long timeout, final TimeUnit unit) {
+    return new Conductor<>(this, timeout, unit);
   }
 
   /**
@@ -201,6 +213,8 @@ public final class Syndicate<T> implements AutoCloseable {
     /** Hold the instance of {@link Syndicate} */
     private final Syndicate<T> syndicate;
 
+    private Try<List<Future<T>>> tryFutureList;
+
     /** timeout the maximum time to wait */
     private long timeout = 0L;
 
@@ -214,17 +228,17 @@ public final class Syndicate<T> implements AutoCloseable {
     }
 
     /**
-     * Use this to set processing timeout.
+     * Constructor with the {@link Syndicate} instance.
      *
+     * @param syndicate the instance of {@link Syndicate}
      * @param timeout the maximum time to wait
      * @param unit the time unit of the timeout argument
-     * @return existing instance of a {@link Conductor}
      */
-    @Contract(value = "_, _ -> this", mutates = "this")
-    public Conductor<T> setTimeOut(final long timeout, final TimeUnit unit) {
+    @Contract(pure = true)
+    private Conductor(final Syndicate<T> syndicate, final long timeout, final TimeUnit unit) {
+      this(syndicate);
       this.timeout = timeout;
       this.unit = unit;
-      return this;
     }
 
     /**
@@ -240,25 +254,29 @@ public final class Syndicate<T> implements AutoCloseable {
     @Contract("_ -> new")
     public @NotNull Close<T> onComplete(
         final @NotNull Consumer<Try<List<Future<T>>>> futuresConsumer) {
-      futuresConsumer.accept(this.executeAll());
+      futuresConsumer.accept(this.tryFutureList);
       return new Close<>(this);
     }
 
     /**
-     * Executes the given tasks, passes a list of Futures holding their status and results when all.
+     * Executes the given tasks, passes a list of Futures holding their status and results.
      *
      * @return the {@link Try} list of Futures holding the status of the tasks
      */
     @Contract(" -> new")
-    private @NotNull Try<List<Future<T>>> executeAll() {
-      return Try.of(
-          () -> {
-            if (this.timeout > 0L && Objects.nonNull(this.unit)) {
-              return this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
-            } else {
-              return this.syndicate.es.invokeAll(this.syndicate.taskList);
-            }
-          });
+    public @NotNull Conductor<T> execute() {
+      this.tryFutureList =
+          Try.of(
+              () -> {
+                if (this.timeout > 0L && Objects.nonNull(this.unit)) {
+                  return this.syndicate.es.invokeAll(
+                      this.syndicate.taskList, this.timeout, this.unit);
+                } else {
+                  return this.syndicate.es.invokeAll(this.syndicate.taskList);
+                }
+              });
+
+      return this;
     }
 
     /**
@@ -269,7 +287,7 @@ public final class Syndicate<T> implements AutoCloseable {
      */
     @Contract(pure = true)
     public @NotNull Try<List<Future<T>>> get() {
-      return this.executeAll();
+      return this.tryFutureList;
     }
 
     @Override
