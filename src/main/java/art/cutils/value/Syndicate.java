@@ -29,7 +29,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +38,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * Syndicate simplifies and represent a specific operation of the Executor Service, InvokeAll. Use
@@ -60,7 +58,7 @@ import java.util.function.Consumer;
  * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
-public final class Syndicate<T> implements AutoCloseable {
+public final class Syndicate<T> {
 
   /**
    * An Executor that provides methods to manage termination and methods that can produce a Future
@@ -141,41 +139,6 @@ public final class Syndicate<T> implements AutoCloseable {
     return new Conductor<>(this, timeout, unit);
   }
 
-  /**
-   * Shuts down {@link ExecutorService}, relinquishing any underlying resources. This method is
-   * invoked automatically on objects managed by the {@code try}-with-resources statement.
-   *
-   * @apiNote While this interface method is declared to throw {@code Exception}, implementers are
-   *     <em>strongly</em> encouraged to declare concrete implementations of the {@code close}
-   *     method to throw more specific exceptions, or to throw no exception at all if the close
-   *     operation cannot fail.
-   *     <p>Cases where the close operation may fail require careful attention by implementers. It
-   *     is strongly advised to relinquish the underlying resources and to internally <em>mark</em>
-   *     the resource as closed, prior to throwing the exception. The {@code close} method is
-   *     unlikely to be invoked more than once and so this ensures that the resources are released
-   *     in a timely manner. Furthermore it reduces problems that could arise when the resource
-   *     wraps, or is wrapped, by another resource.
-   *     <p><em>Implementers of this interface are also strongly advised to not have the {@code
-   *     close} method throw {@link InterruptedException}.</em>
-   *     <p>This exception interacts with a thread's interrupted status, and runtime misbehavior is
-   *     likely to occur if an {@code InterruptedException} is {@linkplain Throwable#addSuppressed
-   *     suppressed}.
-   *     <p>More generally, if it would cause problems for an exception to be suppressed, the {@code
-   *     AutoCloseable.close} method should not throw it.
-   *     <p>Note that unlike the {@link Closeable#close close} method of {@link Closeable}, this
-   *     {@code close} method is <em>not</em> required to be idempotent. In other words, calling
-   *     this {@code close} method more than once may have some visible side effect, unlike {@code
-   *     Closeable.close} which is required to have no effect if called more than once.
-   *     <p>However, implementers of this interface are strongly encouraged to make their {@code
-   *     close} methods idempotent.
-   */
-  @Override
-  public void close() {
-    if (!this.es.isTerminated()) {
-      this.es.shutdown();
-    }
-  }
-
   @Override
   public int hashCode() {
     return new HashCodeBuilder(17, 37).append(es).append(taskList).toHashCode();
@@ -200,7 +163,7 @@ public final class Syndicate<T> implements AutoCloseable {
 
   @Override
   public String toString() {
-    return "Syndicate{" + "executorService=" + es + ", callableTaskList=" + taskList + '}';
+    return "Syndicate {" + "executorService=" + es + ", callableTaskList=" + taskList + '}';
   }
 
   /**
@@ -212,8 +175,6 @@ public final class Syndicate<T> implements AutoCloseable {
 
     /** Hold the instance of {@link Syndicate} */
     private final Syndicate<T> syndicate;
-
-    private Try<List<Future<T>>> tryFutureList;
 
     /** timeout the maximum time to wait */
     private long timeout = 0L;
@@ -241,55 +202,6 @@ public final class Syndicate<T> implements AutoCloseable {
       this.unit = unit;
     }
 
-    /**
-     * Executes the given tasks, passes a list of Futures holding their status and results when all
-     * complete to {@link Accepter}. Future.isDone is true for each element of the returned list.
-     * Note that a completed task could have terminated either normally or by throwing an exception.
-     * The results of this method are undefined if the given collection is modified while this
-     * operation is in progress.
-     *
-     * @param futuresConsumer the consumer to accept the list of Futures
-     * @return the {@link Try} list of Futures holding the status of the tasks
-     */
-    @Contract("_ -> new")
-    public @NotNull Close<T> onComplete(
-        final @NotNull Consumer<Try<List<Future<T>>>> futuresConsumer) {
-      futuresConsumer.accept(this.tryFutureList);
-      return new Close<>(this);
-    }
-
-    /**
-     * Executes the given tasks, passes a list of Futures holding their status and results.
-     *
-     * @return the {@link Try} list of Futures holding the status of the tasks
-     */
-    @Contract(" -> new")
-    public @NotNull Conductor<T> execute() {
-      this.tryFutureList =
-          Try.of(
-              () -> {
-                if (this.timeout > 0L && Objects.nonNull(this.unit)) {
-                  return this.syndicate.es.invokeAll(
-                      this.syndicate.taskList, this.timeout, this.unit);
-                } else {
-                  return this.syndicate.es.invokeAll(this.syndicate.taskList);
-                }
-              });
-
-      return this;
-    }
-
-    /**
-     * Get the list of Futures hold the results.
-     *
-     * @implSpec this method also closes the current {@link ExecutorService} running the Syndicate.
-     * @return the {@link Try} list of Futures holding the status of the tasks
-     */
-    @Contract(pure = true)
-    public @NotNull Try<List<Future<T>>> get() {
-      return this.tryFutureList;
-    }
-
     @Override
     public int hashCode() {
       return new HashCodeBuilder(17, 37)
@@ -306,81 +218,38 @@ public final class Syndicate<T> implements AutoCloseable {
         return true;
       }
 
-      if (o instanceof Conductor) {
-        final Conductor<?> conductor = (Conductor<?>) o;
-
-        return new EqualsBuilder()
-            .append(timeout, conductor.timeout)
-            .append(syndicate, conductor.syndicate)
-            .append(unit, conductor.unit)
-            .isEquals();
-      }
-      return false;
-    }
-
-    @Override
-    @Contract(pure = true)
-    public @NotNull String toString() {
-      return "Conductor{"
-          + "syndicate="
-          + syndicate
-          + ", timeout="
-          + timeout
-          + ", unit="
-          + unit
-          + '}';
-    }
-  }
-
-  /**
-   * Represent the operation used to shutdown the current {@link ExecutorService} running the
-   * Syndicate.
-   *
-   * @param <T> the type of the values from the tasks
-   */
-  public static final class Close<T> {
-    /** Existing instance of the Conductor */
-    private final Conductor<T> conductor;
-
-    /**
-     * Constructor to create a new instance of Close.
-     *
-     * @param conductor existing instance of the Conductor
-     */
-    @Contract(pure = true)
-    public Close(final Conductor<T> conductor) {
-      this.conductor = conductor;
-    }
-
-    /** Use to shutdown Thread Manually. */
-    public void close() {
-      this.conductor.syndicate.close();
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37).append(conductor).toHashCode();
-    }
-
-    @Contract(value = "null -> false", pure = true)
-    @Override
-    public boolean equals(final Object o) {
-      if (this == o) {
-        return true;
-      }
-
-      if (o instanceof Close) {
-        final Close<?> close = (Close<?>) o;
-
-        return new EqualsBuilder().append(conductor, close.conductor).isEquals();
-      } else {
+      if (o == null || getClass() != o.getClass()) {
         return false;
       }
+
+      final Conductor<?> conductor = (Conductor<?>) o;
+
+      return new EqualsBuilder()
+          .append(timeout, conductor.timeout)
+          .append(syndicate, conductor.syndicate)
+          .append(unit, conductor.unit)
+          .isEquals();
     }
 
-    @Override
-    public String toString() {
-      return "Close{" + "conductor=" + conductor + '}';
+    /**
+     * Executes the given tasks, passes a list of Futures holding their status and results when all
+     * complete to {@link Accepter}. Future.isDone is true for each element of the returned list.
+     * Note that a completed task could have terminated either normally or by throwing an exception.
+     * The results of this method are undefined if the given collection is modified while this
+     * operation is in progress.
+     *
+     * @return the {@link Try} list of Futures holding the status of the tasks
+     */
+    @Contract(" -> new")
+    public @NotNull Try<List<Future<T>>> execute() throws InterruptedException {
+      return Try.of(
+          () -> {
+            if (this.timeout > 0L && Objects.nonNull(this.unit)) {
+              return this.syndicate.es.invokeAll(this.syndicate.taskList, this.timeout, this.unit);
+            } else {
+              return this.syndicate.es.invokeAll(this.syndicate.taskList);
+            }
+          });
     }
   }
 }
