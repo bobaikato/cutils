@@ -23,6 +23,15 @@
 
 package art.cutils.value;
 
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -31,20 +40,12 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import art.cutils.function.Dealer;
-import art.cutils.function.Executable;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Pause allows you to write a safe an idiomatic expression to pause an execution on the current
  * execution thread.
  *
  * @param <T> type.
- * @author Bobai Kato - https://github.com/B0BAI
+ * @author <a href="https://github.com/B0BAI">B0BAI</a>
  * @since 1.0
  */
 public final class Pause<T> {

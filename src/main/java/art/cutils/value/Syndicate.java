@@ -23,6 +23,12 @@
 
 package art.cutils.value;
 
+import art.cutils.function.Accepter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,11 +40,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import art.cutils.function.Accepter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Syndicate simplifies and represent a specific operation of the Executor Service, InvokeAll. Use
@@ -56,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>}
  *
  * @param <T> the type of the values from the tasks.
- * @author Bobai Kato https://github.com/B0BAI
+ * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
  * @since 1.0
  */
 public final class Syndicate<T> implements AutoCloseable {
