@@ -100,6 +100,36 @@ public final class Pair<F, S> {
   }
 
   /**
+   * Use to set the first and second values.
+   *
+   * @param first first value
+   * @param second second value
+   */
+  @Contract(mutates = "this")
+  public void setFirstAndSecond(final F first, final S second) {
+    this.first = first;
+    this.second = second;
+  }
+
+  /** Reset both values to null. */
+  public void reset() {
+    this.deleteFirst();
+    this.deleteSecond();
+  }
+
+  /** Reset the first value to null. */
+  @Contract(mutates = "this")
+  public void deleteFirst() {
+    this.first = null;
+  }
+
+  /** Reset the second value to null. */
+  @Contract(mutates = "this")
+  public void deleteSecond() {
+    this.second = null;
+  }
+
+  /**
    * Returns the second value.
    *
    * @return the second value
