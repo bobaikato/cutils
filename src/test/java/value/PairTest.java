@@ -93,4 +93,49 @@ class PairTest {
 
     assertNotSame(pair.toString(), pair2.toString());
   }
+
+  @Test
+  void testPairWithNullValues() {
+    final Pair<Integer, String> pair = Pair.of(1, null);
+    assertEquals(1, pair.getFirst());
+    assertNull(pair.getSecond());
+
+    assertTrue(pair.hasFirst());
+    assertFalse(pair.hasSecond());
+
+    assertTrue(pair.isNotEmpty());
+
+    pair.setFirst(null);
+    pair.setSecond("Two");
+
+    assertNull(pair.getFirst());
+    assertEquals("Two", pair.getSecond());
+
+    assertFalse(pair.hasFirst());
+    assertTrue(pair.hasSecond());
+
+    assertTrue(pair.isNotEmpty());
+  }
+
+  @Test
+  void testResetAndDelete() {
+    final Pair<Integer, String> pair = Pair.of(1, "Two");
+    pair.reset();
+    assertNull(pair.getFirst());
+    assertNull(pair.getSecond());
+    assertFalse(pair.hasFirst());
+    assertFalse(pair.hasSecond());
+    assertFalse(pair.isNotEmpty());
+    assertTrue(pair.isEmpty());
+
+    pair.setFirstAndSecond(3, "Four");
+
+    assertEquals(3, pair.getFirst());
+    assertEquals("Four", pair.getSecond());
+
+    assertTrue(pair.hasFirst());
+    assertTrue(pair.hasSecond());
+
+    assertTrue(pair.isNotEmpty());
+  }
 }
