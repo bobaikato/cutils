@@ -23,16 +23,17 @@
 
 package value;
 
+import art.cutils.value.Try;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import art.cutils.value.Try;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 @DisplayName("Try Operation test.")
 final class TryTest {
@@ -61,10 +62,7 @@ final class TryTest {
 
     assertEquals(5, squareRoot.orElseGet(() -> 34));
 
-    final Exception ex =
-        assertThrows(UnsupportedOperationException.class, convertStringToInteger::getCause);
-
-    assertEquals("Operation was successful, without any exception thrown.", ex.getMessage());
+    assertNull(convertStringToInteger.getCause());
   }
 
   @Test
@@ -78,17 +76,13 @@ final class TryTest {
 
     assertFalse(convertStringToInteger.isResult());
 
-    final Exception getEx =
-        assertThrows(UnsupportedOperationException.class, convertStringToInteger::get);
-
-    assertEquals("No result available, operation failed with an exception.", getEx.getMessage());
-
     final Exception mapEx =
         assertThrows(
             UnsupportedOperationException.class,
             () -> convertStringToInteger.map(result -> (int) Math.sqrt(result)));
 
-    assertEquals("No result available, operation failed with an exception.", getEx.getMessage());
+    assertEquals(
+        "No result available to map, operation failed with an exception.", mapEx.getMessage());
 
     assertTrue(convertStringToInteger.getCause() instanceof NumberFormatException);
 
@@ -111,7 +105,12 @@ final class TryTest {
   @Test
   void testForSuccessTryOperationWithoutResult() {
 
-    final Try<?> pause = Try.of(() -> sleep(0));
+    final Try<?> pause =
+        Try.of(
+            () -> {
+              sleep(0);
+              System.out.println();
+            });
 
     assertTrue(pause.isSuccess());
 
@@ -182,71 +181,39 @@ final class TryTest {
 
   @Test
   void supplementaryTryTest() {
-    final Try<?> successTryWithoutResult =
-        Try.of(
-            () -> {
-              Integer.parseInt("25");
-            });
 
     final Exception ex =
         assertThrows(
             IllegalStateException.class,
-            () -> successTryWithoutResult.onSuccess(System.out::println));
+            () ->
+                Try.of(
+                    () -> {
+                      Integer.parseInt("25");
+                    }));
 
     assertEquals("Operation has no result available.", ex.getMessage());
 
-    final Try<?> successTryWithResult = Try.of(() -> Integer.parseInt("25"));
-
-    successTryWithResult.onSuccess(
-        result -> {
-          assertEquals(25, result);
-        });
-
-    successTryWithResult.onSuccessOrElse(
-        result -> {
-          assertEquals(25, result);
-        },
-        () -> {});
-
-    successTryWithResult.onSuccessOrElse(
-        result -> {
-          assertEquals(25, result);
-        },
-        () -> {});
-
-    successTryWithResult.onSuccessOrElse(
-        result -> {
-          assertEquals(25, result);
-        },
-        e -> {
-          // Failed with exception available
-        });
-
-    final Try<?> failTry =
-        Try.of(
+    Try.of(() -> Integer.parseInt("25"))
+        .onSuccess(result -> assertEquals(25, result))
+        .onSuccess(
             () -> {
-              Integer.parseInt("2F");
+              // Execute some code on success
+            })
+        .onFailure(
+            cause -> {
+              // exception here if Try fails.
             });
 
-    failTry.onFailure(
-        e -> {
-          assertTrue(e.getMessage().contains("For input string: \"2F\""));
-        });
-
-    failTry.onFailureOrElse(
-        exception -> {
-          assertTrue(exception.getMessage().contains("For input string: \"2F\""));
-        },
-        () -> {
-          // success story
-        });
-
-    failTry.onFailureOrElse(
-        exception -> {
-          assertTrue(exception.getMessage().contains("For input string: \"2F\""));
-        },
-        result -> {
-          // success story with result available
-        });
+    Try.of(
+            () -> {
+              Integer.parseInt("2F");
+            })
+        .onFailure(e -> assertTrue(e.getMessage().contains("For input string: \"2F\"")))
+        .onFailure(
+            exception -> assertTrue(exception.getMessage().contains("For input string: \"2F\"")))
+        .onFailure(
+            () -> {
+              // Execute some code on failure
+            });
   }
 }
