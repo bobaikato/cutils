@@ -187,9 +187,10 @@ final class TryTest {
             IllegalStateException.class,
             () ->
                 Try.of(
-                    () -> {
-                      Integer.parseInt("25");
-                    }));
+                        () -> {
+                          Integer.parseInt("25");
+                        })
+                    .get());
 
     assertEquals("Operation has no result available.", ex.getMessage());
 
@@ -209,8 +210,6 @@ final class TryTest {
               Integer.parseInt("2F");
             })
         .onFailure(e -> assertTrue(e.getMessage().contains("For input string: \"2F\"")))
-        .onFailure(
-            exception -> assertTrue(exception.getMessage().contains("For input string: \"2F\"")))
         .onFailure(
             () -> {
               // Execute some code on failure
