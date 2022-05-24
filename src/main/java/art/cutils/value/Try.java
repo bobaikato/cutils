@@ -27,6 +27,7 @@ import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -63,7 +64,7 @@ import java.util.function.Supplier;
  *
  * @param <T> type
  * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
- * @since v5
+ * @since v1
  */
 public abstract class Try<T> implements Serializable {
   private static final long serialVersionUID = 4530258067856316628L;
@@ -77,9 +78,9 @@ public abstract class Try<T> implements Serializable {
    * successful.
    *
    * @param operation the operation that will be tried, a variable of {@link Dealer} type.
-   * @param <T>       variable type
+   * @param <T> variable type
    * @return instance of {@link Try} either with a {@link Success} or {@link Failure} state.
-   * @since v5
+   * @since v1
    */
   @Contract("_ -> new")
   public static <T> @NotNull Try<T> of(final Dealer<? extends T> operation) {
@@ -95,9 +96,9 @@ public abstract class Try<T> implements Serializable {
    * Accepts a {@link Executable} type function with no result expected if operation is successful.
    *
    * @param operation the operation that will be tried, a variable of {@link Executable} type.
-   * @param <T>       variable type
+   * @param <T> variable type
    * @return instance of {@link Try} either with a {@link Success} or {@link Failure} state.
-   * @since v5
+   * @since v1
    */
   @Contract("_ -> new")
   public static <T> @NotNull Try<T> of(final Executable operation) {
@@ -114,17 +115,30 @@ public abstract class Try<T> implements Serializable {
    * If try is successful, invoke the specified consumer with the operation result, otherwise do
    * nothing.
    *
-   * @param resultConsumer block of operation to be executed with try result
+   * @param result block of operation to be executed with try result
    * @apiNote an {@link IllegalStateException} will be thrown if the successful try doesn't return
-   * any result.
+   *     any result.
    * @see Success#get()
-   * @since v5
+   * @since v1
+   * @return existing instance of {@link Try}
    */
-  public void onSuccess(final Consumer<? super T> resultConsumer) {
+  public Try<T> onSuccess(final Consumer<? super T> result) {
+    Objects.requireNonNull(result, "Success result Consumer cannot be null.");
     if (this.isSuccess()) {
-      resultConsumer.accept(this.get());
+      result.accept(this.get());
     }
+    return this;
   }
+
+  /**
+   * Use this method to retrieve the try operation result.
+   *
+   * @return try operation result
+   * @throws IllegalStateException Try state is {@link Success} without an available result.
+   * @throws UnsupportedOperationException Try state is {@link Failure} when a try operation fails
+   * @since v1
+   */
+  public abstract T get();
 
   /**
    * Use to check the stage of the try operation.
@@ -135,28 +149,44 @@ public abstract class Try<T> implements Serializable {
   public abstract boolean isSuccess();
 
   /**
-   * Use this method to retrieve the try operation result.
+   * If try is successful, invoke the specified {@link Runnable}.
    *
-   * @return try operation result
-   * @throws IllegalStateException Try state is {@link Success} without an available result.
-   * @throws UnsupportedOperationException Try state is {@link Failure} when a try operation fails
-   * @since v5
+   * @param run the {@link Runnable} to be executed
+   * @return existing instance of {@link Try}
+   * @since v1
    */
-  public abstract T get();
+  public Try<T> onSuccess(final Runnable run) {
+    Objects.requireNonNull(run, "Success Runnable cannot be null.");
+    if (this.isSuccess()) {
+      run.run();
+    }
+    return this;
+  }
 
   /**
    * If try operations fails, invoke the specified consumer with the exception thrown during the
    * execution, otherwise do nothing.
    *
-   * @param exceptionConsumer operation to be executed if a an exception was thrown
+   * @param cause the consumer to accept the cause and executed if an exception was thrown
    * @see Failure#getCause()
-   * @since v5
+   * @since v1
    */
-  public void onFailure(final Consumer<? super Throwable> exceptionConsumer) {
+  public Try<T> onFailure(final Consumer<? super Throwable> cause) {
+    Objects.requireNonNull(cause, "Failure cause Consumer cannot be null.");
     if (this.isFailure()) {
-      exceptionConsumer.accept(this.getCause());
+      cause.accept(this.getCause());
     }
+    return this;
   }
+
+  /**
+   * Retrieve the Cause of try operation failure.
+   *
+   * @return exception thrown during try operation.
+   * @throws UnsupportedOperationException if try operation is successful
+   * @since v1
+   */
+  public abstract Throwable getCause();
 
   /**
    * Use to check the state of the try operation.
@@ -167,95 +197,18 @@ public abstract class Try<T> implements Serializable {
   public abstract boolean isFailure();
 
   /**
-   * Retrieve the Cause of try operation failure.
+   * If try operations fails, invoke the specified {@link Runnable}.
    *
-   * @return exception thrown during try operation.
-   * @throws UnsupportedOperationException if try operation is successful
-   * @since v5
+   * @param run the {@link Runnable} to be executed
+   * @return existing instance of {@link Try}
+   * @since v2
    */
-  public abstract Throwable getCause();
-
-  /**
-   * Perform further operation on successful try {@code result}, if the try fails the second
-   * argument block is executed.
-   *
-   * <p>NOTE: This method will throw an {@link IllegalStateException} if the try operation executed
-   * doesn't return a result. Use {@link Success#isSuccess} instead to check the state of the try
-   * operation.
-   *
-   * @param resultConsumer block of operation of {@link Consumer} type to be executed with try
-   *     result.
-   * @param action block to be executed if try operation fails.
-   * @since v5
-   */
-  public void onSuccessOrElse(final Consumer<? super T> resultConsumer, final Runnable action) {
-    if (this.isSuccess()) {
-      resultConsumer.accept(this.get());
-    } else {
-      action.run();
-    }
-  }
-
-  /**
-   * Perform further operation on successful try {@code result}, if the try fails the second
-   * argument block is executed.
-   *
-   * <p>NOTE: This method will throw an {@link IllegalStateException} if the try operation executed
-   * doesn't return a result. Use {@link Success#isSuccess} instead to check the state of the try
-   * operation.
-   *
-   * @param resultConsumer block of operation of {@link Consumer} type to be executed with try
-   *     result.
-   * @param exceptionConsumer block of operation of {@link Consumer} type to be executed when the
-   *     try operation succeeds.
-   * @since v5
-   */
-  public void onSuccessOrElse(
-      final Consumer<? super T> resultConsumer,
-      final Consumer<? super Throwable> exceptionConsumer) {
-    if (this.isSuccess()) {
-      resultConsumer.accept(this.get());
-    } else {
-      exceptionConsumer.accept(this.getCause());
-    }
-  }
-
-  /**
-   * Perform further operation on a failed try Exception, if the try succeeds, the second argument
-   * block is executed.
-   *
-   * @param exceptionConsumer block of operation of {@link Consumer} type to be executed when the
-   *     try operation succeeds.
-   * @param action block to be executed if try operation fails.
-   * @since v5
-   */
-  public void onFailureOrElse(
-      final Consumer<? super Throwable> exceptionConsumer, final Runnable action) {
+  public Try<T> onFailure(final Runnable run) {
+    Objects.requireNonNull(run, "Failure Runnable cannot be null.");
     if (this.isFailure()) {
-      exceptionConsumer.accept(this.getCause());
-    } else {
-      action.run();
+      run.run();
     }
-  }
-
-  /**
-   * Perform further operation on a failed try Exception, if the try succeeds, the second argument
-   * block is executed.
-   *
-   * @param exceptionConsumer block of operation of {@link Consumer} type to be executed when the
-   *     try operation succeeds.
-   * @param resultConsumer block of operation of {@link Consumer} type to be executed with try
-   *     result.
-   * @since v5
-   */
-  public void onFailureOrElse(
-      final Consumer<? super Throwable> exceptionConsumer,
-      final Consumer<? super T> resultConsumer) {
-    if (this.isFailure()) {
-      exceptionConsumer.accept(this.getCause());
-    } else {
-      resultConsumer.accept(this.get());
-    }
+    return this;
   }
 
   /**
@@ -372,10 +325,9 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
-    @Contract(value = " -> fail", pure = true)
-    public Throwable getCause() {
-      throw new UnsupportedOperationException(
-          "Operation was successful, without any exception thrown.");
+    @Contract(pure = true)
+    public @Nullable Throwable getCause() {
+      return null;
     }
 
     @Override
@@ -430,10 +382,9 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
-    @Contract(value = " -> fail", pure = true)
-    public F get() {
-      throw new UnsupportedOperationException(
-          "No result available, operation failed with an exception.");
+    @Contract(pure = true)
+    public @Nullable F get() {
+      return null;
     }
 
     @Override
