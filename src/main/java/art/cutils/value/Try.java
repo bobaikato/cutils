@@ -25,6 +25,7 @@ package art.cutils.value;
 
 import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
+import art.cutils.function.ThrowingFunction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -50,8 +50,8 @@ import java.util.function.Supplier;
  *
  * <p>Requesting for a result on a successful operation which returns no result or failed operation
  * which has not result will throw an {@link IllegalStateException}, using the {@link
- * Try#map(Function)} will vary depending on the state of the operation ... and so on. Review the
- * methods description for more information.
+ * Try#map(ThrowingFunction)} will vary depending on the state of the operation ... and so on.
+ * Review the methods description for more information.
  *
  * <p>Furthermore, fatal exceptions aren't handle by {@link Try}:
  *
@@ -223,7 +223,7 @@ public abstract class Try<T> implements Serializable {
    * @throws IllegalStateException if a try operation state is {@link Success} but without a result.
    * @throws UnsupportedOperationException if a try operation state is {@link Failure}.
    */
-  public abstract <M> Try<M> map(final Function<? super T, ? extends M> mapper);
+  public abstract <M> Try<M> map(final ThrowingFunction<? super T, ? extends M> mapper);
 
   /**
    * Return the result if try operation is successful and has a result, otherwise return {@code
@@ -331,7 +331,7 @@ public abstract class Try<T> implements Serializable {
     }
 
     @Override
-    public <M> @NotNull Try<M> map(final Function<? super S, ? extends M> mapper) {
+    public <M> @NotNull Try<M> map(final ThrowingFunction<? super S, ? extends M> mapper) {
       Objects.requireNonNull(mapper, "Mapper cannot be null.");
       return Try.of(() -> mapper.apply(this.result));
     }
@@ -396,7 +396,7 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     @Contract(value = "_ -> fail", pure = true)
-    public <M> @NotNull Try<M> map(final Function<? super F, ? extends M> mapper) {
+    public <M> @NotNull Try<M> map(final ThrowingFunction<? super F, ? extends M> mapper) {
       return new Failure<>(this.exception);
     }
 
