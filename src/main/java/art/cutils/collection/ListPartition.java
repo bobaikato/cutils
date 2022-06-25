@@ -23,15 +23,16 @@
 
 package art.cutils.collection;
 
-import static java.lang.String.format;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import static java.lang.String.format;
 
 /**
  * This class provide a means to partition List into List of sublist.
@@ -69,7 +70,7 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
    * Method to receive the list to be partitioned.
    *
    * @param list List to be partitioned.
-   * @param <T>  List type
+   * @param <T> List type
    * @return instance of {@link ListPartition}
    */
   @Contract("_ -> new")
@@ -94,18 +95,18 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
   @Contract(pure = true)
   @Override
   public @NotNull List<T> get(final int index) {
-    final int start = index * sublistSize;
-    final int end = Math.min(start + sublistSize, list.size());
+    final int start = index * this.sublistSize;
+    final int end = Math.min(start + this.sublistSize, this.list.size());
     if (start > end) {
       throw new IndexOutOfBoundsException(
           format("Index %d is out of the list range <0,%d>", index, this.size() - 1));
     }
-    return new ArrayList<>(list.subList(start, end));
+    return new ArrayList<>(this.list.subList(start, end));
   }
 
   @Override
   public int size() {
-    return (int) Math.ceil((double) list.size() / (double) sublistSize);
+    return (int) Math.ceil((double) this.list.size() / (double) this.sublistSize);
   }
 
   @Override
@@ -119,13 +120,13 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
         return false;
       }
       final ListPartition<?> listPartition = (ListPartition<?>) o;
-      return sublistSize == listPartition.sublistSize && list.equals(listPartition.list);
+      return this.sublistSize == listPartition.sublistSize && this.list.equals(listPartition.list);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), list, sublistSize);
+    return Objects.hash(super.hashCode(), this.list, this.sublistSize);
   }
 }

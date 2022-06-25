@@ -23,6 +23,12 @@
 
 package art.cutils.value;
 
+import art.cutils.function.Accepter;
+import art.cutils.function.Dealer;
+import art.cutils.function.Executable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,11 +36,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import art.cutils.function.Accepter;
-import art.cutils.function.Dealer;
-import art.cutils.function.Executable;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
@@ -80,7 +81,7 @@ public final class Que<T> implements Serializable {
    * Operations.
    *
    * @param value {@link Que} value
-   * @param <T>   value Type
+   * @param <T> value Type
    * @return Returns instance of {@link Que}
    */
   @Contract(value = "_ -> new", pure = true)
@@ -92,7 +93,7 @@ public final class Que<T> implements Serializable {
    * This method is a helper method used to create {@link Que} reference of a {@code value}.
    *
    * @param value the {@code value} of the reference
-   * @param <T>   Type of the {@code value}
+   * @param <T> Type of the {@code value}
    * @return an instance of {@link Que}
    * @since 1.0
    */
@@ -106,7 +107,7 @@ public final class Que<T> implements Serializable {
    * instance of {@link Que} for other sequential Operations.
    *
    * @param supplier variable of Type value
-   * @param <T>      Type of value
+   * @param <T> Type of value
    * @return instance of {@link Que}
    */
   @Contract("_ -> new")
@@ -119,7 +120,7 @@ public final class Que<T> implements Serializable {
    * instance of {@link Que} for other sequential Operations.
    *
    * @param dealer variable of Type value
-   * @param <T>    Type of value
+   * @param <T> Type of value
    * @return instance of {@link Que}
    */
   public static <T> @NotNull Que<T> as(final Dealer<? extends T> dealer) throws Exception {
@@ -147,7 +148,6 @@ public final class Que<T> implements Serializable {
    * @param <T> Type of value
    * @return existing or newly created instance of {@link Que}
    */
-  @SuppressWarnings("unchecked")
   private static <T> Que<T> getInstance() {
     if (Objects.isNull(instance)) {
       synchronized (Que.class) {
@@ -248,7 +248,7 @@ public final class Que<T> implements Serializable {
    * @return existing instance of {@link Que}
    * @since 1.0
    */
-  public @NotNull Que<T> andSupply(Supplier<? extends T> supplier) {
+  public @NotNull Que<T> andSupply(final Supplier<? extends T> supplier) {
     Objects.requireNonNull(supplier, "supplier cannot be null");
     return Que.createReference(supplier.get());
   }

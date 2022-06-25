@@ -23,15 +23,19 @@
 
 package art.cutils.security;
 
-import static art.cutils.security.AES.Algorithm.SHA256;
-import static java.security.MessageDigest.getInstance;
-import static java.util.Objects.hash;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.apache.commons.lang3.Validate.isTrue;
+import art.cutils.Serialization;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -45,18 +49,15 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.function.Supplier;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.validation.Valid;
-import art.cutils.Serialization;
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import static art.cutils.security.AES.Algorithm.SHA256;
+import static java.security.MessageDigest.getInstance;
+import static java.util.Objects.hash;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static org.apache.commons.lang3.Validate.isTrue;
 
 /**
  * This is an implementation of Advanced Encryption Standard, to can encrypt and decrypt Objects of
@@ -232,7 +233,7 @@ public final class AES<T> implements Serializable {
     }
 
     final byte[] serializeData = Serialization.serialize(itemToEncrypt);
-    byte[] cipherText = this.cipher.doFinal(serializeData);
+    final byte[] cipherText = this.cipher.doFinal(serializeData);
 
     final ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + cipherText.length);
     byteBuffer.put(iv);
@@ -277,8 +278,8 @@ public final class AES<T> implements Serializable {
 
   @Override
   public int hashCode() {
-    int result = hash(cipher, secretKey);
-    result = 31 * result + Arrays.hashCode(aad);
+    int result = hash(this.cipher, this.secretKey);
+    result = 31 * result + Arrays.hashCode(this.aad);
     return result;
   }
 
@@ -290,8 +291,8 @@ public final class AES<T> implements Serializable {
     }
     if (o instanceof AES) {
       final AES<?> aes = (AES<?>) o;
-      if (cipher.equals(aes.cipher) && secretKey.equals(aes.secretKey)) {
-        return Arrays.equals(aad, aes.aad);
+      if (this.cipher.equals(aes.cipher) && this.secretKey.equals(aes.secretKey)) {
+        return Arrays.equals(this.aad, aes.aad);
       }
       return false;
     }

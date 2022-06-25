@@ -156,7 +156,7 @@ public final class Pair<F, S> {
    */
   @Contract(pure = true)
   public boolean isNotEmpty() {
-    return !isEmpty();
+    return !this.isEmpty();
   }
 
   /**
@@ -211,7 +211,7 @@ public final class Pair<F, S> {
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(first).append(second).toHashCode();
+    return new HashCodeBuilder(17, 37).append(this.first).append(this.second).toHashCode();
   }
 
   @Override
@@ -221,18 +221,21 @@ public final class Pair<F, S> {
       return true;
     }
 
-    if (o == null || getClass() != o.getClass()) {
+    if (o == null || this.getClass() != o.getClass()) {
       return false;
     }
 
     final Pair<?, ?> pair = (Pair<?, ?>) o;
 
-    return new EqualsBuilder().append(first, pair.first).append(second, pair.second).isEquals();
+    return new EqualsBuilder()
+        .append(this.first, pair.first)
+        .append(this.second, pair.second)
+        .isEquals();
   }
 
   @Override
   @Contract(pure = true)
   public @NotNull String toString() {
-    return "Pair{" + "first=" + first + ", second=" + second + '}';
+    return "Pair{" + "first=" + this.first + ", second=" + this.second + '}';
   }
 }

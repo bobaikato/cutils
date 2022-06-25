@@ -41,7 +41,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
- * Pause allows you to write a safe an idiomatic expression to pause an execution on the current
+ * Pause helps you write a safe an idiomatic expression to pause an execution on the current
  * execution thread.
  *
  * @param <T> type.
@@ -68,7 +68,7 @@ public final class Pause<T> {
    * equivalent
    *
    * @param timeOut Number to be interpreted to time
-   * @param <T>     the type of the operation
+   * @param <T> the type of the operation
    * @return an instance of {@link Pause} for subsequent operations.
    */
   @Contract(value = "_ -> new", pure = true)
@@ -141,19 +141,18 @@ public final class Pause<T> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(run);
+    return Objects.hash(this.run);
   }
 
   @Override
   @Contract(value = "null -> false", pure = true)
-
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }
     if (o instanceof Pause) {
       final Pause<?> pause = (Pause<?>) o;
-      return run.equals(pause.run);
+      return this.run.equals(pause.run);
     } else {
       return false;
     }
@@ -198,7 +197,7 @@ public final class Pause<T> {
      * This method chains a {@link Executable} expression that execute after the pause.
      *
      * @param executable this method take an expressions {@link Executable} that has no return
-     *                   value.
+     *     value.
      * @return an instance of {@link Delay} for further operations.
      */
     @Contract("_ -> new")
@@ -229,7 +228,7 @@ public final class Pause<T> {
 
     @Override
     public int hashCode() {
-      return Objects.hash(timeOut, timeUnit);
+      return Objects.hash(this.timeOut, this.timeUnit);
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -240,7 +239,7 @@ public final class Pause<T> {
       }
       if (o instanceof Run) {
         final Run<?> run = (Run<?>) o;
-        return timeOut == run.timeOut && timeUnit == run.timeUnit;
+        return this.timeOut == run.timeOut && this.timeUnit == run.timeUnit;
       } else {
         return false;
       }
@@ -323,7 +322,7 @@ public final class Pause<T> {
 
       @Override
       public int hashCode() {
-        return Objects.hash(tryResult);
+        return Objects.hash(this.tryResult);
       }
 
       @Contract(value = "null -> false", pure = true)
@@ -334,7 +333,7 @@ public final class Pause<T> {
         }
         if (o instanceof Delay) {
           final Delay<?> delay = (Delay<?>) o;
-          return tryResult.equals(delay.tryResult);
+          return this.tryResult.equals(delay.tryResult);
         } else {
           return false;
         }

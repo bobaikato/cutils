@@ -23,7 +23,8 @@
 
 package art.cutils.string;
 
-import static org.apache.commons.lang3.Validate.isTrue;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
@@ -32,8 +33,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import static org.apache.commons.lang3.Validate.isTrue;
 
 /**
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
@@ -174,7 +175,7 @@ public class StringIncubator implements Serializable {
    *
    * @param uppercaseValue the upper case values.
    */
-  public static void setUpper(@NotNull String uppercaseValue) {
+  public static void setUpper(@NotNull final String uppercaseValue) {
     StringIncubator.upper = uppercaseValue.toUpperCase();
   }
 
@@ -203,8 +204,9 @@ public class StringIncubator implements Serializable {
    * @since 1.0
    */
   public String hatch() {
-    IntStream.range(0, buffer.length)
-        .forEachOrdered(idx -> buffer[idx] = symbols[random.nextInt(symbols.length)]);
-    return String.valueOf(buffer);
+    IntStream.range(0, this.buffer.length)
+        .forEachOrdered(
+            idx -> this.buffer[idx] = this.symbols[this.random.nextInt(this.symbols.length)]);
+    return String.valueOf(this.buffer);
   }
 }
