@@ -114,7 +114,7 @@ public final class Syndicate<T> implements AutoCloseable {
    * @return existing instance of {@link Syndicate}
    */
   @Contract("_ -> this")
-  public Syndicate<T> add(Callable<T> callableTask) {
+  public Syndicate<T> add(final Callable<T> callableTask) {
     this.taskList.add(callableTask);
     return this;
   }
@@ -178,7 +178,7 @@ public final class Syndicate<T> implements AutoCloseable {
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(es).append(taskList).toHashCode();
+    return new HashCodeBuilder(17, 37).append(this.es).append(this.taskList).toHashCode();
   }
 
   @Contract(value = "null -> false", pure = true)
@@ -191,8 +191,8 @@ public final class Syndicate<T> implements AutoCloseable {
     if (o instanceof Syndicate) {
       final Syndicate<?> syndicate = (Syndicate<?>) o;
       return new EqualsBuilder()
-          .append(es, syndicate.es)
-          .append(taskList, syndicate.taskList)
+          .append(this.es, syndicate.es)
+          .append(this.taskList, syndicate.taskList)
           .isEquals();
     }
     return false;
@@ -200,7 +200,12 @@ public final class Syndicate<T> implements AutoCloseable {
 
   @Override
   public String toString() {
-    return "Syndicate{" + "executorService=" + es + ", callableTaskList=" + taskList + '}';
+    return "Syndicate{"
+        + "executorService="
+        + this.es
+        + ", callableTaskList="
+        + this.taskList
+        + '}';
   }
 
   /**
@@ -221,12 +226,6 @@ public final class Syndicate<T> implements AutoCloseable {
     /** unit the time unit of the timeout argument */
     private TimeUnit unit;
 
-    // Sealed Constructor
-    @Contract(pure = true)
-    private Conductor(final Syndicate<T> syndicate) {
-      this.syndicate = syndicate;
-    }
-
     /**
      * Constructor with the {@link Syndicate} instance.
      *
@@ -239,6 +238,12 @@ public final class Syndicate<T> implements AutoCloseable {
       this(syndicate);
       this.timeout = timeout;
       this.unit = unit;
+    }
+
+    // Sealed Constructor
+    @Contract(pure = true)
+    private Conductor(final Syndicate<T> syndicate) {
+      this.syndicate = syndicate;
     }
 
     /**
@@ -293,9 +298,9 @@ public final class Syndicate<T> implements AutoCloseable {
     @Override
     public int hashCode() {
       return new HashCodeBuilder(17, 37)
-          .append(syndicate)
-          .append(timeout)
-          .append(unit)
+          .append(this.syndicate)
+          .append(this.timeout)
+          .append(this.unit)
           .toHashCode();
     }
 
@@ -310,9 +315,9 @@ public final class Syndicate<T> implements AutoCloseable {
         final Conductor<?> conductor = (Conductor<?>) o;
 
         return new EqualsBuilder()
-            .append(timeout, conductor.timeout)
-            .append(syndicate, conductor.syndicate)
-            .append(unit, conductor.unit)
+            .append(this.timeout, conductor.timeout)
+            .append(this.syndicate, conductor.syndicate)
+            .append(this.unit, conductor.unit)
             .isEquals();
       }
       return false;
@@ -323,11 +328,11 @@ public final class Syndicate<T> implements AutoCloseable {
     public @NotNull String toString() {
       return "Conductor{"
           + "syndicate="
-          + syndicate
+          + this.syndicate
           + ", timeout="
-          + timeout
+          + this.timeout
           + ", unit="
-          + unit
+          + this.unit
           + '}';
     }
   }
@@ -359,7 +364,7 @@ public final class Syndicate<T> implements AutoCloseable {
 
     @Override
     public int hashCode() {
-      return new HashCodeBuilder(17, 37).append(conductor).toHashCode();
+      return new HashCodeBuilder(17, 37).append(this.conductor).toHashCode();
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -372,7 +377,7 @@ public final class Syndicate<T> implements AutoCloseable {
       if (o instanceof Close) {
         final Close<?> close = (Close<?>) o;
 
-        return new EqualsBuilder().append(conductor, close.conductor).isEquals();
+        return new EqualsBuilder().append(this.conductor, close.conductor).isEquals();
       } else {
         return false;
       }
@@ -380,7 +385,7 @@ public final class Syndicate<T> implements AutoCloseable {
 
     @Override
     public String toString() {
-      return "Close{" + "conductor=" + conductor + '}';
+      return "Close{" + "conductor=" + this.conductor + '}';
     }
   }
 }
