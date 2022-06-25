@@ -131,6 +131,14 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
+   * Use to check the stage of the try operation.
+   *
+   * @return a {@link Boolean} depending on the state: {@code true} if try was successful else
+   *     {@code false} if operation fails.
+   */
+  public abstract boolean isSuccess();
+
+  /**
    * Use this method to retrieve the try operation result.
    *
    * @return try operation result
@@ -139,14 +147,6 @@ public abstract class Try<T> implements Serializable {
    * @since v1
    */
   public abstract T get();
-
-  /**
-   * Use to check the stage of the try operation.
-   *
-   * @return a {@link Boolean} depending on the state: {@code true} if try was successful else
-   *     {@code false} if operation fails.
-   */
-  public abstract boolean isSuccess();
 
   /**
    * If try is successful, invoke the specified {@link Runnable}.
@@ -180,6 +180,14 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
+   * Use to check the state of the try operation.
+   *
+   * @return a {@link Boolean} depending on the state: {@code true} if try operation fails else
+   *     {@code false} if operation was successful..
+   */
+  public abstract boolean isFailure();
+
+  /**
    * Retrieve the Cause of try operation failure.
    *
    * @return exception thrown during try operation.
@@ -187,14 +195,6 @@ public abstract class Try<T> implements Serializable {
    * @since v1
    */
   public abstract Throwable getCause();
-
-  /**
-   * Use to check the state of the try operation.
-   *
-   * @return a {@link Boolean} depending on the state: {@code true} if try operation fails else
-   *     {@code false} if operation was successful..
-   */
-  public abstract boolean isFailure();
 
   /**
    * If try operations fails, invoke the specified {@link Runnable}.
@@ -296,7 +296,7 @@ public abstract class Try<T> implements Serializable {
       }
       if (o instanceof Success) {
         final Success<?> success = (Success<?>) o;
-        return isResult() == success.isResult() && this.result == success.result;
+        return this.isResult() == success.isResult() && this.result == success.result;
       } else {
         return false;
       }
@@ -332,13 +332,8 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     public <M> @NotNull Try<M> map(final Function<? super S, ? extends M> mapper) {
-      Objects.requireNonNull(mapper, "mapper cannot be null");
-
-      if (this.isResult()) {
-        return Try.of(() -> mapper.apply(this.result));
-      }
-
-      throw new IllegalStateException("No result available to map.");
+      Objects.requireNonNull(mapper, "Mapper cannot be null.");
+      return Try.of(() -> mapper.apply(this.result));
     }
 
     @Override
@@ -401,9 +396,8 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     @Contract(value = "_ -> fail", pure = true)
-    public <M> Try<M> map(final Function<? super F, ? extends M> mapper) {
-      throw new UnsupportedOperationException(
-          "No result available to map, operation failed with an exception.");
+    public <M> @NotNull Try<M> map(final Function<? super F, ? extends M> mapper) {
+      return new Failure<>(this.exception);
     }
 
     @Override
@@ -432,7 +426,7 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     public int hashCode() {
-      return Objects.hash(exception);
+      return Objects.hash(this.exception);
     }
 
     @Override
@@ -443,7 +437,7 @@ public abstract class Try<T> implements Serializable {
       }
       if (o instanceof Failure) {
         final Failure<?> failure = (Failure<?>) o;
-        return exception.equals(failure.exception);
+        return this.exception.equals(failure.exception);
       } else {
         return false;
       }

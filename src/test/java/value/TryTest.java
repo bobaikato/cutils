@@ -31,6 +31,7 @@ import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -66,6 +67,34 @@ final class TryTest {
   }
 
   @Test
+  void testTryMapperReturningOriginalFailureCause() {
+    Try.of(() -> Integer.parseInt("0O25"))
+        .map(
+            result -> {
+              assertEquals(25, result);
+              return (int) Math.sqrt(result);
+            })
+        .onFailure(
+            cause -> {
+              assertEquals("For input string: \"0O25\"", cause.getMessage());
+            });
+  }
+
+  @Test
+  void testTryMappingWithoutResult() {
+    Try.of(
+            () -> {
+              Integer.parseInt("025");
+            })
+        .map(result -> Integer.parseInt(String.valueOf(result)))
+        .onFailure(
+            cause -> {
+              assertNotNull(cause);
+              assertEquals("For input string: \"null\"", cause.getMessage());
+            });
+  }
+
+  @Test
   void testForFailedTryOperation() {
 
     final Try<Integer> convertStringToInteger = Try.of(() -> Integer.parseInt("0o25"));
@@ -75,14 +104,6 @@ final class TryTest {
     assertFalse(convertStringToInteger.isSuccess());
 
     assertFalse(convertStringToInteger.isResult());
-
-    final Exception mapEx =
-        assertThrows(
-            UnsupportedOperationException.class,
-            () -> convertStringToInteger.map(result -> (int) Math.sqrt(result)));
-
-    assertEquals(
-        "No result available to map, operation failed with an exception.", mapEx.getMessage());
 
     assertTrue(convertStringToInteger.getCause() instanceof NumberFormatException);
 
@@ -121,15 +142,6 @@ final class TryTest {
     final Exception getEx = assertThrows(IllegalStateException.class, pause::get);
 
     assertEquals("Operation has no result available.", getEx.getMessage());
-
-    final Exception mapEx =
-        assertThrows(
-            IllegalStateException.class,
-            () -> {
-              pause.map(Object::toString);
-            });
-
-    assertEquals("No result available to map.", mapEx.getMessage());
   }
 
   @Test
@@ -212,6 +224,7 @@ final class TryTest {
         .onFailure(e -> assertTrue(e.getMessage().contains("For input string: \"2F\"")))
         .onFailure(
             () -> {
+              System.out.println("Exception thrown");
               // Execute some code on failure
             });
   }
