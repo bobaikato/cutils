@@ -270,12 +270,11 @@ public abstract class Try<T> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
     private final boolean isResult;
 
-    private final transient S result;
+    private S result;
 
     private Success() {
       super();
       this.isResult = false;
-      this.result = null;
     }
 
     private Success(final S result) {
@@ -311,11 +310,7 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(pure = true)
     public S get() {
-      if (this.isResult) {
-        return this.result;
-      }
-
-      throw new IllegalStateException("Operation has no result available.");
+      return this.result;
     }
 
     @Override
@@ -339,13 +334,13 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(pure = true)
     public S orElse(final S other) {
-      return this.get();
+      return this.isResult ? this.result : other;
     }
 
     @Override
     @Contract(pure = true)
     public S orElseGet(final Supplier<? extends S> other) {
-      return this.get();
+      return this.isResult ? this.result : other.get();
     }
 
     @Override
