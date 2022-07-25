@@ -139,9 +139,7 @@ final class TryTest {
 
     assertFalse(pause.isResult());
 
-    final Exception getEx = assertThrows(IllegalStateException.class, pause::get);
-
-    assertEquals("Operation has no result available.", getEx.getMessage());
+    assertNull(pause.get());
   }
 
   @Test
@@ -193,18 +191,6 @@ final class TryTest {
 
   @Test
   void supplementaryTryTest() {
-
-    final Exception ex =
-        assertThrows(
-            IllegalStateException.class,
-            () ->
-                Try.of(
-                        () -> {
-                          Integer.parseInt("25");
-                        })
-                    .get());
-
-    assertEquals("Operation has no result available.", ex.getMessage());
 
     Try.of(() -> Integer.parseInt("25"))
         .onSuccess(result -> assertEquals(25, result))
