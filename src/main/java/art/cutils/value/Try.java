@@ -233,7 +233,7 @@ public abstract class Try<T> implements Serializable {
    * @return the {@code result}, if present, otherwise {@code other}
    * @throws IllegalStateException if a try was successful but returns no result.
    */
-  public abstract T orElse(final T other);
+  public abstract T orElseGet(final T other);
 
   /**
    * Return the result if available after the try operation, otherwise invoke {@code other} and
@@ -333,7 +333,7 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     @Contract(pure = true)
-    public S orElse(final S other) {
+    public S orElseGet(final S other) {
       return this.isResult ? this.result : other;
     }
 
@@ -397,7 +397,7 @@ public abstract class Try<T> implements Serializable {
 
     @Override
     @Contract(value = "_ -> param1", pure = true)
-    public F orElse(final F other) {
+    public F orElseGet(final F other) {
       return other;
     }
 

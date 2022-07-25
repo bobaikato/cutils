@@ -59,7 +59,7 @@ final class TryTest {
     assertTrue(squareRoot.isSuccess());
     assertTrue(squareRoot.isResult());
 
-    assertEquals(5, squareRoot.orElse(24));
+    assertEquals(5, squareRoot.orElseGet(24));
 
     assertEquals(5, squareRoot.orElseGet(() -> 34));
 
@@ -107,7 +107,7 @@ final class TryTest {
 
     assertTrue(convertStringToInteger.getCause() instanceof NumberFormatException);
 
-    assertEquals(25, convertStringToInteger.orElse(25));
+    assertEquals(25, convertStringToInteger.orElseGet(25));
 
     assertEquals(25, convertStringToInteger.orElseGet(() -> 25));
 
