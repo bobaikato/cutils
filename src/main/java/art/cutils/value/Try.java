@@ -227,7 +227,7 @@ public abstract class Try<T> implements Serializable {
 
   /**
    * Return the result if try operation is successful and has a result, otherwise return {@code
-   * other} if try operation fails.
+   * other} value.
    *
    * @param other the value to be returned if there is no result available, it could also be a null.
    * @return the {@code result}, if present, otherwise {@code other}
@@ -236,8 +236,8 @@ public abstract class Try<T> implements Serializable {
   public abstract T orElseGet(final T other);
 
   /**
-   * Return the result if available after the try operation, otherwise invoke {@code other} and
-   * return the result of that invocation.
+   * Return the result if available after the try operation, otherwise invoke supply {@code other}
+   * result
    *
    * @param other a {@link Supplier} block whose result is returned if try fails
    * @return the try result if available otherwise the result of {@code other.get()}
@@ -282,11 +282,13 @@ public abstract class Try<T> implements Serializable {
       this.result = result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
       return Objects.hash(this.isResult(), this.result);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(value = "null -> false", pure = true)
     public boolean equals(final Object o) {
@@ -301,54 +303,64 @@ public abstract class Try<T> implements Serializable {
       }
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public boolean isSuccess() {
       return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public S get() {
       return this.result;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public boolean isFailure() {
       return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public @Nullable Throwable getCause() {
       return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <M> @NotNull Try<M> map(final ThrowingFunction<? super S, ? extends M> mapper) {
       Objects.requireNonNull(mapper, "Mapper cannot be null.");
       return Try.of(() -> mapper.apply(this.result));
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public S orElseGet(final S other) {
       return this.isResult ? this.result : other;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public S orElseGet(final Supplier<? extends S> other) {
+      Objects.requireNonNull(other, "Supplier cannot be null.");
       return this.isResult ? this.result : other.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public <X extends Throwable> S orElseThrow(final Supplier<? extends X> exceptionSupplier) {
       return this.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public boolean isResult() {
@@ -365,47 +377,56 @@ public abstract class Try<T> implements Serializable {
       this.exception = exception;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public boolean isSuccess() {
       return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public @Nullable F get() {
       return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public boolean isFailure() {
       return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public Throwable getCause() {
       return this.exception;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(value = "_ -> fail", pure = true)
     public <M> @NotNull Try<M> map(final ThrowingFunction<? super F, ? extends M> mapper) {
       return new Failure<>(this.exception);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(value = "_ -> param1", pure = true)
     public F orElseGet(final F other) {
       return other;
     }
 
+    /** {@inheritDoc} */
     @Override
     public F orElseGet(final @NotNull Supplier<? extends F> other) {
+      Objects.requireNonNull(other, "Supplier cannot be null.");
       return other.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract("_ -> fail")
     public <X extends Throwable> F orElseThrow(
@@ -413,17 +434,20 @@ public abstract class Try<T> implements Serializable {
       throw exceptionSupplier.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
     public boolean isResult() {
       return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
       return Objects.hash(this.exception);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Contract(value = "null -> false", pure = true)
     public boolean equals(final Object o) {
