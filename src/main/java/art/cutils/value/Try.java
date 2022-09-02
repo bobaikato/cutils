@@ -259,6 +259,15 @@ public abstract class Try<T> implements Serializable {
       throws X;
 
   /**
+   * Return try result if operation was successful, otherwise throw the exception supplied. * @param
+   * throwable The {@link Throwable} which will to be thrown
+   *
+   * @return the present value
+   * @throws IllegalStateException if a try was successful but returns no result.
+   */
+  public abstract T orElseThrow(final Throwable throwable) throws Throwable;
+
+  /**
    * Use to check the state of a successful try operation if or not it has a result.
    *
    * @return a {@link Boolean} depending on the state: {@code true} if try operation was successful
@@ -363,6 +372,13 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
+    public S orElseThrow(final Throwable throwable) {
+      return this.get();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
     public boolean isResult() {
       return this.isResult;
     }
@@ -431,7 +447,15 @@ public abstract class Try<T> implements Serializable {
     @Contract("_ -> fail")
     public <X extends Throwable> F orElseThrow(
         final @NotNull Supplier<? extends X> exceptionSupplier) throws X {
+      Objects.requireNonNull(exceptionSupplier, "Exception supplier cannot be null.");
       throw exceptionSupplier.get();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(value = "_ -> fail", pure = true)
+    public F orElseThrow(final @NotNull Throwable throwable) throws Throwable {
+      throw throwable;
     }
 
     /** {@inheritDoc} */

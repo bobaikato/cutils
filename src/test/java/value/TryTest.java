@@ -121,6 +121,16 @@ final class TryTest {
                   });
             });
     assertEquals("An exception from orElseThrow.", throwEx.getMessage());
+
+    final Exception throwEx2 =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              convertStringToInteger.orElseThrow(
+                  new RuntimeException("An exception from orElseThrow."));
+            });
+
+    assertEquals("An exception from orElseThrow.", throwEx2.getMessage());
   }
 
   @Test
