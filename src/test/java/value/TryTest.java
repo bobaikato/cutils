@@ -126,11 +126,10 @@ final class TryTest {
         assertThrows(
             RuntimeException.class,
             () -> {
-              convertStringToInteger.orElseThrow(
-                  new RuntimeException("An exception from orElseThrow."));
+              convertStringToInteger.orElseThrow(new Exception("An exception from orElseThrow."));
             });
 
-    assertEquals("An exception from orElseThrow.", throwEx2.getMessage());
+    assertEquals("java.lang.Exception: An exception from orElseThrow.", throwEx2.getMessage());
   }
 
   @Test
