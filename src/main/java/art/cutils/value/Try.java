@@ -265,7 +265,7 @@ public abstract class Try<T> implements Serializable {
    * @return the present value
    * @throws IllegalStateException if a try was successful but returns no result.
    */
-  public abstract T orElseThrow(final Throwable throwable) throws Throwable;
+  public abstract T orElseThrow(final Throwable throwable);
 
   /**
    * Use to check the state of a successful try operation if or not it has a result.
@@ -454,8 +454,12 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(value = "_ -> fail", pure = true)
-    public F orElseThrow(final @NotNull Throwable throwable) throws Throwable {
-      throw throwable;
+    public F orElseThrow(final @NotNull Throwable throwable) {
+      try {
+        throw throwable;
+      } catch (final Throwable ex) {
+        throw new RuntimeException(ex);
+      }
     }
 
     /** {@inheritDoc} */
