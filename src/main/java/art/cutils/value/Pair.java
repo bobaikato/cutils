@@ -93,10 +93,12 @@ public final class Pair<F, S> {
    * Use to set the first value.
    *
    * @param first first value
+   * @return current instance of {@link Pair}
    */
   @Contract(mutates = "this")
-  public void setFirst(final F first) {
+  public Pair<F, S> first(final F first) {
     this.first = first;
+    return this;
   }
 
   /**
@@ -111,22 +113,35 @@ public final class Pair<F, S> {
     this.second = second;
   }
 
-  /** Reset both values to null. */
-  public void reset() {
-    this.deleteFirst();
-    this.deleteSecond();
+  /**
+   * Remove both values to null from the {@link Pair}.
+   *
+   * @return current instance of {@link Pair}
+   */
+  public Pair<F, S> clear() {
+    return this.deleteFirst().deleteSecond();
   }
 
-  /** Reset the first value to null. */
+  /**
+   * Reset the first value to null.
+   *
+   * @return current instance of {@link Pair}
+   */
   @Contract(mutates = "this")
-  public void deleteFirst() {
+  public Pair<F, S> deleteFirst() {
     this.first = null;
+    return this;
   }
 
-  /** Reset the second value to null. */
+  /**
+   * Reset the second value to null.
+   *
+   * @return current instance of {@link Pair}
+   */
   @Contract(mutates = "this")
-  public void deleteSecond() {
+  public Pair<F, S> deleteSecond() {
     this.second = null;
+    return this;
   }
 
   /**
@@ -140,13 +155,26 @@ public final class Pair<F, S> {
   }
 
   /**
+   * Swap the first and second values.
+   *
+   * @implNote A new instance of {@link Pair} will be created.
+   * @return instance of {@link Pair} with swapped values
+   */
+  @Contract(value = " -> new", pure = true)
+  public @NotNull Pair<S, F> swap() {
+    return Pair.of(this.second, this.first);
+  }
+
+  /**
    * Use to set the second value.
    *
    * @param second second value
+   * @return current instance of {@link Pair}
    */
   @Contract(mutates = "this")
-  public void setSecond(final S second) {
+  public Pair<F, S> second(final S second) {
     this.second = second;
+    return this;
   }
 
   /**
