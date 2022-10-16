@@ -24,56 +24,47 @@
 package value;
 
 import art.cutils.value.Pair;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PairTest {
 
   @Test
   void testPairWithInitialValueOnCreation() {
     final Pair<Integer, String> pair = Pair.of(1, "Two");
-    assertEquals(1, pair.getFirst());
-    assertEquals("Two", pair.getSecond());
+    Assertions.assertEquals(1, pair.getFirst());
+    Assertions.assertEquals("Two", pair.getSecond());
 
-    assertTrue(pair.hasFirst());
-    assertTrue(pair.hasSecond());
+    Assertions.assertTrue(pair.hasFirst());
+    Assertions.assertTrue(pair.hasSecond());
 
-    assertTrue(pair.isNotEmpty());
+    Assertions.assertTrue(pair.isNotEmpty());
   }
 
   @Test
   void testInitialEmptyPair() {
-    final Pair pair = Pair.empty();
+    final Pair<Integer, String> pair = Pair.empty();
 
-    assertNull(pair.getFirst());
-    assertNull(pair.getSecond());
+    Assertions.assertNull(pair.getFirst());
+    Assertions.assertNull(pair.getSecond());
 
-    assertFalse(pair.hasFirst());
-    assertFalse(pair.hasSecond());
+    Assertions.assertFalse(pair.hasFirst());
+    Assertions.assertFalse(pair.hasSecond());
 
-    assertFalse(pair.isNotEmpty());
+    Assertions.assertFalse(pair.isNotEmpty());
 
-    assertTrue(pair.notHasFirst());
-    assertTrue(pair.notHasSecond());
+    Assertions.assertTrue(pair.notHasFirst());
+    Assertions.assertTrue(pair.notHasSecond());
 
-    assertTrue(pair.isEmpty());
+    Assertions.assertTrue(pair.isEmpty());
 
-    pair.setFirst(1);
-    pair.setSecond("Two");
+    Assertions.assertEquals(1, pair.first(1).second("Two").getFirst());
+    Assertions.assertEquals("Two", pair.getSecond());
 
-    assertEquals(1, pair.getFirst());
-    assertEquals("Two", pair.getSecond());
+    Assertions.assertTrue(pair.hasFirst());
+    Assertions.assertTrue(pair.hasSecond());
 
-    assertTrue(pair.hasFirst());
-    assertTrue(pair.hasSecond());
-
-    assertTrue(pair.isNotEmpty());
+    Assertions.assertTrue(pair.isNotEmpty());
   }
 
   @Test
@@ -81,61 +72,66 @@ class PairTest {
     final Pair<Integer, String> pair = Pair.of(1, "Two");
     final Pair<String, String> pair2 = Pair.of("One", "Two");
 
-    assertNotEquals(pair, pair2);
+    Assertions.assertNotEquals(pair, pair2);
 
-    assertFalse(pair.equals(null) && pair.equals(new Object()));
+    Assertions.assertFalse(pair.equals(null) && pair.equals(new Object()));
 
-    assertEquals(pair, Pair.of(1, "Two"));
+    Assertions.assertEquals(pair, Pair.of(1, "Two"));
 
-    assertEquals(pair.hashCode(), Pair.of(1, "Two").hashCode());
+    Assertions.assertEquals(pair.hashCode(), Pair.of(1, "Two").hashCode());
 
-    assertNotEquals(pair.hashCode(), pair2.hashCode());
+    Assertions.assertNotEquals(pair.hashCode(), pair2.hashCode());
 
-    assertNotSame(pair.toString(), pair2.toString());
+    Assertions.assertNotSame(pair.toString(), pair2.toString());
+  }
+
+  @Test
+  void testPairSwapping(){
+    final Pair<Integer, String> pair = Pair.of(1, "Two");
+    final Pair<String, Integer> pair2 = Pair.of("Two", 1);
+
+    Assertions.assertEquals(pair2, pair.swap());
   }
 
   @Test
   void testPairWithNullValues() {
     final Pair<Integer, String> pair = Pair.of(1, null);
-    assertEquals(1, pair.getFirst());
-    assertNull(pair.getSecond());
+    Assertions.assertEquals(1, pair.getFirst());
+    Assertions.assertNull(pair.getSecond());
 
-    assertTrue(pair.hasFirst());
-    assertFalse(pair.hasSecond());
+    Assertions.assertTrue(pair.hasFirst());
+    Assertions.assertFalse(pair.hasSecond());
 
-    assertTrue(pair.isNotEmpty());
+    Assertions.assertTrue(pair.isNotEmpty());
 
-    pair.setFirst(null);
-    pair.setSecond("Two");
+    Assertions.assertNull(pair.first(null).getFirst());
+    Assertions.assertEquals("Two", pair.second("Two").getSecond());
 
-    assertNull(pair.getFirst());
-    assertEquals("Two", pair.getSecond());
+    Assertions.assertFalse(pair.hasFirst());
+    Assertions.assertTrue(pair.hasSecond());
 
-    assertFalse(pair.hasFirst());
-    assertTrue(pair.hasSecond());
-
-    assertTrue(pair.isNotEmpty());
+    Assertions.assertTrue(pair.isNotEmpty());
   }
 
   @Test
   void testResetAndDelete() {
     final Pair<Integer, String> pair = Pair.of(1, "Two");
-    pair.reset();
-    assertNull(pair.getFirst());
-    assertNull(pair.getSecond());
-    assertFalse(pair.hasFirst());
-    assertFalse(pair.hasSecond());
-    assertFalse(pair.isNotEmpty());
-    assertTrue(pair.isEmpty());
+
+    Assertions.assertNull(pair.clear().getFirst());
+    Assertions.assertNull(pair.getSecond());
+    Assertions.assertFalse(pair.hasFirst());
+    Assertions.assertFalse(pair.hasSecond());
+    Assertions.assertFalse(pair.isNotEmpty());
+    Assertions.assertTrue(pair.isEmpty());
 
     pair.setFirstAndSecond(3, "Four");
 
-    assertEquals(3, pair.getFirst());
-    assertEquals("Four", pair.getSecond());
+    Assertions.assertEquals(3, pair.getFirst());
+    Assertions.assertEquals("Four", pair.getSecond());
 
-    assertTrue(pair.hasFirst());
-    assertTrue(pair.hasSecond());
+    Assertions.assertTrue(pair.hasFirst());
+    Assertions.assertTrue(pair.hasSecond());
 
-    assertTrue(pair.isNotEmpty());
+    Assertions.assertTrue(pair.isNotEmpty());
   }
 }
