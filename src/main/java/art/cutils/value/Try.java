@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -147,6 +148,16 @@ public abstract class Try<T> implements Serializable {
    * @since v1
    */
   public abstract T get();
+
+  /**
+   * Use this method to retrieve the try operation {@link Optional} result.
+   *
+   * @return try operation {@link Optional} result.
+   * @throws IllegalStateException Try state is {@link Success} without an available result.
+   * @throws UnsupportedOperationException Try state is {@link Failure} when a try operation fails
+   * @since v1
+   */
+  public abstract Optional<T> getOptional();
 
   /**
    * If try is successful, invoke the specified {@link Runnable}.
@@ -329,6 +340,13 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
+    public Optional<S> getOptional() {
+      return Optional.ofNullable(this.result);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
     public boolean isFailure() {
       return false;
     }
@@ -405,6 +423,13 @@ public abstract class Try<T> implements Serializable {
     @Contract(pure = true)
     public @Nullable F get() {
       return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
+    public Optional<F> getOptional() {
+      return Optional.empty();
     }
 
     /** {@inheritDoc} */
