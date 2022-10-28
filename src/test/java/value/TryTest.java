@@ -133,6 +133,21 @@ final class TryTest {
   }
 
   @Test
+  void testOptionalReturnValue() {
+    final Try<Integer> convertStringToInteger = Try.of(() -> Integer.parseInt("25"));
+
+    assertTrue(convertStringToInteger.isResult());
+    assertTrue(convertStringToInteger.getOptional().isPresent());
+
+    convertStringToInteger
+        .getOptional()
+        .ifPresent(
+            result -> {
+              assertEquals(25, result);
+            });
+  }
+
+  @Test
   void testForSuccessTryOperationWithoutResult() {
 
     final Try<?> pause =
