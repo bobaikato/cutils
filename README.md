@@ -2,8 +2,6 @@
 
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
 [![Build & Test](https://github.com/B0BAI/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/B0BAI/cutils/actions/workflows/maven.yml)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/B0BAI/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/B0BAI/cutils/context:java)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/B0BAI/cutils.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/B0BAI/cutils/alerts/)
 [![codebeat badge](https://codebeat.co/badges/0938a891-4a79-4966-b914-e07720cd1771)](https://codebeat.co/projects/github-com-b0bai-cutils-master)
 [![Release](https://github.com/B0BAI/cutils/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/B0BAI/cutils/actions/workflows/maven-publish.yml)
 
