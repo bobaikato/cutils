@@ -23,10 +23,6 @@
 
 package value;
 
-import art.cutils.value.Try;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -35,6 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import art.cutils.value.Try;
+import java.util.Objects;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("Try Operation test.")
 final class TryTest {
@@ -47,6 +48,10 @@ final class TryTest {
     assertTrue(convertStringToInteger.isSuccess());
 
     assertFalse(convertStringToInteger.isFailure());
+
+    assertEquals(convertStringToInteger.filter(Objects::nonNull), convertStringToInteger);
+
+    assertNotEquals(convertStringToInteger.filter(Objects::isNull), convertStringToInteger);
 
     assertTrue(convertStringToInteger.isResult());
 
@@ -104,6 +109,8 @@ final class TryTest {
     assertFalse(convertStringToInteger.isSuccess());
 
     assertFalse(convertStringToInteger.isResult());
+
+    assertEquals(convertStringToInteger.filter(Objects::nonNull), convertStringToInteger);
 
     assertTrue(convertStringToInteger.getCause() instanceof NumberFormatException);
 
