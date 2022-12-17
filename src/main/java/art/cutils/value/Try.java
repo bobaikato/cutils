@@ -26,15 +26,15 @@ package art.cutils.value;
 import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
 import art.cutils.function.ThrowingFunction;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link Try} class offers the ability write safe code without focusing on try-catch blocks in
@@ -50,9 +50,9 @@ import java.util.function.Supplier;
  * </ul>
  *
  * <p>Requesting for a result on a successful operation which returns no result or failed operation
- * which has not result will throw an {@link IllegalStateException}, using the {@link
+ * which has not resulted will throw an {@link IllegalStateException}, using the {@link
  * Try#map(ThrowingFunction)} will vary depending on the state of the operation ... and so on.
- * Review the methods description for more information.
+ * Review the method description for more information.
  *
  * <p>Furthermore, fatal exceptions aren't handle by {@link Try}:
  *
@@ -148,6 +148,17 @@ public abstract class Try<T> implements Serializable {
    * @since v1
    */
   public abstract T get();
+
+  /**
+   * If a result is present, and the result matches the given predicate, returns a {@code Try}
+   * describing the result, otherwise returns an empty {@link Try}
+   *
+   * @param predicate the predicate to apply to a result, if present
+   * @return an {@link Try} describing the value of this {@link Try}, if a result is present and the
+   *     result matches the given predicate, otherwise an empty {@link Try}
+   * @throws NullPointerException if the predicate is {@code null}
+   */
+  public abstract Try<T> filter(Predicate<? super T> predicate);
 
   /**
    * Use this method to retrieve the try operation {@link Optional} result.
@@ -339,6 +350,17 @@ public abstract class Try<T> implements Serializable {
 
     /** {@inheritDoc} */
     @Override
+    public Try<S> filter(final Predicate<? super S> predicate) {
+      Objects.requireNonNull(predicate, "Predicate cannot be null.");
+      if (isResult()) {
+        return predicate.test(this.result) ? this : new Success<>();
+      } else {
+        return this;
+      }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     @Contract(pure = true)
     public Optional<S> getOptional() {
       return Optional.ofNullable(this.result);
@@ -423,6 +445,13 @@ public abstract class Try<T> implements Serializable {
     @Contract(pure = true)
     public @Nullable F get() {
       return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(value = "_ -> this", pure = true)
+    public Try<F> filter(final Predicate<? super F> predicate) {
+      return this;
     }
 
     /** {@inheritDoc} */
