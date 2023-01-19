@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  * unique parameters and the result and served whenever needed.
  *
  * @param <T> the result type
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @see Function
  * @see LazyFunction
  * @since 1.0

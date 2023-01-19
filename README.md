@@ -1,9 +1,9 @@
 ## CUTILS ART
 
 [![License](https://img.shields.io/github/license/honerfor/cutils)](#License)
-[![Build & Test](https://github.com/B0BAI/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/B0BAI/cutils/actions/workflows/maven.yml)
+[![Build & Test](https://github.com/bobaikato/cutils/actions/workflows/maven.yml/badge.svg)](https://github.com/bobaikato/cutils/actions/workflows/maven.yml)
 [![codebeat badge](https://codebeat.co/badges/0938a891-4a79-4966-b914-e07720cd1771)](https://codebeat.co/projects/github-com-b0bai-cutils-master)
-[![Release](https://github.com/B0BAI/cutils/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/B0BAI/cutils/actions/workflows/maven-publish.yml)
+[![Release](https://github.com/bobaikato/cutils/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/bobaikato/cutils/actions/workflows/maven-publish.yml)
 
 A package of utility classes intended to enhance and simplify my development — You need `Java 8+`. You can browse the [Javadocs](https://javadoc.io/doc/art.cutils/cutils). If you have any questions related to usage, simple open an issue.
 

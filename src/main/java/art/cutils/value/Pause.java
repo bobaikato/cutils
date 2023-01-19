@@ -45,7 +45,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * execution thread.
  *
  * @param <T> type.
- * @author <a href="https://github.com/B0BAI">B0BAI</a>
+ * @author <a href="https://github.com/bobaikato">B0BAI</a>
  * @since 1.0
  */
 public final class Pause<T> {
