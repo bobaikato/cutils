@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
  * and the result and served whenever needed and hence improving the performance.
  *
  * @param <T> the type value
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @see Supplier
  * @see Dealer
  * @since 1.0

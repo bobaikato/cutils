@@ -23,6 +23,7 @@
 
 package art.cutils.value;
 
+import art.cutils.function.Accepter;
 import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
 import art.cutils.function.ThrowingFunction;
@@ -64,7 +65,7 @@ import org.jetbrains.annotations.Nullable;
  * </ul>
  *
  * @param <T> type
- * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @since v1
  */
 public abstract class Try<T> implements Serializable {
@@ -142,7 +143,7 @@ public abstract class Try<T> implements Serializable {
   /**
    * Use this method to retrieve the try operation result.
    *
-   * @return try operation result
+   * @return the try operation result
    * @throws IllegalStateException Try state is {@link Success} without an available result.
    * @throws UnsupportedOperationException Try state is {@link Failure} when a try operation fails
    * @since v1
@@ -158,7 +159,21 @@ public abstract class Try<T> implements Serializable {
    *     result matches the given predicate, otherwise an empty {@link Try}
    * @throws NullPointerException if the predicate is {@code null}
    */
-  public abstract Try<T> filter(Predicate<? super T> predicate);
+  public abstract Try<T> filter(final Predicate<? super T> predicate);
+
+  /**
+   * Safely, performing an action on the current try result if present. Unlike {@link
+   * Try#map(ThrowingFunction)} this method will not affect the current {@link Try} results.
+   *
+   * <p>operation. The same result will be returned with the {@link Try} instance.
+   *
+   * @implSpec Use this method instead {@link Try#onSuccess(Runnable)} to safely perform an action
+   *     on the result.
+   * @implNote if the current try is a {@link Failure} it will return a new {@link Failure} instance
+   * @param acceptor the action to be performed on the result if present.
+   * @return a {@link Try} consisting of the Result, if a result is present, otherwise an empty
+   */
+  public abstract Try<T> peek(final Accepter<? super T> acceptor);
 
   /**
    * Use this method to retrieve the try operation {@link Optional} result.
@@ -362,6 +377,21 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
+    public @Nullable Try<S> peek(final Accepter<? super S> acceptor) {
+      Objects.requireNonNull(acceptor, "Accepter cannot be null.");
+      if (this.isResult()) {
+        try {
+          acceptor.accept(this.result);
+        } catch (final Throwable cause) {
+          return new Failure<>(cause);
+        }
+      }
+      return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
     public Optional<S> getOptional() {
       return Optional.ofNullable(this.result);
     }
@@ -451,6 +481,17 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(value = "_ -> this", pure = true)
     public Try<F> filter(final Predicate<? super F> predicate) {
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @implNote No operation is performed because on {@link Failure} no result is present.
+     */
+    @Override
+    @Contract(value = "_ -> this", pure = true)
+    public Try<F> peek(final Accepter<? super F> acceptor) {
       return this;
     }
 

@@ -64,7 +64,7 @@ import static org.apache.commons.lang3.Validate.isTrue;
  * any type.
  *
  * @param <T> Type of value
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @since 1.0
  */
 public final class AES<T> implements Serializable {

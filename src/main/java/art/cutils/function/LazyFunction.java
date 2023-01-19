@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the result type
  * @param <R> the return type
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @see Function
  * @since 1.0
  */

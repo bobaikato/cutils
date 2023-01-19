@@ -52,7 +52,7 @@ import static org.apache.commons.lang3.Validate.isTrue;
  * StringIncubator tickets = new StringIncubator(23, new SecureRandom(), symbol);
  * </code>
  *
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @author Erickson (https://stackoverflow.com/users/3474/erickson)
  * @since 1.0
  */

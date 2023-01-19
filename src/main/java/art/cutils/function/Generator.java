@@ -30,7 +30,7 @@ package art.cutils.function;
  * same behavior as the {@link Dealer} and {@link Runnable}.
  *
  * @param <T> type of value.
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @see Runnable
  * @see Dealer
  * @since 1.0

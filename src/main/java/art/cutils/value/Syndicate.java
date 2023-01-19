@@ -57,7 +57,7 @@ import java.util.function.Consumer;
  * <p>}
  *
  * @param <T> the type of the values from the tasks.
- * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @since 1.0
  */
 public final class Syndicate<T> implements AutoCloseable {

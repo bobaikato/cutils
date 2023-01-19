@@ -79,6 +79,10 @@ final class TryTest {
               assertEquals(25, result);
               return (int) Math.sqrt(result);
             })
+        .peek(
+            result -> {
+              // ignored
+            })
         .onFailure(
             cause -> {
               assertEquals("For input string: \"0O25\"", cause.getMessage());
@@ -137,6 +141,34 @@ final class TryTest {
             });
 
     assertEquals("java.lang.Exception: An exception from orElseThrow.", throwEx2.getMessage());
+  }
+
+  @Test
+  void testTryPeekSuccess() {
+    final int sameResult =
+        Try.of(() -> Integer.parseInt("0025"))
+            .peek(result -> assertEquals(25, result))
+            .onFailure(
+                cause -> {
+                  // ignored
+                })
+            .get();
+
+    assertEquals(25, sameResult);
+  }
+  // test PeekFailure
+  @Test
+  void testTryPeekFailureAffectingTryState() {
+    final int finalResult =
+        Try.of(() -> Integer.parseInt("030"))
+            .peek(result -> Integer.parseInt("o" + result))
+            .onFailure(
+                cause -> {
+                  assertEquals("For input string: \"o30\"", cause.getMessage());
+                })
+            .orElseGet(100);
+
+    assertEquals(100, finalResult);
   }
 
   @Test

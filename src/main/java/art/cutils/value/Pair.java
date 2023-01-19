@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <F> first value type
  * @param <S> second value type
- * @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @since 2.0
  */
 public final class Pair<F, S> {

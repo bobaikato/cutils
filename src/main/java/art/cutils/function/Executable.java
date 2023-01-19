@@ -27,7 +27,7 @@ package art.cutils.function;
  * Represent operations that need the {@link Runnable} like behavior. Use the {@link Executable} for
  * operation that may throw and {@link Exception}
  *
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @see Runnable
  * @since 1.0
  */

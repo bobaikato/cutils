@@ -27,7 +27,7 @@ package art.cutils.function;
  * Represents an operation that returns a condition/boolean. whose functional method is {@link
  * #isMet()}.
  *
- * @author @author <a href="https://github.com/B0BAI">Bobai Kato</a>
+ * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>
  * @since 1.0
  */
 @FunctionalInterface
