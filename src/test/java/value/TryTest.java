@@ -277,4 +277,50 @@ final class TryTest {
               // Execute some code on failure
             });
   }
+
+  @Test
+  void test_try_with_result_states() {
+    Try<Integer> t1 = Try.of(() -> Integer.parseInt("25")).filter(Objects::nonNull);
+
+    assertTrue(t1.isActive());
+
+    t1.filter(result -> result > 0);
+    assertTrue(t1.isActive());
+
+    Try<Integer> t2 = t1.filter(result -> result < 0); // condition is not met
+
+    assertNotEquals(t1, t2); // t1 is still active
+
+    assertFalse(t2.isActive()); // t2 is now passive
+    assertTrue(t2.isPassive()); // t2 is now passive
+    assertFalse(t2.isResult()); // t2 no longer has a result
+    assertTrue(t2.isSuccess()); // t2  is still a success
+
+    t2.map(result -> result + 1); // t2 is still passive
+    assertTrue(t2.get() == null);
+  }
+
+  @Test
+  void test_try_without_result_states() {
+    Try<?> t1 =
+        Try.of(
+            () -> {
+              Integer.parseInt("25");
+            });
+
+    assertTrue(t1.isActive());
+
+    Try<?> t2 = t1.filter(Objects::isNull); // condition is met
+
+    assertEquals(t1, t2);
+
+    assertTrue(t1.isActive());
+
+    t2 = t1.filter(Objects::nonNull); // condition is not met
+
+    assertTrue(t2.isActive()); // t2 is still active
+    assertFalse(t2.isPassive()); // t2 not passive
+    assertFalse(t2.isResult()); // t2 still no longer has a result
+    assertTrue(t2.isSuccess()); // t1  is still a success
+  }
 }

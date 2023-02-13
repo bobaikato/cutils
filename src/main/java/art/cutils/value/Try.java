@@ -141,6 +141,33 @@ public abstract class Try<T> implements Serializable {
   public abstract boolean isSuccess();
 
   /**
+   * Try is active if operation isn't failed or filter condition is not met.
+   *
+   * @return a {@link Boolean} depending on the state: {@code true} if try is active else {@code
+   *     false}
+   * @see Try#filter(Predicate)
+   * @see Try#isFailure()
+   * @see Try#isSuccess()
+   * @since v2.4
+   */
+  public abstract boolean isActive();
+
+  /**
+   * Try is passive if operation is failed or filter condition is met.
+   *
+   * @implSpec default implementation of {@link Try#isPassive()} is {@code !isActive()}
+   * @return a {@link Boolean} depending on the state: {@code true} if try is passive else {@code
+   *     false}
+   * @see Try#filter(Predicate)
+   * @see Try#isFailure()
+   * @see Try#isSuccess()
+   * @since v2.4
+   */
+  public boolean isPassive() {
+    return !isActive();
+  }
+
+  /**
    * Use this method to retrieve the try operation result.
    *
    * @return the try operation result
@@ -158,6 +185,7 @@ public abstract class Try<T> implements Serializable {
    * @return an {@link Try} describing the value of this {@link Try}, if a result is present and the
    *     result matches the given predicate, otherwise an empty {@link Try}
    * @throws NullPointerException if the predicate is {@code null}
+   * @since v2.4
    */
   public abstract Try<T> filter(final Predicate<? super T> predicate);
 
@@ -315,17 +343,23 @@ public abstract class Try<T> implements Serializable {
   private static class Success<S> extends Try<S> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
     private final boolean isResult;
-
     private S result;
 
-    private Success() {
-      super();
-      this.isResult = false;
+    private boolean isActive = true;
+
+    private Success(final boolean isActive) {
+      this();
+      this.isActive = isActive;
     }
 
     private Success(final S result) {
       this.isResult = true;
       this.result = result;
+    }
+
+    private Success() {
+      super();
+      this.isResult = false;
     }
 
     /** {@inheritDoc} */
@@ -343,7 +377,9 @@ public abstract class Try<T> implements Serializable {
       }
       if (o instanceof Success) {
         final Success<?> success = (Success<?>) o;
-        return this.isResult() == success.isResult() && this.result == success.result;
+        return this.isResult() == success.isResult()
+            && this.result == success.result
+            && this.isActive == success.isActive;
       } else {
         return false;
       }
@@ -359,6 +395,13 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
+    public boolean isActive() {
+      return this.isActive;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
     public S get() {
       return this.result;
     }
@@ -367,8 +410,8 @@ public abstract class Try<T> implements Serializable {
     @Override
     public Try<S> filter(final Predicate<? super S> predicate) {
       Objects.requireNonNull(predicate, "Predicate cannot be null.");
-      if (isResult()) {
-        return predicate.test(this.result) ? this : new Success<>();
+      if (this.isResult && this.isActive) {
+        return predicate.test(this.result) ? this : new Success<>(false);
       } else {
         return this;
       }
@@ -379,7 +422,7 @@ public abstract class Try<T> implements Serializable {
     @Contract(pure = true)
     public @Nullable Try<S> peek(final Accepter<? super S> acceptor) {
       Objects.requireNonNull(acceptor, "Accepter cannot be null.");
-      if (this.isResult()) {
+      if (this.isResult && this.isActive) {
         try {
           acceptor.accept(this.result);
         } catch (final Throwable cause) {
@@ -414,7 +457,11 @@ public abstract class Try<T> implements Serializable {
     @Override
     public <M> @NotNull Try<M> map(final ThrowingFunction<? super S, ? extends M> mapper) {
       Objects.requireNonNull(mapper, "Mapper cannot be null.");
-      return Try.of(() -> mapper.apply(this.result));
+      if (this.isResult && this.isActive) {
+        return Try.of(() -> mapper.apply(this.result));
+      }
+
+      return new Success<>(false);
     }
 
     /** {@inheritDoc} */
@@ -467,6 +514,13 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(pure = true)
     public boolean isSuccess() {
+      return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
+    public boolean isActive() {
       return false;
     }
 
