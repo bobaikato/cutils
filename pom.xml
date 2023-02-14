@@ -309,9 +309,9 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git://github.com/B0BAI/cutils.git</connection>
-    <developerConnection>scm:git:ssh://github.com:B0BAI/cutils.git</developerConnection>
-    <url>http://github.com/B0BAI/cutils/tree/master</url>
+    <connection>scm:git:git://github.com/bobaikato/cutils.git</connection>
+    <developerConnection>scm:git:ssh://github.com:bobaikato/cutils.git</developerConnection>
+    <url>http://github.com/bobaikato/cutils/tree/master</url>
   </scm>
 
   <url>https://github.com/bobaikato/cutils</url>
