@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import art.cutils.value.Try;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +59,7 @@ final class TryTest {
     assertNotEquals(squareRoot, convertStringToInteger);
 
     assertTrue(squareRoot.isSuccess());
+
     assertTrue(squareRoot.isResult());
 
     assertEquals(5, squareRoot.orElseGet(24));
@@ -329,17 +331,37 @@ final class TryTest {
         .filter(Objects::nonNull)
         .onEmpty(
             () -> {
-              System.out.println("Will never print this message");
+              System.out.println("Should never print this message");
             })
         .filter(result -> result > 0)
         .onEmpty(
             () -> {
-              System.out.println("Will never print this message");
+              System.out.println("Should never print this message");
             })
         .filter(result -> result < 0)
         .onEmpty(
             () -> {
-              System.out.println("onEmpty Invoked.");
+              System.out.println("Should print.");
             });
+  }
+
+  @Test
+  void test_onSuccess_when_try_is_empty_to_not_invoke() {
+
+    final AtomicInteger value = new AtomicInteger();
+
+    Try.of(() -> Integer.parseInt("25"))
+        .filter(result -> result == 25)
+        .onSuccess(
+            result -> {
+              value.set(result + 1);
+            })
+        .filter(result -> result < 0)
+        .onSuccess(
+            result -> {
+              value.set(result + 100);
+            });
+
+    assertEquals(26, value.get());
   }
 }

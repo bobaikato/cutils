@@ -114,19 +114,20 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
-   * If try is successful, invoke the specified consumer with the operation result, otherwise do
-   * nothing.
+   * If {@link Try#isSuccess()}, {@link Try#isResult()} and {@link Try#isNotEmpty()} ()} invoke the
+   * specified consumer with the operation result, otherwise do nothing.
    *
-   * @param result block of operation to be executed with try result
-   * @apiNote an {@link IllegalStateException} will be thrown if the successful try doesn't return
-   *     any result.
+   * @param result block of operation to be executed.
    * @see Success#get()
+   * @see Try#isSuccess()
+   * @see Try#isResult()
+   * @see Try#isNotEmpty()
    * @since v1
    * @return existing instance of {@link Try}
    */
   public Try<T> onSuccess(final Consumer<? super T> result) {
     Objects.requireNonNull(result, "Success result Consumer cannot be null.");
-    if (this.isSuccess()) {
+    if (this.isSuccess() && this.isResult() && this.isNotEmpty()) {
       result.accept(this.get());
     }
     return this;
@@ -230,16 +231,18 @@ public abstract class Try<T> implements Serializable {
   public abstract Optional<T> getOptional();
 
   /**
-   * If try is successful, invoke the specified {@link Runnable}.
+   * If {@link Try#isSuccess()} and {@link Try#isNotEmpty()}, invoke the specified {@link Runnable}.
    *
-   * @param run the {@link Runnable} to be executed
+   * @param runnable the {@link Runnable} to be executed
    * @return existing instance of {@link Try}
    * @since v1
+   * @see Try#isNotEmpty()
+   * @see Try#isSuccess()
    */
-  public Try<T> onSuccess(final Runnable run) {
-    Objects.requireNonNull(run, "Success Runnable cannot be null.");
-    if (this.isSuccess()) {
-      run.run();
+  public Try<T> onSuccess(final Runnable runnable) {
+    Objects.requireNonNull(runnable, "Success Runnable cannot be null.");
+    if (this.isSuccess() && this.isNotEmpty()) {
+      runnable.run();
     }
     return this;
   }
@@ -359,7 +362,6 @@ public abstract class Try<T> implements Serializable {
   private static class Success<S> extends Try<S> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
     private boolean isResult;
-    private boolean filterConditionNotMet;
     private S result;
 
     private boolean empty;
@@ -396,8 +398,7 @@ public abstract class Try<T> implements Serializable {
         final Success<?> success = (Success<?>) o;
         return this.isResult() == success.isResult()
             && this.result == success.result
-            && this.empty == success.empty
-            && this.filterConditionNotMet == success.filterConditionNotMet;
+            && this.empty == success.empty;
       } else {
         return false;
       }
@@ -421,7 +422,7 @@ public abstract class Try<T> implements Serializable {
     @Override
     public @Nullable Try<S> onEmpty(final Runnable task) {
       Objects.requireNonNull(task, "on Empty Runnable cannot be null.");
-      if (this.filterConditionNotMet) {
+      if (this.isEmpty()) {
         task.run();
       }
       return this;
@@ -448,7 +449,6 @@ public abstract class Try<T> implements Serializable {
       Objects.requireNonNull(predicate, "Filter Predicate cannot be null.");
       if (this.isResult && this.isNotEmpty()) {
         if (!predicate.test(this.result)) {
-          this.filterConditionNotMet = true; // filter condition is not met
           this.empty = true; // empty, condition is not met
           this.isResult = false; // no result
           this.result = null; // clear result
@@ -596,7 +596,6 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(value = "_ -> this", pure = true)
     public Try<F> peek(final Accepter<? super F> acceptor) {
-
       return this;
     }
 
