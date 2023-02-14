@@ -141,30 +141,46 @@ public abstract class Try<T> implements Serializable {
   public abstract boolean isSuccess();
 
   /**
-   * Try is active if operation isn't failed or filter condition is not met.
+   * Try is Empty if operation is Failed or Filter condition is not met.
    *
-   * @return a {@link Boolean} depending on the state: {@code true} if try is active else {@code
+   * @return a {@link Boolean} depending on the state: {@code true} if try is empty else {@code
    *     false}
    * @see Try#filter(Predicate)
    * @see Try#isFailure()
    * @see Try#isSuccess()
+   * @see Try#isNotEmpty()
    * @since v2.4
    */
-  public abstract boolean isActive();
+  public abstract boolean isEmpty();
 
   /**
-   * Try is passive if operation is failed or filter condition is met.
+   * If try filter condition is not met, invoke the specified {@link Runnable}.
    *
-   * @implSpec default implementation of {@link Try#isPassive()} is {@code !isActive()}
-   * @return a {@link Boolean} depending on the state: {@code true} if try is passive else {@code
+   * @implNote this method is not intended to be used for handling failed operations. Use {@link
+   *     Try#onFailure(Runnable)} to handle failed operation.
+   * @implSpec Try will invoke {@link Try#onEmpty(Runnable)} only if filter condition is not met.
+   * @param run the operation to be executed if filter condition is not met.
+   * @return existing instance of {@link Try}
+   * @since v2.4.5
+   * @see Try#onFailure(Runnable)
+   * @see Try#filter(Predicate)
+   */
+  public abstract Try<T> onEmpty(final Runnable run);
+
+  /**
+   * Try is Not Empty if operation is Successful or filter condition is met.
+   *
+   * @implSpec default implementation of {@link Try#isNotEmpty()} is {@code !isEmpty()}
+   * @return a {@link Boolean} depending on the state: {@code true} if try is not empty else {@code
    *     false}
    * @see Try#filter(Predicate)
    * @see Try#isFailure()
    * @see Try#isSuccess()
+   * @see Try#isEmpty()
    * @since v2.4
    */
-  public boolean isPassive() {
-    return !isActive();
+  public boolean isNotEmpty() {
+    return !this.isEmpty();
   }
 
   /**
@@ -193,7 +209,7 @@ public abstract class Try<T> implements Serializable {
    * Safely, performing an action on the current try result if present. Unlike {@link
    * Try#map(ThrowingFunction)} this method will not affect the current {@link Try} results.
    *
-   * <p>operation. The same result will be returned with the {@link Try} instance.
+   * <p>The same result will be returned with the {@link Try} instance.
    *
    * @implSpec Use this method instead {@link Try#onSuccess(Runnable)} to safely perform an action
    *     on the result.
@@ -333,7 +349,7 @@ public abstract class Try<T> implements Serializable {
   public abstract T orElseThrow(final Throwable throwable);
 
   /**
-   * Use to check the state of a successful try operation if or not it has a result.
+   * Use to check the state of a successful try operation whether or not it has a result.
    *
    * @return a {@link Boolean} depending on the state: {@code true} if try operation was successful
    *     and has a result or {@code false} if operation fails or successful but without a result.
@@ -342,14 +358,15 @@ public abstract class Try<T> implements Serializable {
 
   private static class Success<S> extends Try<S> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
-    private final boolean isResult;
+    private boolean isResult;
+    private boolean filterConditionNotMet;
     private S result;
 
-    private boolean isActive = true;
+    private boolean empty;
 
-    private Success(final boolean isActive) {
+    private Success(final boolean empty) {
       this();
-      this.isActive = isActive;
+      this.empty = empty;
     }
 
     private Success(final S result) {
@@ -379,7 +396,8 @@ public abstract class Try<T> implements Serializable {
         final Success<?> success = (Success<?>) o;
         return this.isResult() == success.isResult()
             && this.result == success.result
-            && this.isActive == success.isActive;
+            && this.empty == success.empty
+            && this.filterConditionNotMet == success.filterConditionNotMet;
       } else {
         return false;
       }
@@ -395,8 +413,25 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
-    public boolean isActive() {
-      return this.isActive;
+    public boolean isEmpty() {
+      return this.empty;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public @Nullable Try<S> onEmpty(final Runnable task) {
+      Objects.requireNonNull(task, "on Empty Runnable cannot be null.");
+      if (this.filterConditionNotMet) {
+        task.run();
+      }
+      return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
+    public boolean isNotEmpty() {
+      return !this.empty;
     }
 
     /** {@inheritDoc} */
@@ -408,10 +443,18 @@ public abstract class Try<T> implements Serializable {
 
     /** {@inheritDoc} */
     @Override
+    @Contract("_ -> this")
     public Try<S> filter(final Predicate<? super S> predicate) {
-      Objects.requireNonNull(predicate, "Predicate cannot be null.");
-      if (this.isResult && this.isActive) {
-        return predicate.test(this.result) ? this : new Success<>(false);
+      Objects.requireNonNull(predicate, "Filter Predicate cannot be null.");
+      if (this.isResult && this.isNotEmpty()) {
+        if (!predicate.test(this.result)) {
+          this.filterConditionNotMet = true; // filter condition is not met
+          this.empty = true; // empty, condition is not met
+          this.isResult = false; // no result
+          this.result = null; // clear result
+        }
+        return this;
+
       } else {
         return this;
       }
@@ -422,7 +465,7 @@ public abstract class Try<T> implements Serializable {
     @Contract(pure = true)
     public @Nullable Try<S> peek(final Accepter<? super S> acceptor) {
       Objects.requireNonNull(acceptor, "Accepter cannot be null.");
-      if (this.isResult && this.isActive) {
+      if (this.isResult && this.isNotEmpty()) {
         try {
           acceptor.accept(this.result);
         } catch (final Throwable cause) {
@@ -457,11 +500,11 @@ public abstract class Try<T> implements Serializable {
     @Override
     public <M> @NotNull Try<M> map(final ThrowingFunction<? super S, ? extends M> mapper) {
       Objects.requireNonNull(mapper, "Mapper cannot be null.");
-      if (this.isResult && this.isActive) {
+      if (this.isResult && this.isNotEmpty()) {
         return Try.of(() -> mapper.apply(this.result));
       }
 
-      return new Success<>(false);
+      return new Success<>(true);
     }
 
     /** {@inheritDoc} */
@@ -520,8 +563,15 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
-    public boolean isActive() {
-      return false;
+    public boolean isEmpty() {
+      return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(value = " -> this", pure = true)
+    public Try<F> onEmpty(final Runnable run) {
+      return this;
     }
 
     /** {@inheritDoc} */
@@ -546,6 +596,7 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(value = "_ -> this", pure = true)
     public Try<F> peek(final Accepter<? super F> acceptor) {
+
       return this;
     }
 

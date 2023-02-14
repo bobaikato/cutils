@@ -51,10 +51,6 @@ final class TryTest {
 
     assertEquals(convertStringToInteger.filter(Objects::nonNull), convertStringToInteger);
 
-    assertNotEquals(convertStringToInteger.filter(Objects::isNull), convertStringToInteger);
-
-    assertTrue(convertStringToInteger.isResult());
-
     assertEquals(25, convertStringToInteger.get());
 
     final Try<Integer> squareRoot = convertStringToInteger.map(result -> (int) Math.sqrt(result));
@@ -69,6 +65,10 @@ final class TryTest {
     assertEquals(5, squareRoot.orElseGet(() -> 34));
 
     assertNull(convertStringToInteger.getCause());
+
+    assertEquals(convertStringToInteger.filter(Objects::isNull), convertStringToInteger);
+
+    assertFalse(convertStringToInteger.isResult());
   }
 
   @Test
@@ -280,47 +280,66 @@ final class TryTest {
 
   @Test
   void test_try_with_result_states() {
-    Try<Integer> t1 = Try.of(() -> Integer.parseInt("25")).filter(Objects::nonNull);
+    final Try<Integer> t1 = Try.of(() -> Integer.parseInt("25")).filter(Objects::nonNull);
 
-    assertTrue(t1.isActive());
+    assertTrue(t1.isNotEmpty());
 
     t1.filter(result -> result > 0);
-    assertTrue(t1.isActive());
+    assertTrue(t1.isNotEmpty());
 
-    Try<Integer> t2 = t1.filter(result -> result < 0); // condition is not met
+    final Try<Integer> t2 = t1.filter(result -> result < 0); // condition is not met
 
-    assertNotEquals(t1, t2); // t1 is still active
+    assertEquals(t1, t2);
+    assertFalse(t2.isNotEmpty());
+    assertTrue(t2.isEmpty());
+    assertFalse(t2.isResult());
+    assertTrue(t2.isSuccess());
 
-    assertFalse(t2.isActive()); // t2 is now passive
-    assertTrue(t2.isPassive()); // t2 is now passive
-    assertFalse(t2.isResult()); // t2 no longer has a result
-    assertTrue(t2.isSuccess()); // t2  is still a success
-
-    t2.map(result -> result + 1); // t2 is still passive
+    t2.map(result -> result + 1);
     assertTrue(t2.get() == null);
   }
 
   @Test
   void test_try_without_result_states() {
-    Try<?> t1 =
+    final Try<?> t1 =
         Try.of(
             () -> {
               Integer.parseInt("25");
             });
 
-    assertTrue(t1.isActive());
+    assertTrue(t1.isNotEmpty());
 
     Try<?> t2 = t1.filter(Objects::isNull); // condition is met
 
     assertEquals(t1, t2);
 
-    assertTrue(t1.isActive());
+    assertTrue(t1.isNotEmpty());
 
     t2 = t1.filter(Objects::nonNull); // condition is not met
 
-    assertTrue(t2.isActive()); // t2 is still active
-    assertFalse(t2.isPassive()); // t2 not passive
-    assertFalse(t2.isResult()); // t2 still no longer has a result
-    assertTrue(t2.isSuccess()); // t1  is still a success
+    assertTrue(t2.isNotEmpty());
+    assertFalse(t2.isEmpty());
+    assertFalse(t2.isResult());
+    assertTrue(t2.isSuccess());
+  }
+
+  @Test
+  void test_try_onEmpty() {
+    Try.of(() -> Integer.parseInt("25"))
+        .filter(Objects::nonNull)
+        .onEmpty(
+            () -> {
+              System.out.println("Will never print this message");
+            })
+        .filter(result -> result > 0)
+        .onEmpty(
+            () -> {
+              System.out.println("Will never print this message");
+            })
+        .filter(result -> result < 0)
+        .onEmpty(
+            () -> {
+              System.out.println("onEmpty Invoked.");
+            });
   }
 }
