@@ -27,10 +27,6 @@ import art.cutils.value.Pause;
 import art.cutils.value.Syndicate;
 import art.cutils.value.Syndicate.Close;
 import art.cutils.value.Try;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,25 +36,28 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-/** Created by B0BAI on 13 Nov, 2021 */
+/** Created by Bobai Kato on 13 Nov, 2021 */
 final class SyndicateTest {
 
   private final List<Integer> numbers =
       new ArrayList<Integer>() {
         {
-          add(1);
-          add(2);
-          add(3);
+          this.add(1);
+          this.add(2);
+          this.add(3);
         }
       };
 
   private final Set<Object> results =
       new HashSet<Object>() {
         {
-          add(6);
-          add(14);
-          add("aeroplanes");
+          this.add(6);
+          this.add(14);
+          this.add("aeroplanes");
         }
       };
 
@@ -67,8 +66,8 @@ final class SyndicateTest {
 
     try (final Syndicate<Object> syndicate = Syndicate.init()) {
       syndicate
-          .add(() -> numbers.stream().mapToInt(i -> i).sum())
-          .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+          .add(() -> this.numbers.stream().mapToInt(i -> i).sum())
+          .add(() -> this.numbers.stream().mapToInt(i -> i * i).sum())
           .add(
               () -> {
                 Pause.until(1).seconds().empty();
@@ -83,15 +82,15 @@ final class SyndicateTest {
                 futures.forEach(
                     future -> {
                       try {
-                        Assertions.assertTrue(results.contains(future.get()));
-                      } catch (InterruptedException | ExecutionException e) {
+                        Assertions.assertTrue(this.results.contains(future.get()));
+                      } catch (final InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                       }
-                      Assertions.assertEquals(futuresTry.get().size(), results.size());
+                      Assertions.assertEquals(futuresTry.get().size(), this.results.size());
                     });
               });
 
-    } catch (Exception e) {
+    } catch (final Exception e) {
       e.printStackTrace();
     }
   }
@@ -100,8 +99,8 @@ final class SyndicateTest {
   void testProcessingWithinTryResourceWithExceptionThrown() {
     try (final Syndicate<Object> syndicate = Syndicate.init(Executors.newFixedThreadPool(2))) {
       syndicate
-          .add(() -> numbers.stream().mapToInt(i -> i).sum())
-          .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+          .add(() -> this.numbers.stream().mapToInt(i -> i).sum())
+          .add(() -> this.numbers.stream().mapToInt(i -> i * i).sum())
           .add(
               () -> {
                 Pause.until(1).seconds().empty();
@@ -116,15 +115,15 @@ final class SyndicateTest {
                 futures.forEach(
                     future -> {
                       try {
-                        Assertions.assertTrue(results.contains(future.get()));
-                      } catch (InterruptedException | ExecutionException e) {
+                        Assertions.assertTrue(this.results.contains(future.get()));
+                      } catch (final InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                       }
-                      Assertions.assertEquals(futuresTry.get().size(), results.size());
+                      Assertions.assertEquals(futuresTry.get().size(), this.results.size());
                     });
               });
 
-    } catch (Exception e) {
+    } catch (final Exception e) {
       Assertions.assertTrue(e instanceof CancellationException);
     }
   }
@@ -135,8 +134,8 @@ final class SyndicateTest {
         Try.of(
             () ->
                 Syndicate.init()
-                    .add(() -> numbers.stream().mapToInt(i -> i).sum())
-                    .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                    .add(() -> this.numbers.stream().mapToInt(i -> i).sum())
+                    .add(() -> this.numbers.stream().mapToInt(i -> i * i).sum())
                     .add(
                         () -> {
                           Pause.until(1).seconds().empty();
@@ -151,11 +150,12 @@ final class SyndicateTest {
                           futures.forEach(
                               future -> {
                                 try {
-                                  Assertions.assertTrue(results.contains(future.get()));
-                                } catch (InterruptedException | ExecutionException e) {
+                                  Assertions.assertTrue(this.results.contains(future.get()));
+                                } catch (final InterruptedException | ExecutionException e) {
                                   e.printStackTrace();
                                 }
-                                Assertions.assertEquals(futuresTry.get().size(), results.size());
+                                Assertions.assertEquals(
+                                    futuresTry.get().size(), this.results.size());
                               });
                         })
                     .close());
@@ -167,8 +167,8 @@ final class SyndicateTest {
   void testingRetrievalOfResourceOutsideOnComplete() {
     final @NotNull Try<List<Future<Object>>> aTry =
         Syndicate.init()
-            .add(() -> numbers.stream().mapToInt(i -> i).sum())
-            .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+            .add(() -> this.numbers.stream().mapToInt(i -> i).sum())
+            .add(() -> this.numbers.stream().mapToInt(i -> i * i).sum())
             .add(
                 () -> {
                   Pause.until(1).seconds().empty();
@@ -188,8 +188,8 @@ final class SyndicateTest {
         Try.of(
             () -> {
               Syndicate.init()
-                  .add(() -> numbers.stream().mapToInt(i -> i).sum())
-                  .add(() -> numbers.stream().mapToInt(i -> i * i).sum())
+                  .add(() -> this.numbers.stream().mapToInt(i -> i).sum())
+                  .add(() -> this.numbers.stream().mapToInt(i -> i * i).sum())
                   .add(
                       () -> {
                         Pause.until(1).seconds().empty();
@@ -204,11 +204,11 @@ final class SyndicateTest {
                         futures.forEach(
                             future -> {
                               try {
-                                Assertions.assertTrue(results.contains(future.get()));
-                              } catch (InterruptedException | ExecutionException e) {
+                                Assertions.assertTrue(this.results.contains(future.get()));
+                              } catch (final InterruptedException | ExecutionException e) {
                                 e.printStackTrace();
                               }
-                              Assertions.assertEquals(futuresTry.get().size(), results.size());
+                              Assertions.assertEquals(futuresTry.get().size(), this.results.size());
                             });
                       })
                   .close();
