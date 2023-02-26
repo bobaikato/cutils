@@ -234,11 +234,6 @@
       <version>1.9.0</version>
     </dependency>
     <dependency>
-      <artifactId>javatuples</artifactId>
-      <groupId>org.javatuples</groupId>
-      <version>1.2</version>
-    </dependency>
-    <dependency>
       <artifactId>annotations</artifactId>
       <groupId>org.jetbrains</groupId>
       <scope>compile</scope>
