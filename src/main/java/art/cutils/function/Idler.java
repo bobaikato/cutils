@@ -27,10 +27,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
+import art.cutils.value.Pair;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Supplier;
-import org.javatuples.Pair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,9 +48,9 @@ import org.jetbrains.annotations.NotNull;
 public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   private static final long serialVersionUID = -909341387550414732L;
 
-  private transient Supplier<? extends T> supplier;
+  private transient Supplier<T> supplier;
 
-  private transient Dealer<? extends T> dealer;
+  private transient Dealer<T> dealer;
 
   /**
    * Object to hold information.
@@ -59,14 +59,14 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    *
    * <p>1: Dealer
    */
-  private transient Pair<? extends T, ? extends T> pair = Pair.with(null, null);
+  private transient Pair<T, T> pair = Pair.empty();
 
   /**
    * Sealed constructor takes the supplier.
    *
    * @param supplier instance of {@link Supplier}
    */
-  private Idler(final Supplier<? extends T> supplier) {
+  private Idler(final Supplier<T> supplier) {
     this.supplier = supplier;
   }
 
@@ -75,23 +75,27 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    *
    * @param dealer instance of {@link Dealer}
    */
-  private Idler(final Dealer<? extends T> dealer) {
+  private Idler(final Dealer<T> dealer) {
     this.dealer = dealer;
   }
 
-  private Idler(final Dealer<? extends T> dealer, Supplier<? extends T> supplier) {
+  private Idler(final Dealer<T> dealer, final Supplier<T> supplier) {
     this.dealer = dealer;
     this.supplier = supplier;
   }
 
   @Contract("_, _ -> new")
-  public static <T> @NotNull Idler<T> of(final Dealer<? extends T> dealer, final Supplier<T> supplier) {
+  public static <T> @NotNull Idler<T> of(final Dealer<T> dealer, final Supplier<T> supplier) {
     return Idler.of(supplier, dealer);
   }
 
   @Contract("_, _ -> new")
-  public static <T> @NotNull Idler<T> of(
-      final Supplier<? extends T> supplier, final Dealer<? extends T> dealer) {
+  public static <T> @NotNull Idler<T> of(final Dealer<T> dealer) {
+    return new Idler<>(dealer);
+  }
+
+  @Contract("_, _ -> new")
+  public static <T> @NotNull Idler<T> of(final Supplier<T> supplier, final Dealer<T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(dealer, supplier);
@@ -100,12 +104,12 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   /**
    * Supply take an instance of {@link Supplier} as parameter..
    *
-   * @param <T>      the type parameter
+   * @param <T> the type parameter
    * @param supplier the supplier, an instance of {@link Supplier}
    * @return the supplier, an instance of {@link Supplier}
    */
   @Contract("_ -> new")
-  public static <T> @NotNull Supplier<T> supply(final Supplier<? extends T> supplier) {
+  public static <T> @NotNull Supplier<T> supply(final Supplier<T> supplier) {
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(supplier);
   }
@@ -113,12 +117,12 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   /**
    * Supply take an instance of {@link Dealer} as parameter..
    *
-   * @param <T>    the type parameter
+   * @param <T> the type parameter
    * @param dealer the supplier, an instance of {@link Dealer}
    * @return the supplier, an instance of {@link Dealer}
    */
   @Contract("_ -> new")
-  public static <T> @NotNull Dealer<T> deal(final Dealer<? extends T> dealer) {
+  public static <T> @NotNull Dealer<T> deal(final Dealer<T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     return new Idler<>(dealer);
   }
@@ -131,10 +135,10 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    */
   @Override
   public T deal() throws Exception {
-    if (nonNull(this.dealer) && isNull(this.pair.getValue1())) {
-      this.pair = this.pair.setAt1(this.dealer.deal());
+    if (nonNull(this.dealer) && isNull(this.pair.getSecond())) {
+      this.pair = this.pair.second(this.dealer.deal());
     }
-    return this.pair.getValue1();
+    return this.pair.getSecond();
   }
 
   /**
@@ -145,17 +149,17 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
    */
   @Override
   public T get() {
-    if (nonNull(this.supplier) && isNull(this.pair.getValue0())) {
-      this.pair = this.pair.setAt0(this.supplier.get());
+    if (nonNull(this.supplier) && isNull(this.pair.getFirst())) {
+      this.pair = this.pair.first(this.supplier.get());
     }
-    return this.pair.getValue0();
+    return this.pair.getFirst();
   }
 
   @Override
   public int hashCode() {
-    int result = supplier != null ? supplier.hashCode() : 0;
-    result = 31 * result + (dealer != null ? dealer.hashCode() : 0);
-    result = 31 * result + pair.hashCode();
+    int result = this.supplier != null ? this.supplier.hashCode() : 0;
+    result = 31 * result + (this.dealer != null ? this.dealer.hashCode() : 0);
+    result = 31 * result + this.pair.hashCode();
     return result;
   }
 
@@ -168,11 +172,11 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
     if (o instanceof Idler) {
       final Idler<?> idler = (Idler<?>) o;
 
-      if (Objects.equals(supplier, idler.supplier)) {
-        if (!Objects.equals(dealer, idler.dealer)) {
+      if (Objects.equals(this.supplier, idler.supplier)) {
+        if (!Objects.equals(this.dealer, idler.dealer)) {
           return false;
         }
-        return pair.equals(idler.pair);
+        return this.pair.equals(idler.pair);
       } else {
         return false;
       }
