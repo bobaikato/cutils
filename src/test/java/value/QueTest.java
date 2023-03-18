@@ -180,14 +180,14 @@ final class QueTest {
   @Test
   void equalsAndHashCodeContractToBeValid() throws Exception {
 
-    Que<String> q1 =
+    final Que<String> q1 =
         Que.of(
             () -> {
               // ..supply
               return "Hello World";
             });
 
-    Que<String> q2 =
+    final Que<String> q2 =
         Que.<String>run(() -> {})
             .andRun(() -> {})
             .andSupply(
@@ -206,15 +206,15 @@ final class QueTest {
   @Test
   void equalsAndHashCodeContractToBeInvalid() throws Exception {
 
-    Que<String> q1 =
+    final Que<String> q1 =
         Que.of(
             () -> {
               // ..supply
               return "Content";
             });
 
-    Que<String> q2 =
-        Que.as(
+    final Que<String> q2 =
+        Que.of(
             () -> {
               // ..supply
               return "Different Content";

@@ -26,9 +26,6 @@ package art.cutils.value;
 import art.cutils.function.Accepter;
 import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,6 +33,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This is {@link Que} gotten from the word Cue. This is intended to give you the ability to
@@ -47,18 +47,13 @@ import java.util.function.Supplier;
  */
 public final class Que<T> implements Serializable {
   private static final long serialVersionUID = 2637789154313032412L;
-  /**
-   * This will hold instance of {@link Que} which will be used to enforce singleton.
-   *
-   * @since 1.0
-   */
-  private static Que<?> instance;
+
   /**
    * This hold this holds the final value an operation.
    *
    * @since 1.0
    */
-  private final transient T value;
+  private T value;
 
   /** Constructs an empty instance. */
   @Contract(pure = true)
@@ -112,6 +107,7 @@ public final class Que<T> implements Serializable {
    */
   @Contract("_ -> new")
   public static <T> @NotNull Que<T> of(final @NotNull Supplier<? extends T> supplier) {
+    Objects.requireNonNull(supplier, "supplier cannot be null");
     return Que.createReference(supplier.get());
   }
 
@@ -136,27 +132,10 @@ public final class Que<T> implements Serializable {
    * @return returns new instance of {@link Que}
    * @since 1.0
    */
-  public static <T> Que<T> run(final Runnable runnable) {
+  public static <T> @NotNull Que<T> run(final Runnable runnable) {
     Objects.requireNonNull(runnable, "runnable cannot be null");
     runnable.run();
-    return Que.getInstance();
-  }
-
-  /**
-   * The method should be used to get {@link Que} instance.
-   *
-   * @param <T> Type of value
-   * @return existing or newly created instance of {@link Que}
-   */
-  private static <T> Que<T> getInstance() {
-    if (Objects.isNull(instance)) {
-      synchronized (Que.class) {
-        if (Objects.isNull(instance)) {
-          instance = new Que<>();
-        }
-      }
-    }
-    return (Que<T>) instance;
+    return Que.createReference(null);
   }
 
   /**
@@ -168,10 +147,16 @@ public final class Que<T> implements Serializable {
    * @throws Exception this can be any exception throw when executing
    * @since 1.0
    */
-  public static <T> Que<T> execute(final Executable executable) throws Exception {
+  public static <T> @NotNull Que<T> execute(final Executable executable) throws Exception {
     Objects.requireNonNull(executable, "executable cannot be null");
     executable.execute();
-    return Que.getInstance();
+    return Que.createReference(null);
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  private Que<T> updateValue(final T value) {
+    this.value = value;
+    return this;
   }
 
   /**
@@ -183,11 +168,6 @@ public final class Que<T> implements Serializable {
    */
   @Contract("_ -> this")
   public Que<T> run(final Consumer<? super T> consumer) {
-    return this.consumer(consumer);
-  }
-
-  @Contract("_ -> this")
-  private Que<T> consumer(final Consumer<? super T> consumer) {
     Objects.requireNonNull(consumer, "consumer cannot be null");
     consumer.accept(this.value);
     return this;
@@ -202,11 +182,6 @@ public final class Que<T> implements Serializable {
    */
   @Contract("_ -> this")
   public Que<T> execute(final Accepter<? super T> accepter) throws Exception {
-    return this.accepter(accepter);
-  }
-
-  @Contract("_ -> this")
-  private Que<T> accepter(final Accepter<? super T> accepter) throws Exception {
     Objects.requireNonNull(accepter, "accepter cannot be null");
     accepter.accept(this.value);
     return this;
@@ -248,9 +223,11 @@ public final class Que<T> implements Serializable {
    * @return existing instance of {@link Que}
    * @since 1.0
    */
+  @Contract("_ -> this")
   public @NotNull Que<T> andSupply(final Supplier<? extends T> supplier) {
     Objects.requireNonNull(supplier, "supplier cannot be null");
-    return Que.createReference(supplier.get());
+    this.value = supplier.get();
+    return this;
   }
 
   /**
@@ -261,9 +238,11 @@ public final class Que<T> implements Serializable {
    * @return existing instance of {@link Que}
    * @since 1.0
    */
+  @Contract("_ -> this")
   public @NotNull Que<T> andDeal(final Dealer<? extends T> dealer) throws Exception {
     Objects.requireNonNull(dealer, "dealer cannot be null");
-    return Que.createReference(dealer.deal());
+    this.value = dealer.deal();
+    return this;
   }
 
   /**
@@ -275,7 +254,9 @@ public final class Que<T> implements Serializable {
    */
   @Contract("_ -> this")
   public Que<T> andConsume(final Consumer<? super T> consumer) {
-    return this.consumer(consumer);
+    Objects.requireNonNull(consumer, "consumer cannot be null");
+    consumer.accept(this.value);
+    return this;
   }
 
   /**
@@ -288,7 +269,9 @@ public final class Que<T> implements Serializable {
    */
   @Contract("_ -> this")
   public Que<T> andAccept(final Accepter<? super T> accepter) throws Exception {
-    return this.accepter(accepter);
+    Objects.requireNonNull(accepter, "accepter cannot be null");
+    accepter.accept(this.value);
+    return this;
   }
 
   /**
@@ -301,7 +284,7 @@ public final class Que<T> implements Serializable {
    */
   public @NotNull Que<T> andCall(final Callable<? extends T> callable) throws Exception {
     Objects.requireNonNull(callable, "callable cannot be null");
-    return Que.createReference(callable.call());
+    return this.updateValue(callable.call());
   }
 
   /**
@@ -342,16 +325,17 @@ public final class Que<T> implements Serializable {
   }
 
   @Override
-  @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }
-    if (o instanceof Que) {
-      final Que<?> que = (Que<?>) o;
-      return this.value.equals(que.value);
-    } else {
+
+    if (!(o instanceof Que)) {
       return false;
     }
+
+    final Que<?> que = (Que<?>) o;
+
+    return new EqualsBuilder().append(this.value, que.value).isEquals();
   }
 }
