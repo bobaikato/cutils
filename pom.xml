@@ -219,7 +219,7 @@
     <dependency>
       <artifactId>plexus-utils</artifactId>
       <groupId>org.codehaus.plexus</groupId>
-      <version>3.5.0</version>
+      <version>3.5.1</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
     <dependency>
