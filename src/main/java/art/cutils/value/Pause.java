@@ -195,7 +195,7 @@ public final class Pause<T> {
     /**
      * This method chains a {@link Executable} expression that execute after the pause.
      *
-     * @param executable this method take an expressions {@link Executable} that has no return
+     * @param executable this method takes an expressions {@link Executable} that has no return
      *     value.
      * @return an instance of {@link Delay} for further operations.
      */
@@ -207,7 +207,7 @@ public final class Pause<T> {
     /**
      * This method chains a {@link Dealer} expression that execute after the pause.
      *
-     * @param dealer this method take an expressions {@link Dealer} that has a return value.
+     * @param dealer this method takes an expressions {@link Dealer} that has a return value.
      * @return an instance of {@link Delay} operations.
      */
     @Contract("_ -> new")
@@ -245,7 +245,7 @@ public final class Pause<T> {
     }
 
     /**
-     * This class execute the delay and cause the pause before the set operations executed.
+     * This class executes the delay and causes the pause before the set operations executed.
      *
      * @param <T> type
      */
@@ -301,9 +301,9 @@ public final class Pause<T> {
       }
 
       /**
-       * This gets the {@link Try} operation result.
+       * This gets the {@link Try} operation.
        *
-       * @return try result. Instance of {@link Try}
+       * @return try a result. Instance of {@link Try}
        */
       @Contract(pure = true)
       public Try<T> get() {
@@ -311,10 +311,15 @@ public final class Pause<T> {
       }
 
       /**
-       * Takes a consumer that consumes the {@link Try} operation results.
+       * Get the result of the {@link Try} operation.
        *
-       * @param tryResult {@link Try} operation results.
+       * @since v2.5.4
+       * @return the result of the {@link Try} operation.
        */
+      public T getResult() {
+        return this.tryResult.get();
+      }
+
       public void onComplete(final @NotNull Consumer<Try<T>> tryResult) {
         tryResult.accept(this.tryResult);
       }
