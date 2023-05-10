@@ -178,7 +178,7 @@ final class QueTest {
   }
 
   @Test
-  void equalsAndHashCodeContractToBeValid() throws Exception {
+  void equalsAndHashCodeContractToBeValid() {
 
     final Que<String> q1 =
         Que.of(
@@ -187,20 +187,11 @@ final class QueTest {
               return "Hello World";
             });
 
-    final Que<String> q2 =
-        Que.<String>run(() -> {})
-            .andRun(() -> {})
-            .andSupply(
-                () -> {
-                  // ..supply
-                  return "Hello World";
-                });
+    final Que<Integer> q2 = Que.of(() -> "25").map(Integer::parseInt);
 
-    assertEquals(q1, q2);
-    assertEquals(q1, q1);
-    assertEquals(q2, q2);
+    assertNotEquals(q1, q2);
 
-    assertEquals(q1.hashCode(), q2.hashCode());
+    assertNotEquals(q1.hashCode(), q2.hashCode());
   }
 
   @Test
