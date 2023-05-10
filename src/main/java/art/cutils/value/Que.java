@@ -27,11 +27,13 @@ import art.cutils.function.Accepter;
 import art.cutils.function.Dealer;
 import art.cutils.function.Executable;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.jetbrains.annotations.Contract;
@@ -72,16 +74,17 @@ public final class Que<T> implements Serializable {
   }
 
   /**
-   * This method will set {@code value} and returns instance of {@link Que} for other sequential
-   * Operations.
+   * This method will take a {@link Supplier} of Type t and will set {@code value} and returns
+   * instance of {@link Que} for other sequential Operations.
    *
-   * @param value {@link Que} value
-   * @param <T> value Type
-   * @return Returns instance of {@link Que}
+   * @param supplier variable of Type value
+   * @param <T> Type of value
+   * @return instance of {@link Que}
    */
-  @Contract(value = "_ -> new", pure = true)
-  public static <T> @NotNull Que<T> of(final T value) {
-    return Que.createReference(value);
+  @Contract("_ -> new")
+  public static <T> @NotNull Que<T> of(final @NotNull Supplier<? extends T> supplier) {
+    Objects.requireNonNull(supplier, "supplier cannot be null");
+    return Que.createReference(supplier.get());
   }
 
   /**
@@ -95,20 +98,6 @@ public final class Que<T> implements Serializable {
   @Contract(value = "_ -> new", pure = true)
   private static <T> @NotNull Que<T> createReference(final T value) {
     return new Que<>(value);
-  }
-
-  /**
-   * This method will take a {@link Supplier} of Type t and will set {@code value} and returns
-   * instance of {@link Que} for other sequential Operations.
-   *
-   * @param supplier variable of Type value
-   * @param <T> Type of value
-   * @return instance of {@link Que}
-   */
-  @Contract("_ -> new")
-  public static <T> @NotNull Que<T> of(final @NotNull Supplier<? extends T> supplier) {
-    Objects.requireNonNull(supplier, "supplier cannot be null");
-    return Que.createReference(supplier.get());
   }
 
   /**
@@ -153,10 +142,29 @@ public final class Que<T> implements Serializable {
     return Que.createReference(null);
   }
 
-  @Contract(value = "_ -> this", mutates = "this")
-  private Que<T> updateValue(final T value) {
-    this.value = value;
-    return this;
+  /**
+   * If a {@link Que} is not empty then {@code value} is used {@link Map} to create a new instance
+   * of {@link Que}.
+   *
+   * @param mapper a mapping function to apply to the result is available.
+   * @return Returns instance of {@link Que}
+   */
+  public <R> @NotNull Que<R> map(final Function<? super T, ? extends R> mapper) {
+    Objects.requireNonNull(mapper, "Mapper cannot be null.");
+    return Que.of(mapper.apply(this.value));
+  }
+
+  /**
+   * This method will set {@code value} and returns instance of {@link Que} for other sequential
+   * Operations.
+   *
+   * @param value {@link Que} value
+   * @param <T> value Type
+   * @return Returns instance of {@link Que}
+   */
+  @Contract(value = "_ -> new", pure = true)
+  public static <T> @NotNull Que<T> of(final T value) {
+    return Que.createReference(value);
   }
 
   /**
@@ -285,6 +293,12 @@ public final class Que<T> implements Serializable {
   public @NotNull Que<T> andCall(final Callable<? extends T> callable) throws Exception {
     Objects.requireNonNull(callable, "callable cannot be null");
     return this.updateValue(callable.call());
+  }
+
+  @Contract(value = "_ -> this", mutates = "this")
+  private Que<T> updateValue(final T value) {
+    this.value = value;
+    return this;
   }
 
   /**
