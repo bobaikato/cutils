@@ -46,8 +46,8 @@ public final class Pair<F, S> {
   /**
    * Constructor to create a pair of values.
    *
-   * @param first first value, can be null.
-   * @param second second value, can be null.
+   * @param first the first value. Can be null.
+   * @param second the second value. Can be null.
    */
   @Contract(pure = true)
   private Pair(final F first, final S second) {
@@ -58,8 +58,8 @@ public final class Pair<F, S> {
   /**
    * Creates a pair of values.
    *
-   * @param first first value, can be null.
-   * @param second second value, can be null.
+   * @param first the first value. Can be null.
+   * @param second the second value. Can be null.
    * @return a pair of values
    */
   @Contract(value = "_, _ -> new", pure = true)
@@ -70,7 +70,7 @@ public final class Pair<F, S> {
   /**
    * Create and empty pair.
    *
-   * @return new instance of empty pair
+   * @return new instance of an empty {@link Pair}
    * @param <F> first value type
    * @param <S> second value type
    */
@@ -200,17 +200,17 @@ public final class Pair<F, S> {
   /**
    * Check Pair not have the first value.
    *
-   * @return true if Pair has no first value
+   * @return true if the {@link Pair} has no first value
    */
   @Contract(pure = true)
-  public boolean notHasFirst() {
+  public boolean notHaveFirst() {
     return !this.hasFirst();
   }
 
   /**
    * Check Pair has the first value.
    *
-   * @return true if Pair has first value
+   * @return true if the {@link Pair} has first value
    */
   @Contract(pure = true)
   public boolean hasFirst() {
@@ -218,19 +218,19 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Check Pair not have the second value.
+   * Check Pair doesn't have the second value.
    *
-   * @return true if Pair has no second value
+   * @return true if the {@link Pair} has no second value
    */
   @Contract(pure = true)
-  public boolean notHasSecond() {
+  public boolean notHaveSecond() {
     return !this.hasSecond();
   }
 
   /**
    * Check Pair has the second value.
    *
-   * @return true if Pair has second value
+   * @return true if the {@link Pair} has second value
    */
   @Contract(pure = true)
   public boolean hasSecond() {

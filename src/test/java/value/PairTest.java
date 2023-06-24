@@ -53,8 +53,8 @@ class PairTest {
 
     Assertions.assertFalse(pair.isNotEmpty());
 
-    Assertions.assertTrue(pair.notHasFirst());
-    Assertions.assertTrue(pair.notHasSecond());
+    Assertions.assertTrue(pair.notHaveFirst());
+    Assertions.assertTrue(pair.notHaveSecond());
 
     Assertions.assertTrue(pair.isEmpty());
 
@@ -86,7 +86,7 @@ class PairTest {
   }
 
   @Test
-  void testPairSwapping(){
+  void testPairSwapping() {
     final Pair<Integer, String> pair = Pair.of(1, "Two");
     final Pair<String, Integer> pair2 = Pair.of("Two", 1);
 
