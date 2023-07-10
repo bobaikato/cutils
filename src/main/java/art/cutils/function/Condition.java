@@ -23,6 +23,10 @@
 
 package art.cutils.function;
 
+import java.util.Arrays;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents an operation that returns a condition/boolean. whose functional method is {@link
  * #isMet()}.
@@ -34,9 +38,67 @@ package art.cutils.function;
 public interface Condition {
 
   /**
+   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   *
+   * @param conditions a condition that will be logically-NOTed with this condition
+   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   */
+  @Contract(pure = true)
+  static boolean areAllMet(final Condition... conditions) {
+    return Arrays.stream(conditions).noneMatch(Condition::isNotMet);
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   *
+   * @param conditions a condition that will be logically-NOTed with this condition
+   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   */
+  static boolean areAnyMet(final Condition @NotNull ... conditions) {
+
+    for (final Condition condition : conditions) {
+      if (condition.isMet()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   *
+   * @param conditions a condition that will be logically-NOTed with this condition
+   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   */
+  static boolean areNoneMet(final Condition @NotNull ... conditions) {
+
+    for (final Condition condition : conditions) {
+      if (condition.isMet()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   *
+   * @param conditions a condition that will be logically-NOTed with this condition
+   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   */
+  static boolean areAllNotMet(final Condition @NotNull ... conditions) {
+    for (final Condition condition : conditions) {
+      if (condition.isNotMet()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Negates the condition. True is condition isn't met and False when condition is met.
    *
-   * @return the final negation of the actual condition of boolean.
+   * @return the negated condition.
    * @since 1.0
    */
   default boolean isNotMet() {
@@ -50,4 +112,68 @@ public interface Condition {
    * @since 1.0
    */
   boolean isMet();
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical AND of this condition
+   *
+   * @param other a condition that will be logically-ANDed with this condition
+   * @return a composed condition that represents the short-circuiting logical AND of this condition
+   */
+  default Condition and(final Condition other) {
+    return () -> this.isMet() && other.isMet();
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical OR of this condition
+   *
+   * @param other a condition that will be logically-ORed with this condition
+   * @return a composed condition that represents the short-circuiting logical OR of this condition
+   */
+  default Condition or(final Condition other) {
+    return () -> this.isMet() || other.isMet();
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical XOR of this condition
+   *
+   * @implNote XOR is exclusive.
+   * @param other a condition that will be logically-XORed with this condition
+   * @return a composed condition that represents the short-circuiting logical XOR of this condition
+   */
+  default Condition xor(final Condition other) {
+    return () -> this.isMet() ^ other.isMet();
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical NAND of this condition
+   *
+   * @implNote NAND is the negation of AND (Not AND)
+   * @param other
+   * @return a composed condition that represents the short-circuiting logical NAND of this
+   *     condition
+   */
+  default Condition nand(final Condition other) {
+    return () -> !(this.isMet() && other.isMet());
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical NOR of this condition
+   *
+   * @param other a condition that will be logically-NORed with this condition
+   * @return a composed condition that represents the short-circuiting logical NOR of this condition
+   */
+  default Condition nor(final Condition other) {
+    return () -> !(this.isMet() || other.isMet());
+  }
+
+  /**
+   * Returns a composed condition that represents a short-circuiting logical XNOR of this condition
+   *
+   * @param other a condition that will be logically-XNORed with this condition
+   * @return a composed condition that represents the short-circuiting logical XNOR of this
+   *     condition
+   */
+  default Condition xnor(final Condition other) {
+    return () -> this.isMet() == other.isMet();
+  }
 }
