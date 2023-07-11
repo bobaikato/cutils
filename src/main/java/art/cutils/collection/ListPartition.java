@@ -23,19 +23,18 @@
 
 package art.cutils.collection;
 
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import static java.lang.String.format;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static java.lang.String.format;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * This class provide a means to partition List into List of sublist.
+ * This class provides a means to partition List into List of sublist.
  *
  * @author Szymon Stepniak
  * @author @author <a href="https://github.com/bobaikato">Bobai Kato</a>

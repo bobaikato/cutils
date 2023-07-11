@@ -43,6 +43,12 @@ import org.jetbrains.annotations.Contract;
 @FunctionalInterface
 public interface Accepter<T> {
 
+  @SuppressWarnings("unchecked")
+  @Contract(value = "_ -> fail", pure = true)
+  static <T extends Exception> void sneakyThrow(final Exception ex) throws T {
+    throw (T) ex;
+  }
+
   /**
    * Returns a composed {@code Accepter} that performs, in sequence, this operation followed by the
    * {@code after} operation. If performing either operation throws an exception, it is relayed to
@@ -72,10 +78,4 @@ public interface Accepter<T> {
    * @throws Exception throws accepter exception
    */
   void accept(T t) throws Exception;
-
-  @SuppressWarnings("unchecked")
-  @Contract(value = "_ -> fail", pure = true)
-  static <T extends Exception> void sneakyThrow(final Exception ex) throws T {
-    throw (T) ex;
-  }
 }
