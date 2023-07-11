@@ -38,21 +38,21 @@ import org.jetbrains.annotations.NotNull;
 public interface Condition {
 
   /**
-   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   * Verifies that all conditions are met.
    *
-   * @param conditions a condition that will be logically-NOTed with this condition
-   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   * @param conditions the conditions to verify that all are met
+   * @return true if all conditions are met, false otherwise
    */
   @Contract(pure = true)
-  static @NotNull Condition areAllMet(final Condition... conditions) {
+  static @NotNull Condition allMet(final Condition... conditions) {
     return () -> Arrays.stream(conditions).noneMatch(Condition::isNotMet);
   }
 
   /**
-   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   * Verifies that at least one condition is met.
    *
-   * @param conditions a condition that will be logically-NOTed with this condition
-   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   * @param conditions the conditions to verify that at least one is met
+   * @return true if at least one condition is met, false otherwise
    */
   @Contract(pure = true)
   static @NotNull Condition anyMet(final Condition @NotNull ... conditions) {
@@ -60,10 +60,10 @@ public interface Condition {
   }
 
   /**
-   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
+   * Verifies that none of the conditions are met.
    *
-   * @param conditions a condition that will be logically-NOTed with this condition
-   * @return a composed condition that represents the short-circuiting logical NOT of this condition
+   * @param conditions the conditions to verify that none are met
+   * @return true if none of the conditions are met, false otherwise
    */
   @Contract(pure = true)
   static @NotNull Condition noneMet(final Condition @NotNull ... conditions) {
@@ -79,17 +79,6 @@ public interface Condition {
   @Contract(pure = true)
   static @NotNull Condition of(final boolean value) {
     return () -> value;
-  }
-
-  /**
-   * Returns a composed condition that represents a short-circuiting logical NOT of this condition
-   *
-   * @param conditions a condition that will be logically-NOTed with this condition
-   * @return a composed condition that represents the short-circuiting logical NOT of this condition
-   */
-  @Contract(pure = true)
-  static @NotNull Condition allMet(final Condition @NotNull ... conditions) {
-    return () -> Arrays.stream(conditions).anyMatch(Condition::isNotMet);
   }
 
   /**
@@ -145,7 +134,7 @@ public interface Condition {
    * Returns a composed condition that represents a short-circuiting logical NAND of this condition
    *
    * @implNote NAND is the negation of AND (Not AND)
-   * @param other
+   * @param other a condition that will be logically-NANDed with this condition
    * @return a composed condition that represents the short-circuiting logical NAND of this
    *     condition
    */
