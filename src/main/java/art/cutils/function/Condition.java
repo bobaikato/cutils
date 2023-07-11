@@ -44,8 +44,8 @@ public interface Condition {
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
   @Contract(pure = true)
-  static boolean areAllMet(final Condition... conditions) {
-    return Arrays.stream(conditions).noneMatch(Condition::isNotMet);
+  static @NotNull Condition areAllMet(final Condition... conditions) {
+    return () -> Arrays.stream(conditions).noneMatch(Condition::isNotMet);
   }
 
   /**
@@ -54,14 +54,9 @@ public interface Condition {
    * @param conditions a condition that will be logically-NOTed with this condition
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
-  static boolean areAnyMet(final Condition @NotNull ... conditions) {
-
-    for (final Condition condition : conditions) {
-      if (condition.isMet()) {
-        return true;
-      }
-    }
-    return false;
+  @Contract(pure = true)
+  static @NotNull Condition areAnyMet(final Condition @NotNull ... conditions) {
+    return () -> Arrays.stream(conditions).anyMatch(Condition::isMet);
   }
 
   /**
@@ -70,14 +65,9 @@ public interface Condition {
    * @param conditions a condition that will be logically-NOTed with this condition
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
-  static boolean areNoneMet(final Condition @NotNull ... conditions) {
-
-    for (final Condition condition : conditions) {
-      if (condition.isMet()) {
-        return false;
-      }
-    }
-    return true;
+  @Contract(pure = true)
+  static @NotNull Condition areNoneMet(final Condition @NotNull ... conditions) {
+    return () -> Arrays.stream(conditions).noneMatch(Condition::isMet);
   }
 
   /**
@@ -86,13 +76,9 @@ public interface Condition {
    * @param conditions a condition that will be logically-NOTed with this condition
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
-  static boolean areAllNotMet(final Condition @NotNull ... conditions) {
-    for (final Condition condition : conditions) {
-      if (condition.isNotMet()) {
-        return true;
-      }
-    }
-    return false;
+  @Contract(pure = true)
+  static @NotNull Condition areAllNotMet(final Condition @NotNull ... conditions) {
+    return () -> Arrays.stream(conditions).anyMatch(Condition::isNotMet);
   }
 
   /**
