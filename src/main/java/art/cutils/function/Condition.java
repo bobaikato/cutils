@@ -71,6 +71,17 @@ public interface Condition {
   }
 
   /**
+   * Returns a {@link Condition} of the boolean value.
+   *
+   * @param value the boolean value
+   * @return a {@link Condition} of the boolean value
+   */
+  @Contract(pure = true)
+  static @NotNull Condition of(final boolean value) {
+    return () -> value;
+  }
+
+  /**
    * Returns a composed condition that represents a short-circuiting logical NOT of this condition
    *
    * @param conditions a condition that will be logically-NOTed with this condition
