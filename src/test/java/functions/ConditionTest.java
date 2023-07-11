@@ -141,7 +141,7 @@ final class ConditionTest {
     final Condition firstCondition = () -> true;
     final Condition secondCondition = () -> false;
 
-    Assertions.assertTrue(Condition.areAnyMet(firstCondition, secondCondition).isMet());
+    Assertions.assertTrue(Condition.anyMet(firstCondition, secondCondition).isMet());
   }
 
   @Test
@@ -149,7 +149,7 @@ final class ConditionTest {
     final Condition firstCondition = () -> false;
     final Condition secondCondition = () -> false;
 
-    Assertions.assertTrue(Condition.areNoneMet(firstCondition, secondCondition).isMet());
+    Assertions.assertTrue(Condition.noneMet(firstCondition, secondCondition).isMet());
   }
 
   @Test
@@ -157,6 +157,6 @@ final class ConditionTest {
     final Condition firstCondition = () -> false;
     final Condition secondCondition = () -> false;
 
-    Assertions.assertTrue(Condition.areAllNotMet(firstCondition, secondCondition).isMet());
+    Assertions.assertTrue(Condition.allMet(firstCondition, secondCondition).isMet());
   }
 }

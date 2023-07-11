@@ -55,7 +55,7 @@ public interface Condition {
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
   @Contract(pure = true)
-  static @NotNull Condition areAnyMet(final Condition @NotNull ... conditions) {
+  static @NotNull Condition anyMet(final Condition @NotNull ... conditions) {
     return () -> Arrays.stream(conditions).anyMatch(Condition::isMet);
   }
 
@@ -66,7 +66,7 @@ public interface Condition {
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
   @Contract(pure = true)
-  static @NotNull Condition areNoneMet(final Condition @NotNull ... conditions) {
+  static @NotNull Condition noneMet(final Condition @NotNull ... conditions) {
     return () -> Arrays.stream(conditions).noneMatch(Condition::isMet);
   }
 
@@ -77,7 +77,7 @@ public interface Condition {
    * @return a composed condition that represents the short-circuiting logical NOT of this condition
    */
   @Contract(pure = true)
-  static @NotNull Condition areAllNotMet(final Condition @NotNull ... conditions) {
+  static @NotNull Condition allMet(final Condition @NotNull ... conditions) {
     return () -> Arrays.stream(conditions).anyMatch(Condition::isNotMet);
   }
 
