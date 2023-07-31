@@ -448,16 +448,24 @@ public abstract class Try<T> implements Serializable {
     public Try<S> filter(final Predicate<? super S> predicate) {
       Objects.requireNonNull(predicate, "Filter Predicate cannot be null.");
       if (this.isResult && this.isNotEmpty()) {
-        if (!predicate.test(this.result)) {
-          this.empty = true; // empty, condition is not met
-          this.isResult = false; // no result
-          this.result = null; // clear result
+        if (predicate.test(this.result)) {
+          return this;
         }
-        return this;
-
-      } else {
-        return this;
+        this.clean();
       }
+      return this;
+    }
+
+    /**
+     * Clean the try operation state.
+     *
+     * @implNote This method is used to clean the try operation state when a condition is not met.
+     */
+    @Contract(mutates = "this")
+    private void clean() {
+      this.empty = true; // empty, condition is not met
+      this.isResult = false; // no result
+      this.result = null; // clear result
     }
 
     /** {@inheritDoc} */
