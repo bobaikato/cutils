@@ -59,9 +59,9 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   }
 
   /**
-   * Take the operator argument of of {@link UnaryOperator} type.
+   * Take the operator argument of {@link UnaryOperator} type.
    *
-   * @param <T>      the type parameter
+   * @param <T> the type parameter
    * @param operator the function, of {@link UnaryOperator} type
    * @return the function, an instance of {@link Function} type.
    */
@@ -88,7 +88,6 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   }
 
   @Override
-
   @Contract(value = "null -> false", pure = true)
   public boolean equals(final Object o) {
     if (this == o) {
