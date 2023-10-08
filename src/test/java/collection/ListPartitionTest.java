@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import art.cutils.collection.ListPartition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import art.cutils.collection.ListPartition;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -126,6 +126,19 @@ final class ListPartitionTest {
   void equalsAndHashCodeContractToBeValid() {
     final ListPartition<?> p1 = of(asList("A", "B", "C", "D", "E", "F")).into(2);
     final ListPartition<?> p2 = of(asList("A", "B", "C", "D", "E", "F")).into(2);
+
+    assertEquals(p1, p2);
+    assertEquals(p1, p1);
+    assertEquals(p2, p2);
+
+    // Hashcode
+    assertEquals(p1.hashCode(), p2.hashCode());
+  }
+
+  @Test
+  void test_Overridden_Partition_Of_Arrays() {
+    final ListPartition<String> p1 = of(new String[] {"A", "B", "C", "D", "E", "F"}).into(2);
+    final ListPartition<String> p2 = of("A", "B", "C", "D", "E", "F").into(2);
 
     assertEquals(p1, p2);
     assertEquals(p1, p1);

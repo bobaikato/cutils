@@ -27,6 +27,7 @@ import static java.lang.String.format;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.Validate;
@@ -76,6 +77,20 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
   public static <T> @NotNull ListPartition<T> of(final List<? extends T> list) {
     Objects.requireNonNull(list, "List cannot be null");
     return new ListPartition<>(list);
+  }
+
+  /**
+   * Method to receive the array to be partitioned.
+   *
+   * @param array Array to be partitioned.
+   * @param <T> Array type
+   * @return instance of {@link ListPartition}
+   */
+  @SafeVarargs
+  @Contract("_ -> new")
+  public static <T> @NotNull ListPartition<T> of(final T... array) {
+    Objects.requireNonNull(array, "List cannot be null");
+    return new ListPartition<>(Arrays.asList(array));
   }
 
   /**
