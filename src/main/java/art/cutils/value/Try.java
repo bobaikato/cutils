@@ -142,31 +142,12 @@ public abstract class Try<T> implements Serializable {
   public abstract boolean isSuccess();
 
   /**
-   * Try is Empty if operation is Failed or Filter condition is not met.
+   * Use to check the state of a successful try operation whether or not it has a result.
    *
-   * @return a {@link Boolean} depending on the state: {@code true} if try is empty else {@code
-   *     false}
-   * @see Try#filter(Predicate)
-   * @see Try#isFailure()
-   * @see Try#isSuccess()
-   * @see Try#isNotEmpty()
-   * @since v2.4
+   * @return a {@link Boolean} depending on the state: {@code true} if try operation was successful
+   *     and has a result or {@code false} if operation fails or successful but without a result.
    */
-  public abstract boolean isEmpty();
-
-  /**
-   * If try filter condition is not met, invoke the specified {@link Runnable}.
-   *
-   * @implNote this method is not intended to be used for handling failed operations. Use {@link
-   *     Try#onFailure(Runnable)} to handle failed operation.
-   * @implSpec Try will invoke {@link Try#onEmpty(Runnable)} only if filter condition is not met.
-   * @param run the operation to be executed if filter condition is not met.
-   * @return existing instance of {@link Try}
-   * @since v2.4.5
-   * @see Try#onFailure(Runnable)
-   * @see Try#filter(Predicate)
-   */
-  public abstract Try<T> onEmpty(final Runnable run);
+  public abstract boolean isResult();
 
   /**
    * Try is Not Empty if operation is Successful or filter condition is met.
@@ -193,6 +174,33 @@ public abstract class Try<T> implements Serializable {
    * @since v1
    */
   public abstract T get();
+
+  /**
+   * Try is Empty if operation is Failed or Filter condition is not met.
+   *
+   * @return a {@link Boolean} depending on the state: {@code true} if try is empty else {@code
+   *     false}
+   * @see Try#filter(Predicate)
+   * @see Try#isFailure()
+   * @see Try#isSuccess()
+   * @see Try#isNotEmpty()
+   * @since v2.4
+   */
+  public abstract boolean isEmpty();
+
+  /**
+   * If try filter condition is not met, invoke the specified {@link Runnable}.
+   *
+   * @implNote this method is not intended to be used for handling failed operations. Use {@link
+   *     Try#onFailure(Runnable)} to handle failed operation.
+   * @implSpec Try will invoke {@link Try#onEmpty(Runnable)} only if filter condition is not met.
+   * @param run the operation to be executed if filter condition is not met.
+   * @return existing instance of {@link Try}
+   * @since v2.4.5
+   * @see Try#onFailure(Runnable)
+   * @see Try#filter(Predicate)
+   */
+  public abstract Try<T> onEmpty(final Runnable run);
 
   /**
    * If a result is present, and the result matches the given predicate, returns a {@code Try}
@@ -296,7 +304,7 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
-   * If a try operation return a result, apply the provided mapping function to it, and return and
+   * If a try operation returns a result, apply the provided mapping function to it, and return and
    * instance of {@link Try} with the applied result.
    *
    * @param mapper a mapping function to apply to the result is available.
@@ -308,6 +316,21 @@ public abstract class Try<T> implements Serializable {
    * @throws UnsupportedOperationException if a try operation state is {@link Failure}.
    */
   public abstract <M> Try<M> map(final ThrowingFunction<? super T, ? extends M> mapper);
+
+  /**
+   * If the try operation does not return a result after a {@link Try#filter(Predicate)}, apply the
+   * provided dealer function to provide a default value, and return an instance of {@link Try} with
+   * the provided default value.
+   *
+   * @param dealer a dealer function to provide a default value when the try operation does not
+   *     return a result.
+   * @param <D> The type of the dealer value
+   * @return an instance of {@link Try} with the provided default value.
+   * @throws NullPointerException if the dealer function is null
+   * @throws IllegalStateException if a try operation state is {@link Success} but without a result.
+   * @throws UnsupportedOperationException if a try operation state is {@link Failure}.
+   */
+  public abstract <D> Try<D> onEmpty(final Dealer<? extends D> dealer);
 
   /**
    * Return the result if try operation is successful and has a result, otherwise return {@code
@@ -351,19 +374,13 @@ public abstract class Try<T> implements Serializable {
    */
   public abstract T orElseThrow(final Throwable throwable);
 
-  /**
-   * Use to check the state of a successful try operation whether or not it has a result.
-   *
-   * @return a {@link Boolean} depending on the state: {@code true} if try operation was successful
-   *     and has a result or {@code false} if operation fails or successful but without a result.
-   */
-  public abstract boolean isResult();
-
   private static class Success<S> extends Try<S> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
     private boolean isResult;
+
     private S result;
 
+    /** Indicates whether the variable is empty or not. */
     private boolean empty;
 
     private Success(final boolean empty) {
@@ -371,14 +388,14 @@ public abstract class Try<T> implements Serializable {
       this.empty = empty;
     }
 
-    private Success(final S result) {
-      this.isResult = true;
-      this.result = result;
-    }
-
     private Success() {
       super();
       this.isResult = false;
+    }
+
+    private Success(final S result) {
+      this.isResult = true;
+      this.result = result;
     }
 
     /** {@inheritDoc} */
@@ -414,18 +431,8 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
-    public boolean isEmpty() {
-      return this.empty;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public @Nullable Try<S> onEmpty(final Runnable task) {
-      Objects.requireNonNull(task, "on Empty Runnable cannot be null.");
-      if (this.isEmpty()) {
-        task.run();
-      }
-      return this;
+    public boolean isResult() {
+      return this.isResult;
     }
 
     /** {@inheritDoc} */
@@ -440,6 +447,23 @@ public abstract class Try<T> implements Serializable {
     @Contract(pure = true)
     public S get() {
       return this.result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
+    public boolean isEmpty() {
+      return this.empty;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Try<S> onEmpty(final Runnable task) {
+      Objects.requireNonNull(task, "onEmpty Runnable cannot be null.");
+      if (this.isEmpty()) {
+        task.run();
+      }
+      return this;
     }
 
     /** {@inheritDoc} */
@@ -471,7 +495,7 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
-    public @Nullable Try<S> peek(final Accepter<? super S> acceptor) {
+    public Try<S> peek(final Accepter<? super S> acceptor) {
       Objects.requireNonNull(acceptor, "Accepter cannot be null.");
       if (this.isResult && this.isNotEmpty()) {
         try {
@@ -508,11 +532,21 @@ public abstract class Try<T> implements Serializable {
     @Override
     public <M> @NotNull Try<M> map(final ThrowingFunction<? super S, ? extends M> mapper) {
       Objects.requireNonNull(mapper, "Mapper cannot be null.");
-      if (this.isResult && this.isNotEmpty()) {
-        return Try.of(() -> mapper.apply(this.result));
+      return this.isResult && this.isNotEmpty()
+          ? Try.of(() -> mapper.apply(this.result))
+          : new Success<>(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
+    public <D> Try<D> onEmpty(final Dealer<? extends D> dealer) {
+      Objects.requireNonNull(dealer, "onEmpty Dealer cannot be null.");
+      if (this.isEmpty()) {
+        return Try.of(dealer);
       }
 
-      return new Success<>(true);
+      return this.getClass().cast(this);
     }
 
     /** {@inheritDoc} */
@@ -543,13 +577,6 @@ public abstract class Try<T> implements Serializable {
     public S orElseThrow(final Throwable throwable) {
       return this.get();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    @Contract(pure = true)
-    public boolean isResult() {
-      return this.isResult;
-    }
   }
 
   private static class Failure<F> extends Try<F> implements Serializable {
@@ -571,6 +598,20 @@ public abstract class Try<T> implements Serializable {
     /** {@inheritDoc} */
     @Override
     @Contract(pure = true)
+    public boolean isResult() {
+      return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
+    public @Nullable F get() {
+      return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Contract(pure = true)
     public boolean isEmpty() {
       return true;
     }
@@ -580,13 +621,6 @@ public abstract class Try<T> implements Serializable {
     @Contract(value = " -> this", pure = true)
     public Try<F> onEmpty(final Runnable run) {
       return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Contract(pure = true)
-    public @Nullable F get() {
-      return null;
     }
 
     /** {@inheritDoc} */
@@ -637,6 +671,13 @@ public abstract class Try<T> implements Serializable {
 
     /** {@inheritDoc} */
     @Override
+    @Contract(pure = true)
+    public <D> @NotNull Try<D> onEmpty(final Dealer<? extends D> dealer) {
+      return new Failure<>(this.exception);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     @Contract(value = "_ -> param1", pure = true)
     public F orElseGet(final F other) {
       return other;
@@ -667,13 +708,6 @@ public abstract class Try<T> implements Serializable {
       } catch (final Throwable ex) {
         throw new RuntimeException(ex);
       }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Contract(pure = true)
-    public boolean isResult() {
-      return false;
     }
 
     /** {@inheritDoc} */
