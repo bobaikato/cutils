@@ -542,11 +542,7 @@ public abstract class Try<T> implements Serializable {
     @Contract(pure = true)
     public <D> Try<D> onEmpty(final Dealer<? extends D> dealer) {
       Objects.requireNonNull(dealer, "onEmpty Dealer cannot be null.");
-      if (this.isEmpty()) {
-        return Try.of(dealer);
-      }
-
-      return this.getClass().cast(this);
+      return this.isEmpty() ? Try.of(dealer) : this.getClass().cast(this);
     }
 
     /** {@inheritDoc} */
