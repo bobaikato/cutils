@@ -158,6 +158,7 @@ final class TryTest {
 
     assertEquals(25, sameResult);
   }
+
   // test PeekFailure
   @Test
   void testTryPeekFailureAffectingTryState() {
@@ -363,5 +364,21 @@ final class TryTest {
             });
 
     assertEquals(26, value.get());
+  }
+
+  @Test
+  void onEmpty_whenTryIsEmpty_returnsDealerResult() {
+    Try.of(() -> null)
+        .filter(Objects::nonNull)
+        .onEmpty(() -> 42)
+        .onSuccess(result -> assertEquals(42, result));
+  }
+
+  @Test
+  void onEmpty_whenTryIsNotEmpty_returnsSameTry() {
+    Try.of(() -> 100)
+        .filter(Objects::nonNull)
+        .onEmpty(() -> 42)
+        .onSuccess(result -> assertEquals(100, result));
   }
 }
