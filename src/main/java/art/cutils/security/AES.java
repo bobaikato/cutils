@@ -23,8 +23,7 @@
 
 package art.cutils.security;
 
-import static art.cutils.security.AES.Algorithm.SHA256;
-import static art.cutils.standards.DigestAlgorithm.SHA256;
+import static art.cutils.security.DigestAlgorithm.SHA256;
 import static java.security.MessageDigest.getInstance;
 import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
@@ -34,7 +33,6 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.Validate.isTrue;
 
 import art.cutils.Serialization;
-import art.cutils.standards.DigestAlgorithm;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -70,14 +68,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class AES<T> implements Serializable {
   private static final long serialVersionUID = 977987773346721438L;
+
   /**
    * Default encryption Key.
    *
    * @since 1.0
    */
   private static final String DEFAULT_KEY = "Set yours with: `AES.init('fW&yNtP2peBndT5Hz&')`";
+
   /** GCM Length. */
   private static final int GCM_IV_LENGTH = 12;
+
   /**
    * Instance of {@link Cipher}.
    *
@@ -91,6 +92,7 @@ public final class AES<T> implements Serializable {
    * @since 1.0
    */
   private final SecretKeySpec secretKey;
+
   /**
    * Additional Authentication Data for GCM.
    *
@@ -107,18 +109,18 @@ public final class AES<T> implements Serializable {
    * @throws NoSuchPaddingException if the specified padding mechanism is not available in the
    *     environment
    */
-  private AES(final AES.@NotNull Algorithm algorithm, final @NotNull String encryptionKey)
+  private AES(final @NotNull DigestAlgorithm algorithm, final @NotNull String encryptionKey)
       throws NoSuchPaddingException, NoSuchAlgorithmException {
     this.cipher = Cipher.getInstance("AES/GCM/NoPadding");
     byte[] key = this.aad = encryptionKey.getBytes(StandardCharsets.UTF_8);
-    final MessageDigest messageDigest = getInstance(algorithm.type);
+    final MessageDigest messageDigest = getInstance(algorithm.getType());
     key = Arrays.copyOf(messageDigest.digest(key), 16);
     this.secretKey = new SecretKeySpec(key, "AES");
   }
 
   /**
-   * This initiates encryption with default {@link MessageDigest} {@link Algorithm#type} and
-   * encryption key.
+   * This initiates encryption with default {@link MessageDigest} {@link DigestAlgorithm#getType()}
+   * and encryption key.
    *
    * @param <T> Type of value
    * @return Instance of {@link AES}
@@ -134,8 +136,8 @@ public final class AES<T> implements Serializable {
   }
 
   /**
-   * This initiates encryption with the default {@link MessageDigest} {@link Algorithm#type}:{@code
-   * SHA-256}.
+   * This initiates encryption with the default {@link MessageDigest} {@link
+   * DigestAlgorithm#getType()}:{@code SHA-256}.
    *
    * @param encryptionKey user encryption Key
    * @param <T> Type of value
@@ -154,11 +156,11 @@ public final class AES<T> implements Serializable {
   }
 
   /**
-   * This initiates encryption with the specified {@link MessageDigest} {@link Algorithm#type} type
-   * and default Key.
+   * This initiates encryption with the specified {@link MessageDigest} {@link
+   * DigestAlgorithm#getType()} type and default Key.
    *
-   * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
-   *     null}.
+   * @param algorithm encryption algorithm of {@link DigestAlgorithm} instance. SHA256 is set if
+   *     {@code null}.
    * @param <T> Type of value
    * @return Instance of {@link AES}
    * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
@@ -168,18 +170,18 @@ public final class AES<T> implements Serializable {
    * @since 1.0
    */
   @Contract("_ -> new")
-  public static <T> @NotNull AES<T> init(final AES.Algorithm algorithm)
+  public static <T> @NotNull AES<T> init(final DigestAlgorithm algorithm)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     return AES.init(algorithm, AES.DEFAULT_KEY);
   }
 
   /**
-   * This initiates encryption with the specified {@link MessageDigest} {@link Algorithm#type} and
-   * encryption key.
+   * This initiates encryption with the specified {@link MessageDigest} {@link
+   * DigestAlgorithm#getType()} and encryption key.
    *
    * @param encryptionKey user encryption Key
-   * @param algorithm encryption algorithm of {@link Algorithm} instance. SHA256 is set if {@code
-   *     null}.
+   * @param algorithm encryption algorithm of {@link DigestAlgorithm} instance. SHA256 is set if
+   *     {@code null}.
    * @param <T> Type of value
    * @return Instance of {@link AES}
    * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic
@@ -212,13 +214,16 @@ public final class AES<T> implements Serializable {
    * @throws IOException Signals that an I/O exception of some sort has occurred.
    */
   public String encrypt(@Valid final T itemToEncrypt)
-      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
-          IllegalBlockSizeException, IOException {
+      throws InvalidAlgorithmParameterException,
+          InvalidKeyException,
+          BadPaddingException,
+          IllegalBlockSizeException,
+          IOException {
     Validate.isTrue(isNotEmpty(itemToEncrypt), "Item to encrypt cannot be null.", itemToEncrypt);
     final Supplier<byte[]> ivSupplier =
         () -> {
           final SecureRandom secureRandom = new SecureRandom();
-          final byte[] iv = new byte[GCM_IV_LENGTH]; // NEVER REUSE THIS IV WITH SAME KEY
+          final byte[] iv = new byte[AES.GCM_IV_LENGTH]; // NEVER REUSE THIS IV WITH SAME KEY
           do {
             secureRandom.nextBytes(iv);
           } while (iv[0] == 0);
@@ -258,13 +263,16 @@ public final class AES<T> implements Serializable {
    *     a block * cipher is incorrect, i.e., does not match the block size of the cipher.
    */
   public T decrypt(final @NotNull String itemToDecrypt)
-      throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+      throws InvalidAlgorithmParameterException,
+          InvalidKeyException,
+          BadPaddingException,
           IllegalBlockSizeException {
 
     isTrue(isNotEmpty(itemToDecrypt), "Item to decrypt cannot be null.", itemToDecrypt);
 
     final byte[] cipherMessage = Base64.getUrlDecoder().decode(itemToDecrypt);
-    final AlgorithmParameterSpec spec = new GCMParameterSpec(128, cipherMessage, 0, GCM_IV_LENGTH);
+    final AlgorithmParameterSpec spec =
+        new GCMParameterSpec(128, cipherMessage, 0, AES.GCM_IV_LENGTH);
 
     this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, spec);
 
@@ -273,7 +281,8 @@ public final class AES<T> implements Serializable {
     }
 
     final byte[] plainText =
-        this.cipher.doFinal(cipherMessage, GCM_IV_LENGTH, cipherMessage.length - GCM_IV_LENGTH);
+        this.cipher.doFinal(
+            cipherMessage, AES.GCM_IV_LENGTH, cipherMessage.length - AES.GCM_IV_LENGTH);
 
     return SerializationUtils.deserialize(plainText);
   }

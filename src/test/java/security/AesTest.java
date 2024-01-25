@@ -22,14 +22,7 @@
  */
 package security;
 
-import static art.cutils.security.AES.Algorithm;
-import static art.cutils.security.AES.Algorithm.MD2;
-import static art.cutils.security.AES.Algorithm.MD5;
-import static art.cutils.security.AES.Algorithm.SHA1;
-import static art.cutils.security.AES.Algorithm.SHA224;
-import static art.cutils.security.AES.Algorithm.SHA256;
-import static art.cutils.security.AES.Algorithm.SHA384;
-import static art.cutils.security.AES.Algorithm.SHA512;
+import static art.cutils.security.DigestAlgorithm.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 import art.cutils.security.AES;
+import art.cutils.security.DigestAlgorithm;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -58,17 +52,22 @@ final class AesTest {
   private static @NotNull Stream<Arguments> customObjectResource() {
     final PersonExample personExampleI =
         new PersonExample() {
+
+          private static final long serialVersionUID = 366454167891286432L;
+
           {
-            setAge(10);
-            setName("B0B");
+            this.setAge(10);
+            this.setName("B0B");
           }
         };
 
     final PersonExample personExampleII =
         new PersonExample() {
+          private static final long serialVersionUID = -9074187748710070750L;
+
           {
-            setAge(11);
-            setName("PETER");
+            this.setAge(11);
+            this.setName("PETER");
           }
         };
 
@@ -132,8 +131,8 @@ final class AesTest {
       "Should successfully Encrypt and Decrypt Object with all DigestAlgorithm type and Key")
   @ParameterizedTest(name = "{index} => DigestAlgorithm={0}")
   @MethodSource("algorithmTypes")
-  void encryptionAndDecryptionWithSpecifiedAlgorithmTypeAndCustomKey(final Algorithm algorithm)
-      throws Exception {
+  void encryptionAndDecryptionWithSpecifiedAlgorithmTypeAndCustomKey(
+      final DigestAlgorithm algorithm) throws Exception {
 
     final AES<PersonExample> aes = AES.init(algorithm, "Encrypt and Decrypt Key");
 
@@ -151,7 +150,7 @@ final class AesTest {
   @DisplayName("Should successfully Encrypt and Decrypt Object with all DigestAlgorithm type")
   @ParameterizedTest(name = "{index} => DigestAlgorithm={0}")
   @MethodSource("algorithmTypes")
-  void encryptionAndDecryptionWithSpecifiedAlgorithmType(final Algorithm algorithm)
+  void encryptionAndDecryptionWithSpecifiedAlgorithmType(final DigestAlgorithm algorithm)
       throws Exception {
 
     final AES<PersonExample> aes = AES.init(algorithm);
@@ -205,7 +204,7 @@ final class AesTest {
   @ParameterizedTest(name = "{index} => input={0}, Key={1}, DigestAlgorithm={2}")
   @MethodSource("stringEncryptionValues")
   void shouldEncryptStringTypeValuesWithCustomKeyAndAlgorithmType(
-      final String input, final String key, final Algorithm algorithm) throws Exception {
+      final String input, final String key, final DigestAlgorithm algorithm) throws Exception {
     final String encryptValue = AES.init(algorithm, key).encrypt(input);
     final String decryptedValue = AES.<String>init(algorithm, key).decrypt(encryptValue);
 
@@ -245,7 +244,8 @@ final class AesTest {
   @DisplayName("Should successfully encrypt Double type values With Custom Key.")
   @ParameterizedTest(name = "{index} => input={0}, Key={1}")
   @MethodSource("doubleEncryptionValues")
-  void shouldEncryptDoubleTypeValuesWithCustomKey(double input, String key) throws Exception {
+  void shouldEncryptDoubleTypeValuesWithCustomKey(final double input, final String key)
+      throws Exception {
     final String encryptValue = AES.init(key).encrypt(input);
     final double decryptedValue = AES.<Double>init(key).decrypt(encryptValue);
 
@@ -287,20 +287,24 @@ final class AesTest {
 
     @Override
     public int hashCode() {
-      return Objects.hash(getAge(), getName());
+      return Objects.hash(this.getAge(), this.getName());
     }
 
     @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(final Object o) {
-      if (this == o) return true;
-      if (!(o instanceof PersonExample)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof PersonExample)) {
+        return false;
+      }
       final PersonExample that = (PersonExample) o;
-      return getAge() == that.getAge() && Objects.equals(getName(), that.getName());
+      return this.getAge() == that.getAge() && Objects.equals(this.getName(), that.getName());
     }
 
     public int getAge() {
-      return age;
+      return this.age;
     }
 
     public void setAge(final int age) {
@@ -308,7 +312,7 @@ final class AesTest {
     }
 
     public String getName() {
-      return name;
+      return this.name;
     }
 
     public void setName(final String name) {
