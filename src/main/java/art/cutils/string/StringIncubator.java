@@ -23,8 +23,7 @@
 
 package art.cutils.string;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import static org.apache.commons.lang3.Validate.isTrue;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
@@ -33,8 +32,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
-
-import static org.apache.commons.lang3.Validate.isTrue;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * You can use this class if you need to Generate Random String/Alpha-numeric string for Tickets,
@@ -122,8 +121,8 @@ public class StringIncubator implements Serializable {
   /**
    * Create an alphanumeric string from a secure generator.
    *
-   * @param symbols String to generate the hatched values
-   * @param length of hatched string/value
+   * @param length The length of the hatched string.
+   * @param symbols The string used to generate the hatched values.
    * @since 1.0
    */
   public StringIncubator(final int length, final String symbols) {
@@ -131,7 +130,8 @@ public class StringIncubator implements Serializable {
   }
 
   /**
-   * Create session identifiers, default length of 64.
+   * Constructs a new StringIncubator object with a default session identifier length of 64
+   * characters.
    *
    * @since 1.0
    */
@@ -140,29 +140,28 @@ public class StringIncubator implements Serializable {
   }
 
   /**
-   * Create an alphanumeric string from a secure generator.
+   * Create an alphanumeric string of the specified length using a secure generator.
    *
-   * @param length of hatched string/value
-   * @since 1.0
+   * @param length the length of the generated string
    */
   public StringIncubator(final int length) {
     this(length, new SecureRandom());
   }
 
   /**
-   * Constructor to hatch an alphanumeric string generator.
+   * Constructor to create an alphanumeric string generator.
    *
-   * @param length of hatched string/value
-   * @param random any instance of {@link Random} as required
-   * @since 1.0
+   * @param length The length of the generated string.
+   * @param random An instance of {@link Random} used for random value generation.
    */
   public StringIncubator(final int length, final Random random) {
     this(length, random, ALPHANUM);
   }
 
   /**
-   * Upper-case Alphabets.
+   * Returns a string containing upper-case alphabets.
    *
+   * @return a string containing upper-case alphabets
    * @since 1.0
    */
   @Contract(pure = true)
@@ -171,18 +170,18 @@ public class StringIncubator implements Serializable {
   }
 
   /**
-   * Use this set the Upper case characters.
+   * Sets the upper case characters.
    *
-   * @param uppercaseValue the upper case values.
+   * @param uppercaseValue the upper case values
    */
   public static void setUpper(@NotNull final String uppercaseValue) {
     StringIncubator.upper = uppercaseValue.toUpperCase();
   }
 
   /**
-   * Lower-case Alphabets.
+   * Retrieves the lower case characters used for string generation.
    *
-   * @since 1.0
+   * @return the lower case characters
    */
   @Contract(pure = true)
   public static String getLower() {
@@ -190,17 +189,18 @@ public class StringIncubator implements Serializable {
   }
 
   /**
-   * Use this method to set Lower-case characters.
+   * Sets the value of Lower-case characters.
    *
-   * @param lowercaseValue the lower case values.
+   * @param lowercaseValue the value to set as lowercase.
    */
   public static void setLower(final @NotNull String lowercaseValue) {
     StringIncubator.lower = lowercaseValue.toLowerCase();
   }
 
   /**
-   * Generate and returns random string.
+   * Generate and return a random string.
    *
+   * @return Generated random string.
    * @since 1.0
    */
   public String hatch() {

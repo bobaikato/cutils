@@ -24,7 +24,6 @@
 package art.cutils.function;
 
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -50,10 +49,11 @@ import org.jetbrains.annotations.NotNull;
 public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
 
   /**
-   * Returns a unary operator that always returns its input argument.
+   * Returns a {@link UnaryOperator} that simply returns its input. This method is useful when you
+   * need a function that does not transform the input in any way.
    *
-   * @param <T> the type of the input and output of the operator
-   * @return a unary operator that always returns its input argument
+   * @param <T> the type of the input and output of the UnaryOperator
+   * @return a UnaryOperator that returns its input unchanged
    */
   @Contract(pure = true)
   static <T> @NotNull UnaryOperator<T> identity() {
@@ -61,11 +61,14 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
   }
 
   /**
-   * Uncheck method which will take operation that will throw Exception.
+   * Applies the given throwing unary operation to an argument. If an exception is thrown during the
+   * operation, it is caught and rethrown as a unchecked exception.
    *
-   * @param operator Variable of {@link ThrowingFunction}
-   * @param <T>      the type of the input to the function
-   * @return A {@link Function}
+   * @param <T> the type of the argument and result of the operation
+   * @param operator the throwing unary operation to be applied
+   * @return a unary operator that applies the throwing unary operation to the argument and returns
+   *     the result, or throws an unchecked exception if an exception occurs during the operation
+   * @throws NullPointerException if the operator is null
    */
   @Contract(pure = true)
   static <T> @NotNull UnaryOperator<T> unchecked(final ThrowingUnaryOperation<T> operator) {
@@ -80,13 +83,13 @@ public interface ThrowingUnaryOperation<T> extends ThrowingFunction<T, T> {
   }
 
   /**
-   * Sneak exception on function execution.
+   * Throws a given exception without requiring it to be declared in the method signature.
    *
-   * @param ex exception throw on operation
-   * @param <T> arg type
-   * @param <R> return type
-   * @return an exception
-   * @throws T arg type exception
+   * @param ex the exception to throw
+   * @param <T> the specific type of exception to throw
+   * @param <R> the return type of the method
+   * @return does not actually return a value (throws an exception instead)
+   * @throws T the given exception, cast to the specific type
    */
   @SuppressWarnings("unchecked")
   @Contract(value = "_ -> fail", pure = true)

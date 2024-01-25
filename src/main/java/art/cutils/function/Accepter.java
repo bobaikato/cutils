@@ -72,10 +72,10 @@ public interface Accepter<T> {
   }
 
   /**
-   * Performs this operation on the given argument.
+   * This method accepts a value of type T and executes the specified Accepter on it.
    *
-   * @param t the input argument.
-   * @throws Exception throws accepter exception
+   * @param t the value to accept
+   * @throws Exception if the Accepter throws an exception
    */
   void accept(T t) throws Exception;
 }

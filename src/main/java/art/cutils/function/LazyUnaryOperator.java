@@ -59,11 +59,14 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   }
 
   /**
-   * Take the operator argument of {@link UnaryOperator} type.
+   * Creates a new instance of {@link UnaryOperator} that lazily applies the given {@link
+   * UnaryOperator}.
    *
-   * @param <T> the type parameter
-   * @param operator the function, of {@link UnaryOperator} type
-   * @return the function, an instance of {@link Function} type.
+   * @param operator the {@link UnaryOperator} to be applied lazily
+   * @param <T> the type of the argument and result of the {@link UnaryOperator}
+   * @return a new instance of {@link UnaryOperator} that applies the given {@link UnaryOperator}
+   *     lazily
+   * @throws NullPointerException if the {@code operator} is null
    */
   @Contract("_ -> new")
   public static <T> @NotNull UnaryOperator<T> of(final UnaryOperator<T> operator) {
@@ -72,10 +75,11 @@ public final class LazyUnaryOperator<T> implements UnaryOperator<T>, Serializabl
   }
 
   /**
-   * Applies this function to the given argument.
+   * Applies the function to the given argument.
    *
-   * @param t the function argument
-   * @return the function result
+   * @param t the argument to apply the function to
+   * @return the result of applying the function to the argument
+   * @throws NullPointerException if the argument is null
    */
   @Override
   public T apply(final T t) {

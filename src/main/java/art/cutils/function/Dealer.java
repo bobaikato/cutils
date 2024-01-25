@@ -46,10 +46,11 @@ import java.util.function.Supplier;
 public interface Dealer<T> {
 
   /**
-   * Gets a result.
+   * Executes the dealer operation, which may throw an exception, and returns the result.
    *
-   * @return a result
-   * @throws Exception operation exception thrown
+   * @return the result of the dealer operation
+   * @throws Exception if the dealer operation throws an exception
+   * @see Dealer
    */
   T deal() throws Exception;
 }

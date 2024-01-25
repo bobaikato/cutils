@@ -67,11 +67,11 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
   }
 
   /**
-   * Method to receive the list to be partitioned.
+   * Creates a new instance of ListPartition by partitioning the given list into sublists.
    *
-   * @param list List to be partitioned.
-   * @param <T> List type
-   * @return instance of {@link ListPartition}
+   * @param list The list to be partitioned. Cannot be null.
+   * @param <T> The type of elements in the list.
+   * @return A new instance of ListPartition.
    */
   @Contract("_ -> new")
   public static <T> @NotNull ListPartition<T> of(final List<? extends T> list) {
@@ -80,11 +80,12 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
   }
 
   /**
-   * Method to receive the array to be partitioned.
+   * This method creates a new instance of ListPartition by partitioning the given array into
+   * sublists of the specified size.
    *
-   * @param array Array to be partitioned.
-   * @param <T> Array type
-   * @return instance of {@link ListPartition}
+   * @param array The array to be partitioned. Cannot be null.
+   * @param <T> The type of elements in the array.
+   * @return A new instance of ListPartition.
    */
   @SafeVarargs
   @Contract("_ -> new")
@@ -94,10 +95,10 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
   }
 
   /**
-   * Method used to get partition size.
+   * Partitions the list into sublists of the specified size.
    *
-   * @param sublistSize The sub-list/ListPartition size.
-   * @return current instance of {@link ListPartition}
+   * @param sublistSize The size of each sublist. Must be greater than 0.
+   * @return The ListPartition instance.
    */
   @Contract(value = "_ -> this", mutates = "this")
   public ListPartition<T> into(final int sublistSize) {
@@ -106,8 +107,9 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
     return this;
   }
 
-  @Contract(pure = true)
+  /** {@inheritDoc} */
   @Override
+  @Contract(pure = true)
   public @NotNull List<T> get(final int index) {
     final int start = index * this.sublistSize;
     final int end = Math.min(start + this.sublistSize, this.list.size());
@@ -118,6 +120,7 @@ public final class ListPartition<T> extends AbstractList<List<? super T>> {
     return new ArrayList<>(this.list.subList(start, end));
   }
 
+  /** {@inheritDoc} */
   @Override
   public int size() {
     return (int) Math.ceil((double) this.list.size() / (double) this.sublistSize);

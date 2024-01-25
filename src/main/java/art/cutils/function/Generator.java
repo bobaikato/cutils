@@ -39,10 +39,11 @@ package art.cutils.function;
 public interface Generator<T> {
 
   /**
-   * Generates values.
+   * Generates a value each time it is called.
    *
-   * @return return generate values of T type.
-   * @since 1.0
+   * @param <T> the type of value to generate
+   * @return a unique value of type T
+   * @see Generator
    */
   T generate();
 }

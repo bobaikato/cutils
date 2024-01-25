@@ -63,26 +63,26 @@ public interface ThrowingFunction<T, R> {
   }
 
   /**
-   * Applies this function to the given argument.
+   * Throws a given exception without requiring it to be declared in the method signature.
    *
-   * @param t the function argument if Type T
-   * @return the function result
-   * @throws Exception any exception thrown when applying function
-   */
-  R apply(T t) throws Exception;
-
-  /**
-   * Sneak exception on function execution.
-   *
-   * @param ex exception throw on operation
-   * @param <T> arg type
-   * @param <R> return type
-   * @return an exception
-   * @throws T arg type exception
+   * @param ex the exception to throw
+   * @param <T> the specific type of exception to throw
+   * @param <R> the return type of the method
+   * @return does not actually return a value (throws an exception instead)
+   * @throws T the given exception, cast to the specific type
    */
   @SuppressWarnings("unchecked")
   @Contract(value = "_ -> fail", pure = true)
   static <T extends Exception, R> R sneakyThrow(final Exception ex) throws T {
     throw (T) ex;
   }
+
+  /**
+   * Applies the function to the given input.
+   *
+   * @param t the input to the function
+   * @return the result of applying the function to the input
+   * @throws Exception if an error occurs during function execution
+   */
+  R apply(T t) throws Exception;
 }

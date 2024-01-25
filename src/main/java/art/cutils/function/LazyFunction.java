@@ -66,12 +66,13 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   }
 
   /**
-   * Take the function operation of {@link Function} type.
+   * Creates a new lazy function from the given function.
    *
-   * @param <T>      the type parameter
-   * @param <R>      the return type parameter
-   * @param function the function, of {@link Function} type
-   * @return the function, an instance of {@link Function} type.
+   * @param function the function to create a lazy function from
+   * @param <T> the type of the input to the function
+   * @param <R> the type of the result of the function
+   * @return a new lazy function
+   * @throws NullPointerException if the function is null
    */
   @Contract("_ -> new")
   public static <T, R> @NotNull Function<T, R> of(final Function<? super T, ? extends R> function) {
@@ -80,10 +81,12 @@ public final class LazyFunction<T, R> implements Function<T, R>, Serializable {
   }
 
   /**
-   * Applies this function to the given argument.
+   * Applies the function to the given argument. If the argument is already present in the store,
+   * the stored value is returned. Otherwise, the function is applied to the argument , the result
+   * is stored in the store, and then returned.
    *
-   * @param t the function argument
-   * @return the function result
+   * @param t the argument to apply the function to
+   * @return the result of applying the function to the argument
    */
   @Override
   public R apply(final T t) {

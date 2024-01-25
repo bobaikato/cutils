@@ -301,9 +301,9 @@ public final class Pause<T> {
       }
 
       /**
-       * This gets the {@link Try} operation.
+       * Retrieves the result of the Try operation.
        *
-       * @return try a result. Instance of {@link Try}
+       * @return the result of the Try operation
        */
       @Contract(pure = true)
       public Try<T> get() {

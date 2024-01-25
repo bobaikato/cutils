@@ -23,19 +23,18 @@
 
 package art.cutils.security;
 
-import art.cutils.Serialization;
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import static art.cutils.security.AES.Algorithm.SHA256;
+import static art.cutils.standards.DigestAlgorithm.SHA256;
+import static java.security.MessageDigest.getInstance;
+import static java.util.Objects.hash;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static org.apache.commons.lang3.Validate.isTrue;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.validation.Valid;
+import art.cutils.Serialization;
+import art.cutils.standards.DigestAlgorithm;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -49,15 +48,17 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.function.Supplier;
-
-import static art.cutils.security.AES.Algorithm.SHA256;
-import static java.security.MessageDigest.getInstance;
-import static java.util.Objects.hash;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.apache.commons.lang3.Validate.isTrue;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.validation.Valid;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This is an implementation of Advanced Encryption Standard, to can encrypt and decrypt Objects of
@@ -98,13 +99,13 @@ public final class AES<T> implements Serializable {
   private final byte[] aad;
 
   /**
-   * Default Constructor.
+   * Initializes a new instance of the AES class with the specified algorithm and encryption key.
    *
-   * @param encryptionKey meta data you want to verify secret message
-   * @throws NoSuchPaddingException when a bad/Wrong encryption key is supplied.
-   * @throws NoSuchAlgorithmException This exception is thrown when a cryptographic algorithm not
-   *     available in the environment.
-   * @since 1.0
+   * @param algorithm the encryption algorithm to use
+   * @param encryptionKey the encryption key
+   * @throws NoSuchAlgorithmException if the specified algorithm is not available in the environment
+   * @throws NoSuchPaddingException if the specified padding mechanism is not available in the
+   *     environment
    */
   private AES(final AES.@NotNull Algorithm algorithm, final @NotNull String encryptionKey)
       throws NoSuchPaddingException, NoSuchAlgorithmException {
@@ -188,7 +189,8 @@ public final class AES<T> implements Serializable {
    * @since 1.0
    */
   @Contract("_, _ -> new")
-  public static <T> @NotNull AES<T> init(final AES.Algorithm algorithm, final String encryptionKey)
+  public static <T> @NotNull AES<T> init(
+      final DigestAlgorithm algorithm, final String encryptionKey)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     requireNonNull(encryptionKey, "encryption Key cannot be null");
     return new AES<>(isNull(algorithm) ? SHA256 : algorithm, encryptionKey);
@@ -297,40 +299,5 @@ public final class AES<T> implements Serializable {
       return false;
     }
     return false;
-  }
-
-  /**
-   * This holds valid {@link MessageDigest} algorithm types.
-   *
-   * @since 1.0
-   */
-  public enum Algorithm {
-    /** MD2 algorithm type. */
-    MD2("MD2"),
-
-    /** MD5 algorithm type. */
-    MD5("MD5"),
-
-    /** SHA-1 algorithm type. */
-    SHA1("SHA-1"),
-
-    /** SHA-224 algorithm type. */
-    SHA224("SHA-224"),
-
-    /** SHA-256 algorithm type. */
-    SHA256("SHA-256"),
-
-    /** SHA-384 algorithm type. */
-    SHA384("SHA-384"),
-
-    /** SHA-512 algorithm type. */
-    SHA512("SHA-512");
-
-    private final String type;
-
-    @Contract(pure = true)
-    Algorithm(final String type) {
-      this.type = type;
-    }
   }
 }

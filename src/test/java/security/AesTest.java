@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
+import art.cutils.security.AES;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.crypto.AEADBadTagException;
 import javax.crypto.NoSuchPaddingException;
-import art.cutils.security.AES;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
@@ -128,8 +128,9 @@ final class AesTest {
     assertEquals(decryptedPersonExample.name, input.name);
   }
 
-  @DisplayName("Should successfully Encrypt and Decrypt Object with all Algorithm type and Key")
-  @ParameterizedTest(name = "{index} => Algorithm={0}")
+  @DisplayName(
+      "Should successfully Encrypt and Decrypt Object with all DigestAlgorithm type and Key")
+  @ParameterizedTest(name = "{index} => DigestAlgorithm={0}")
   @MethodSource("algorithmTypes")
   void encryptionAndDecryptionWithSpecifiedAlgorithmTypeAndCustomKey(final Algorithm algorithm)
       throws Exception {
@@ -147,8 +148,8 @@ final class AesTest {
     assertEquals(decryptedPersonExample.name, personExample.name);
   }
 
-  @DisplayName("Should successfully Encrypt and Decrypt Object with all Algorithm type")
-  @ParameterizedTest(name = "{index} => Algorithm={0}")
+  @DisplayName("Should successfully Encrypt and Decrypt Object with all DigestAlgorithm type")
+  @ParameterizedTest(name = "{index} => DigestAlgorithm={0}")
   @MethodSource("algorithmTypes")
   void encryptionAndDecryptionWithSpecifiedAlgorithmType(final Algorithm algorithm)
       throws Exception {
@@ -199,8 +200,9 @@ final class AesTest {
     assertTrue(decryptedValue.equalsIgnoreCase(input));
   }
 
-  @DisplayName("Should successfully encrypt String type values With Custom Key and Algorithm Type.")
-  @ParameterizedTest(name = "{index} => input={0}, Key={1}, Algorithm={2}")
+  @DisplayName(
+      "Should successfully encrypt String type values With Custom Key and DigestAlgorithm Type.")
+  @ParameterizedTest(name = "{index} => input={0}, Key={1}, DigestAlgorithm={2}")
   @MethodSource("stringEncryptionValues")
   void shouldEncryptStringTypeValuesWithCustomKeyAndAlgorithmType(
       final String input, final String key, final Algorithm algorithm) throws Exception {

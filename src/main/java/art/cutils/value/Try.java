@@ -383,16 +383,27 @@ public abstract class Try<T> implements Serializable {
     /** Indicates whether the variable is empty or not. */
     private boolean empty;
 
+    /**
+     * Initializes a new Success instance with the given empty flag.
+     *
+     * @param empty The flag indicating if the Success instance is empty.
+     */
     private Success(final boolean empty) {
       this();
       this.empty = empty;
     }
 
+    /** Represents a success state of a Try operation. */
     private Success() {
       super();
       this.isResult = false;
     }
 
+    /**
+     * Creates a new instance of the Success class with the given result.
+     *
+     * @param result the result value
+     */
     private Success(final S result) {
       this.isResult = true;
       this.result = result;

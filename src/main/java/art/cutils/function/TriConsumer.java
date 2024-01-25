@@ -43,14 +43,17 @@ import java.util.function.Consumer;
 public interface TriConsumer<X, Y, Z> {
 
   /**
-   * Returns a composed {@code TriConsumer} that performs, in sequence, this operation followed by
-   * the {@code after} operation. If performing either operation throws an exception, it is relayed
-   * to the caller of the composed operation. If performing this operation throws an exception, the
-   * {@code after} operation will not be performed.
+   * Returns a composed {@code TriConsumer} that performs this operation followed by the {@code
+   * after} operation. If performing either operation throws an exception, it is relayed to the
+   * caller of the composed operation. If performing this operation throws an exception, the {@code
+   * after} operation will not be executed.
    *
    * @param after the operation to perform after this operation
-   * @return a composed {@code TriConsumer} that performs in sequence this operation followed by the
-   *     {@code after} operation
+   * @param <X> the type of the first argument to the operation
+   * @param <Y> the type of the second argument to the operation
+   * @param <Z> the type of the third argument to the operation
+   * @return a composed {@code TriConsumer} that performs this operation followed by the {@code
+   *     after} operation
    * @throws NullPointerException if {@code after} is null
    */
   default TriConsumer<X, Y, Z> andThen(final TriConsumer<? super X, ? super Y, ? super Z> after) {
@@ -63,7 +66,7 @@ public interface TriConsumer<X, Y, Z> {
   }
 
   /**
-   * Performs this operation on the given argument.
+   * Performs the operation defined by this {@code TriConsumer} on the specified arguments.
    *
    * @param x the first input argument
    * @param y the second input argument

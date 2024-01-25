@@ -80,9 +80,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Returns the first value.
+   * Retrieves the first value stored in the Pair.
    *
-   * @return the first value
+   * @return the first value stored in the Pair
    */
   @Contract(pure = true)
   public F getFirst() {
@@ -90,10 +90,10 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Use to set the first value.
+   * Sets the first value of the Pair and returns the modified Pair.
    *
-   * @param first first value
-   * @return current instance of {@link Pair}
+   * @param first the new value for the first element of the Pair
+   * @return the modified Pair with the updated first value
    */
   @Contract(mutates = "this")
   public Pair<F, S> first(final F first) {
@@ -102,10 +102,10 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Use to set the first and second values.
+   * Sets the first and second values.
    *
-   * @param first first value
-   * @param second second value
+   * @param first the first value
+   * @param second the second value
    */
   @Contract(mutates = "this")
   public void setFirstAndSecond(final F first, final S second) {
@@ -123,9 +123,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Reset the first value to null.
+   * Resets the first value of the pair to null.
    *
-   * @return current instance of {@link Pair}
+   * @return The current instance of {@link Pair}.
    */
   @Contract(mutates = "this")
   public Pair<F, S> deleteFirst() {
@@ -134,9 +134,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Reset the second value to null.
+   * Resets the second value to null.
    *
-   * @return current instance of {@link Pair}
+   * @return The current instance of Pair with the second value set to null.
    */
   @Contract(mutates = "this")
   public Pair<F, S> deleteSecond() {
@@ -145,9 +145,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Returns the second value.
+   * Retrieves the second value of the pair.
    *
-   * @return the second value
+   * @return the second value of the pair
    */
   @Contract(pure = true)
   public S getSecond() {
@@ -155,10 +155,11 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Swap the first and second values.
+   * Swaps the first and second values of the Pair and returns a new instance of Pair with the
+   * swapped values.
    *
-   * @implNote A new instance of {@link Pair} will be created.
-   * @return instance of {@link Pair} with swapped values
+   * @implNote A new instance of Pair will be created with the first and second values swapped.
+   * @return A new instance of Pair with the first and second values swapped.
    */
   @Contract(value = " -> new", pure = true)
   public @NotNull Pair<S, F> swap() {
@@ -166,10 +167,10 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Use to set the second value.
+   * Sets the second value of the pair and returns the modified pair.
    *
-   * @param second second value
-   * @return current instance of {@link Pair}
+   * @param second the new value for the second element of the pair. Can be null.
+   * @return the modified pair with the updated second value.
    */
   @Contract(mutates = "this")
   public Pair<F, S> second(final S second) {
@@ -178,9 +179,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Returns true if both values are not null.
+   * Checks if both values are not null.
    *
-   * @return true if both values are not null
+   * @return {@code true} if both values are not null, {@code false} otherwise
    */
   @Contract(pure = true)
   public boolean isNotEmpty() {
@@ -198,9 +199,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Check Pair not have the first value.
+   * Checks if the Pair does not have a first value.
    *
-   * @return true if the {@link Pair} has no first value
+   * @return True if the Pair does not have a first value, false otherwise.
    */
   @Contract(pure = true)
   public boolean notHaveFirst() {
@@ -208,9 +209,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Check Pair has the first value.
+   * Check if the Pair has the first value.
    *
-   * @return true if the {@link Pair} has first value
+   * @return true if the Pair has the first value, false otherwise
    */
   @Contract(pure = true)
   public boolean hasFirst() {
@@ -218,9 +219,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Check Pair doesn't have the second value.
+   * Checks whether the Pair object does not have a second value.
    *
-   * @return true if the {@link Pair} has no second value
+   * @return {@code true} if the Pair object has no second value, {@code false} otherwise
    */
   @Contract(pure = true)
   public boolean notHaveSecond() {
@@ -228,9 +229,9 @@ public final class Pair<F, S> {
   }
 
   /**
-   * Check Pair has the second value.
+   * Check if the Pair has a second value.
    *
-   * @return true if the {@link Pair} has second value
+   * @return true if the Pair has a second value, false otherwise
    */
   @Contract(pure = true)
   public boolean hasSecond() {

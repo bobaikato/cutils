@@ -35,9 +35,9 @@ package art.cutils.function;
 public interface Executable {
 
   /**
-   * Execute the operation that may likely throw and Exception.
+   * Executes the operation represented by this Executable.
    *
-   * @throws Exception that is thrown when operation executes.
+   * @throws Exception if an exception occurs during execution
    */
   void execute() throws Exception;
 }

@@ -71,34 +71,67 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   }
 
   /**
-   * Sealed constructor takes the dealer.
+   * Private constructor for the Idler class.
    *
-   * @param dealer instance of {@link Dealer}
+   * @param dealer the dealer used by the Idler instance
+   * @param <T> the type of results supplied by the dealer
    */
   private Idler(final Dealer<T> dealer) {
     this.dealer = dealer;
   }
 
+  /**
+   * Creates an instance of Idler with the given dealer and supplier.
+   *
+   * @param dealer an instance of Dealer interface
+   * @param supplier an instance of Supplier interface
+   */
   private Idler(final Dealer<T> dealer, final Supplier<T> supplier) {
     this.dealer = dealer;
     this.supplier = supplier;
   }
 
+  /**
+   * Creates an instance of Idler with the given dealer and supplier.
+   *
+   * @param dealer an instance of Dealer interface
+   * @param supplier an instance of Supplier interface
+   * @param <T> the type of results supplied by the dealer
+   * @return a new instance of Idler
+   * @throws NullPointerException if either the dealer or supplier is null
+   */
   @Contract("_, _ -> new")
   public static <T> @NotNull Idler<T> of(final Dealer<T> dealer, final Supplier<T> supplier) {
     return Idler.of(supplier, dealer);
   }
 
-  @Contract("_, _ -> new")
-  public static <T> @NotNull Idler<T> of(final Dealer<T> dealer) {
-    return new Idler<>(dealer);
-  }
-
+  /**
+   * Creates an instance of Idler with the given supplier and dealer.
+   *
+   * @param supplier an instance of Supplier interface
+   * @param dealer an instance of Dealer interface
+   * @param <T> the type of results supplied by the dealer
+   * @return a new instance of Idler
+   * @throws NullPointerException if either the dealer or supplier is null
+   */
   @Contract("_, _ -> new")
   public static <T> @NotNull Idler<T> of(final Supplier<T> supplier, final Dealer<T> dealer) {
     requireNonNull(dealer, "dealer cannot be null");
     requireNonNull(supplier, "supplier cannot be null");
     return new Idler<>(dealer, supplier);
+  }
+
+  /**
+   * Creates a new instance of {@link Idler} with the given dealer.
+   *
+   * @param dealer the dealer used by the Idler instance
+   * @param <T> the type of results supplied by the dealer
+   * @return a new instance of Idler
+   * @throws NullPointerException if the dealer is null
+   */
+  @Contract("_, _ -> new")
+  public static <T> @NotNull Idler<T> of(final Dealer<T> dealer) {
+    return new Idler<>(dealer);
   }
 
   /**
@@ -115,11 +148,12 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   }
 
   /**
-   * Supply take an instance of {@link Dealer} as parameter..
+   * Creates a new instance of {@link Idler} with the given dealer.
    *
-   * @param <T> the type parameter
-   * @param dealer the supplier, an instance of {@link Dealer}
-   * @return the supplier, an instance of {@link Dealer}
+   * @param dealer the dealer used by the Idler instance
+   * @param <T> the type of results supplied by the dealer
+   * @return a new instance of Idler
+   * @throws NullPointerException if the dealer is null
    */
   @Contract("_ -> new")
   public static <T> @NotNull Dealer<T> deal(final Dealer<T> dealer) {
@@ -128,10 +162,11 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   }
 
   /**
-   * Gets a result for dealer operation.
+   * Executes the deal operation and returns the second value of the pair, which represents the
+   * result of the dealer operation.
    *
-   * @return a dealer result
-   * @see Dealer#deal
+   * @return the second value
+   * @throws Exception if the dealer operation throws an exception
    */
   @Override
   public T deal() throws Exception {
@@ -142,10 +177,11 @@ public final class Idler<T> implements Supplier<T>, Dealer<T>, Serializable {
   }
 
   /**
-   * Gets a result for supplier operation.
+   * Returns the value held by this instance of Idler. If the supplier is not null and the first
+   * value in the pair is null, the supplier will be invoked and the result will be set as the first
+   * value in the pair. Otherwise, it returns the first value in the pair.
    *
-   * @return a supplier result
-   * @see Supplier#get
+   * @return the value held by this instance of Idler
    */
   @Override
   public T get() {
