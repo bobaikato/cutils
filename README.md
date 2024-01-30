@@ -41,6 +41,11 @@ I accept Pull Requests via GitHub. Here are some guidelines which will make appl
 5. Please, provide **JUnit tests** for your changes and make sure your changes don't break any existing tests by running `mvn clean test`.
 6. Lastly, open PR to `development` branch and [follow this rudimentary convention](https://blog.jasonmeridth.com/posts/do-not-issue-pull-requests-from-your-master-branch/)
 
+## Sponsors
+
+[![Jetbrain](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_square.svg)](https://www.jetbrains.com/community/opensource/#support)
+
+
 ## License
 
 This code is under the [Apache Licence v2](https://github.com/prohorde/cutils/blob/master/LICENSE).
