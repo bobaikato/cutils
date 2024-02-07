@@ -4,9 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - alpha
-      - beta
-      - delta
+      - master
 
 jobs:
   qodana:
