@@ -26,6 +26,7 @@ package value;
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -118,7 +119,7 @@ final class TryTest {
 
     assertEquals(convertStringToInteger.filter(Objects::nonNull), convertStringToInteger);
 
-    assertTrue(convertStringToInteger.getCause() instanceof NumberFormatException);
+    assertInstanceOf(NumberFormatException.class, convertStringToInteger.getCause());
 
     assertEquals(25, convertStringToInteger.orElseGet(25));
 

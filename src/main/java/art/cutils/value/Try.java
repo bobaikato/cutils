@@ -166,6 +166,22 @@ public abstract class Try<T> implements Serializable {
   }
 
   /**
+   * Executes the given Executable object. Throws a RuntimeException if any exception occurs during
+   * execution.
+   *
+   * @param executable the Executable object to be executed (must not be null)
+   * @throws RuntimeException if any exception occurs during execution
+   */
+  public void onCompletion(Executable executable) {
+    try {
+      Objects.requireNonNull(executable, "Completion Executable cannot be null.");
+      executable.execute();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
    * Use this method to retrieve the try operation result.
    *
    * @return the try operation result
@@ -374,6 +390,12 @@ public abstract class Try<T> implements Serializable {
    */
   public abstract T orElseThrow(final Throwable throwable);
 
+  /**
+   * The {@code Success} class represents a success state of a Try operation. It is a concrete
+   * implementation of the {@link Try} abstract class.
+   *
+   * @param <S> the type of the result value
+   */
   private static class Success<S> extends Try<S> implements Serializable {
     private static final long serialVersionUID = 4332649928027329163L;
     private boolean isResult;
@@ -586,6 +608,11 @@ public abstract class Try<T> implements Serializable {
     }
   }
 
+  /**
+   * Represents a failure result of a computation.
+   *
+   * @param <F> The type of the result of the computation
+   */
   private static class Failure<F> extends Try<F> implements Serializable {
     private static final long serialVersionUID = 6137465851350394283L;
 
