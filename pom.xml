@@ -183,7 +183,7 @@
         <dependency>
             <artifactId>commons-lang3</artifactId>
             <groupId>org.apache.commons</groupId>
-            <version>3.15.0</version>
+            <version>3.16.0</version>
         </dependency>
         <dependency>
             <artifactId>junit-jupiter-params</artifactId>
