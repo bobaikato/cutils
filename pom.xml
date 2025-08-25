@@ -265,7 +265,7 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <groupId>art.cutils</groupId>
+    <groupId>io.github.bobaikato</groupId>
 
     <inceptionYear>2018</inceptionYear>
     <issueManagement>
