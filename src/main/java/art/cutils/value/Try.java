@@ -604,7 +604,7 @@ public abstract class Try<T> implements Serializable {
     @Override
     @Contract(pure = true)
     public S orElseThrow(final Throwable throwable) {
-      return this.get();
+      return Objects.requireNonNull(this.get(), "Result cannot be null.");
     }
   }
 
