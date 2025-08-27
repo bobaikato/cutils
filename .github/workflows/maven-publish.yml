@@ -9,22 +9,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
       - uses: actions/checkout@v5
 
-      # Setup Java & Maven
       - name: Set up Java & Maven
         uses: actions/setup-java@v5
         with:
-          java-version: 17
+          java-version: '17'
           distribution: temurin
-          server-id: ossrh
-          server-username: ${{ secrets.SONATYPE_USERNAME }}
-          server-password: ${{ secrets.SONATYPE_PASSWORD }}
           cache: maven
+          ossrh-username: ${{ secrets.SONATYPE_USERNAME }}
+          ossrh-password: ${{ secrets.SONATYPE_PASSWORD }}
+          server-id: ossrh
 
-      # Generate a temporary GPG key for this workflow run
       - name: Generate temporary GPG key
+        id: generate_gpg
         run: |
           export GNUPGHOME=$RUNNER_TEMP/gnupg
           mkdir -p $GNUPGHOME
@@ -44,8 +42,16 @@ jobs:
           %echo Done
           EOF
 
-      # Build & Deploy signed artifacts
+          KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ {print $5; exit}')
+          echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+
       - name: Build & Deploy
+        env:
+          GNUPGHOME: ${{ runner.temp }}/gnupg
         run: |
-          export GNUPGHOME=$RUNNER_TEMP/gnupg
-          mvn -B clean deploy
+          mvn -B clean deploy -Dgpg.keyname=$KEY_ID
+
+      # (Optional) Clean up GPG files
+      - name: Cleanup GPG
+        if: always()
+        run: rm -rf $RUNNER_TEMP/gnupg
