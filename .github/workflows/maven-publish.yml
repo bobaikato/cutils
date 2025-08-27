@@ -7,11 +7,12 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      GNUPGHOME: ${{ runner.temp }}/gnupg  # clean GPG home
+
     steps:
+      # Checkout code
       - uses: actions/checkout@v5
 
+      # Setup Java & Maven
       - name: Set up Java & Maven
         uses: actions/setup-java@v5
         with:
@@ -25,6 +26,7 @@ jobs:
       # Generate a temporary GPG key for this workflow run
       - name: Generate temporary GPG key
         run: |
+          export GNUPGHOME=$RUNNER_TEMP/gnupg
           mkdir -p $GNUPGHOME
           chmod 700 $GNUPGHOME
 
@@ -44,4 +46,6 @@ jobs:
 
       # Build & Deploy signed artifacts
       - name: Build & Deploy
-        run: mvn -B clean deploy
+        run: |
+          export GNUPGHOME=$RUNNER_TEMP/gnupg
+          mvn -B clean deploy
