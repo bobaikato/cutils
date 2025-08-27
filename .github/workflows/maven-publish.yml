@@ -18,9 +18,25 @@ jobs:
           server-id: ossrh
           server-username: ${{ secrets.SONATYPE_USERNAME }}
           server-password: ${{ secrets.SONATYPE_PASSWORD }}
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           cache: maven
 
+      # Import GPG key manually
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo RELOADAGENT | gpg-connect-agent
+
+      # Create settings-security.xml so Maven can read passphrase
+      - name: Create settings-security.xml
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          mkdir -p ~/.m2
+          echo "<settingsSecurity><master>${GPG_PASSPHRASE}</master></settingsSecurity>" > ~/.m2/settings-security.xml
+
       - name: Build & Deploy
-        run: mvn -B -Prelease deploy
+        run: mvn -B -Prelease clean deploy
