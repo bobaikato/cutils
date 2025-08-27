@@ -305,7 +305,7 @@
         <url>http://github.com/bobaikato/cutils/tree/master</url>
     </scm>
     <url>https://github.com/bobaikato/cutils</url>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <repositories>
         <repository>
             <id>maven_central</id>
