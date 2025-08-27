@@ -7,6 +7,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      GNUPGHOME: ${{ runner.temp }}/gnupg  # clean GPG home
     steps:
       - uses: actions/checkout@v5
 
@@ -20,23 +22,26 @@ jobs:
           server-password: ${{ secrets.SONATYPE_PASSWORD }}
           cache: maven
 
-      # Import GPG key manually
-      - name: Import GPG key
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      # Generate a temporary GPG key for this workflow run
+      - name: Generate temporary GPG key
         run: |
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          echo "use-agent" >> ~/.gnupg/gpg.conf
-          echo RELOADAGENT | gpg-connect-agent
+          mkdir -p $GNUPGHOME
+          chmod 700 $GNUPGHOME
 
-      # Create settings-security.xml so Maven can read passphrase
-      - name: Create settings-security.xml
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: |
-          mkdir -p ~/.m2
-          echo "<settingsSecurity><master>${GPG_PASSPHRASE}</master></settingsSecurity>" > ~/.m2/settings-security.xml
+          gpg --batch --gen-key <<EOF
+          %echo Generating CI key
+          Key-Type: RSA
+          Key-Length: 4096
+          Subkey-Type: RSA
+          Subkey-Length: 4096
+          Name-Real: CI
+          Name-Email: ci@example.com
+          Expire-Date: 1d
+          %no-protection
+          %commit
+          %echo Done
+          EOF
 
+      # Build & Deploy signed artifacts
       - name: Build & Deploy
         run: mvn -B clean deploy
