@@ -39,4 +39,4 @@ jobs:
           echo "<settingsSecurity><master>${GPG_PASSPHRASE}</master></settingsSecurity>" > ~/.m2/settings-security.xml
 
       - name: Build & Deploy
-        run: mvn -B -Prelease clean deploy
+        run: mvn -B clean deploy
